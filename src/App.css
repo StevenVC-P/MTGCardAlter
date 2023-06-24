@@ -1,38 +1,63 @@
-.App {
+body {
+  background-color: #222;
+  color: #fff;
+  font-family: Arial, sans-serif;
   text-align: center;
+  padding-top: 50px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.container {
+  max-width: 400px;
+  margin: 0 auto;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.header {
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.input-box {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #333;
+  border: none;
+  color: #fff;
+  font-size: 16px;
 }
 
-.App-link {
-  color: #61dafb;
+.submit-button {
+  background-color: #555;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.submit-button:hover {
+  background-color: #777;
+}
+
+.card-result {
+  margin-bottom: 20px;
+}
+
+.card-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.card-image {
+  max-width: 200px;
+  margin-top: 10px;
+}
+
+.card-text {
+  margin-top: 10px;
+}
+
+.card-rules {
+  font-style: italic;
+  margin-top: 10px;
 }
