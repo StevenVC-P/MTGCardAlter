@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Card from "./Card";
+import BasicFrame from "./Templates/BasicFrame";
 import axios from "axios";
 
 const CardForm = () => {
@@ -8,6 +8,13 @@ const CardForm = () => {
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+  const sanitizeInput = (input) => {
+    return input
+      .replace(/\//g, '%2F')  // replace / with %2F
+      .replace(/\\/g, '%5C'); // replace \ with %5C
+  }
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setCardData([]);
@@ -15,7 +22,9 @@ const CardForm = () => {
 
     for (const cardName of cardNamesArr) {
       try {
-        const response = await axios.get(`http://localhost:5000/api/cards/${cardName}`);
+        let sanitizedCardName = sanitizeInput(cardName);
+
+        const response = await axios.get(`http://localhost:5000/api/cards/${sanitizedCardName}`);
         console.log(response.data);
         setCardData(prevCardData => [...prevCardData, response.data]);
         await delay(100); // Adding a delay of 100ms between requests
@@ -41,7 +50,7 @@ const CardForm = () => {
       </form>
       <div id="card-results">
         {cardData.map((card, index) => (
-          <Card key={index} card={card} />
+          <BasicFrame key={index} card={card} />
         ))}
       </div>
     </div>
