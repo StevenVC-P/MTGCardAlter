@@ -1,0 +1,195 @@
+.card-container {
+ color: black;
+ border: 1px solid black;
+ width: 250px;
+ height: 350px;
+ padding: 3px;
+ position: relative;
+ justify-content: center;
+ align-items: center;
+ text-align: center;
+ display:flex;
+ font-size:  1.5em;
+ border-radius: 6px;
+ box-sizing: border-box;
+ background: #171314;
+}
+
+.card-background {
+ height: 300px;
+ margin: 1% 2% 15% 2%;
+ border-radius: 6px;
+ border-top-right-radius: 6px;
+ border-bottom-left-radius: 8%;
+ border-bottom-right-radius: 8%;
+ background-color: #bbb;
+ position: relative;
+}
+
+.card-frame {
+ z-index: 1;
+ position: relative;
+ max-width: 97%;
+ left: 1%;
+ top: 0.5%;
+ left: 1.2%;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-between;
+}
+
+/*
+ — — — — — — — — — — — 
+ — — — — — — — — — — — 
+ OVERFLOW
+ — — — — — — — — — — — 
+ — — — — — — — — — — — 
+*/
+/* .frame-header,
+.frame-type-line,
+.frame-bottom-info {
+ overflow: hidden;
+} */
+
+.frame-header,
+.frame-type-line {
+ background: 
+ linear-gradient( 0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3) ), 
+ url(https://image.ibb.co/jKByZn/tile_bg_1.jpg); 
+ display: flex;
+ margin-top: 0px;
+ margin-left: 5px;
+ margin-right: 5px;
+ padding: 8px 0;
+ justify-content: space-between;
+ border-radius: 18px/40px;
+ font-size: .5em;
+ position: relative;
+ height: 5px;
+ align-items: center;
+}
+
+.name,
+.type {
+ font-size: 1.3em;
+ margin-left: 10px;
+ font-weight: 600;
+}
+
+.type {
+ font-size: 1em 
+}
+
+.frame-image {
+    width: 90%;  /* Adjust as needed */
+    height: 150px;  /* Adjust as needed */
+    margin: 0px auto;  /* Adjust as needed, auto for horizontal centering */
+    background-color: #ccc;  /* Placeholder color, remove it when you add an image */
+}
+
+#mana-icon {
+ font-size: 1.4em;
+ background: #ADD3AC;
+ border-radius: 50%;
+ box-sizing: border-box;
+ box-shadow: -0.05em 0.12em 0px 0 black;
+ margin-right: 5px;
+ height: 20px;
+ align-self: center;
+}
+
+#set-icon {
+ height: 9%;
+ width: 6%;
+ overflow: hidden;
+ margin-right: 10px;
+ align-self: center;
+}
+
+.frame-type-line {
+ margin-top: 0;
+}
+
+.frame-text-box {
+ margin: 0 10px;
+ height: 125px;
+ background: #d3ded6;
+ /* background-image: url(https://image.ibb.co/dFcNx7/tile_bg_2.jpg); */
+ display: flex;
+ flex-direction: column;
+ justify-content: space-around; 
+ box-sizing: border-box;
+ font-size: .4em;
+ position: relative;
+}
+ 
+.flavour-text {
+ font-style: italic;
+ padding: 10px 0;
+}
+
+p {
+ margin-bottom: 5px;
+}
+
+.power-toughness {
+    position: absolute;
+    bottom: -5px; 
+    right: -5px; 
+    width: 35px; 
+    height: 17px; 
+    background-color: #ccc; 
+    border-radius: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+}
+
+.ftb-inner-margin {
+ margin: 5px 1px;
+}
+
+.frame-bottom-info {
+ height: 800px;
+ color: white;
+ display: flex;
+ justify-content: space-between;
+ margin: 5px 0px 4% 0px; 
+}
+
+.fbi-left {
+ flex: 0;
+} 
+.fbi-left p:first-of-type {
+ margin-bottom: 15px;
+}
+.fbi-right {
+ flex: 1;
+ text-align: right;
+}
+.fbi-left,
+.fbi-right {
+ font-size: 5px;
+ position: relative;
+ top: 0px;
+}
+
+.fbi-center {
+ border-radius: 60%;
+ flex-basis: 41px;
+ height: 21px;
+ position: relative;
+ bottom: 11px;
+ z-index: 2;
+ background: lightgray;
+ /* background-image: url(../images/holofoil-texture-2.jpg);  */
+ box-shadow: 
+ 0 0 0 4px #171314;
+}
+
+.card-background {
+ /* background-image: url(../images/green-background.jpg);  */
+ background-repeat: no-repeat;
+ background-size: cover; 
+}
