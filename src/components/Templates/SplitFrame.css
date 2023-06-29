@@ -16,8 +16,22 @@
  margin: 0;
 }
 
-.card-background {
- height: 300px;
+/* These two styles rotate the card and postion them */
+.card-half-top {
+    transform: rotate(-90deg)  translate(0, 160px); 
+    transform-origin: center left;
+    order: 1;
+}
+
+.card-half-bottom {
+    transform: rotate(-90deg)  translate(-40px, 130px); 
+    order: 2;
+    transform-origin: bottom left;
+}
+
+.split-card-background {
+ height: 230px;
+ width: 155px;
  margin: 1% 2% 15% 2%;
  border-radius: 6px;
  border-top-right-radius: 6px;
@@ -27,10 +41,11 @@
  position: relative;
 }
 
-.card-frame {
+.split-card-frame {
  z-index: 1;
  position: relative;
  max-width: 97%;
+ max-height: 97%;
  left: 1%;
  top: 0.5%;
  left: 1.2%;
@@ -38,19 +53,6 @@
  flex-direction: column;
  justify-content: space-between;
 }
-
-/*
- — — — — — — — — — — — 
- — — — — — — — — — — — 
- OVERFLOW
- — — — — — — — — — — — 
- — — — — — — — — — — — 
-*/
-/* .frame-header,
-.frame-type-line,
-.frame-bottom-info {
- overflow: hidden;
-} */
 
 .frame-header,
 .frame-type-line {
