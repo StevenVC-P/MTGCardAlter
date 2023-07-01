@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "./components/Header";
+import Header from "./components/Header.jsx";
 import CardForm from "./components/CardForm";
 import "./App.css";
 
@@ -13,3 +13,9 @@ const App = () => {
 };
 
 export default App;
+
+
+// Black Lotus
+// Fire // Ice
+// Claim // Fame
+// Bonecrusher Giant
