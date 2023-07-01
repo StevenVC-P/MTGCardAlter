@@ -1,5 +1,5 @@
 import React from 'react';
-import "./Aftermath_styles.css";
+import "./Aftermath.css";
 
 //Compenent is a starting point for split card, currently works for cards such as Fire/Ice
 const Aftermath = (props) => {
@@ -7,7 +7,7 @@ const Aftermath = (props) => {
     return (
         <div className="card-container">
             <div className="aftermath-card-half-top">
-                <div className="aftermath-card-background">
+                <div className="card-background aftermath-card-background">
                     <div className="aftermath-card-frame">
                         <div className="frame-header">
                             <h1 className="name">{card_faces[1].name}</h1>

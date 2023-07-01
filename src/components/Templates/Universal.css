@@ -16,22 +16,11 @@
  margin: 0;
 }
 
-/* These two styles rotate the card and postion them */
-.card-half-top {
-    transform: rotate(-90deg)  translate(0, 160px); 
-    transform-origin: center left;
-    order: 1;
+.basic-card-background {
+ height: 300px;
 }
 
-.card-half-bottom {
-    transform: rotate(-90deg)  translate(-40px, 130px); 
-    order: 2;
-    transform-origin: bottom left;
-}
-
-.split-card-background {
- height: 230px;
- width: 155px;
+.card-background {
  margin: 1% 2% 15% 2%;
  border-radius: 6px;
  border-top-right-radius: 6px;
@@ -41,14 +30,12 @@
  position: relative;
 }
 
-.split-card-frame {
+.card-frame {
  z-index: 1;
  position: relative;
  max-width: 97%;
- max-height: 97%;
- left: 1%;
- top: 0.5%;
  left: 1.2%;
+ top: 0.5%;
  display: flex;
  flex-direction: column;
  justify-content: space-between;
@@ -80,7 +67,7 @@
 }
 
 .type {
- font-size: 1em 
+ font-size: 1em;
 }
 
 .frame-image {
@@ -147,48 +134,6 @@ p {
     justify-content: center;
     align-items: center;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
-}
-
-.ftb-inner-margin {
- margin: 5px 1px;
-}
-
-.frame-bottom-info {
- height: 800px;
- color: white;
- display: flex;
- justify-content: space-between;
- margin: 5px 0px 4% 0px; 
-}
-
-.fbi-left {
- flex: 0;
-} 
-.fbi-left p:first-of-type {
- margin-bottom: 15px;
-}
-.fbi-right {
- flex: 1;
- text-align: right;
-}
-.fbi-left,
-.fbi-right {
- font-size: 5px;
- position: relative;
- top: 0px;
-}
-
-.fbi-center {
- border-radius: 60%;
- flex-basis: 41px;
- height: 21px;
- position: relative;
- bottom: 11px;
- z-index: 2;
- background: lightgray;
- /* background-image: url(../images/holofoil-texture-2.jpg);  */
- box-shadow: 
- 0 0 0 4px #171314;
 }
 
 .card-background {

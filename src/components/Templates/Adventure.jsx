@@ -1,12 +1,12 @@
 import React from 'react';
-import "./Universal_styles.css"
-import "./Adventure_styles.css";
+import "./Universal.css"
+import "./Adventure.css";
 
 const Adventure = (props) => {
     const {set, card_faces} = props.card;
     return (
         <div className="card-container">
-            <div className="card-background">
+            <div className="basic-card-background card-background">
                 <div className="card-frame">
                     <div className="frame-header">
                         <h1 className="name">{card_faces[0].name}</h1>
@@ -31,7 +31,7 @@ const Adventure = (props) => {
                                 <p className="description ftb-inner-margin">{card_faces[1].oracle_text}</p>
                             </div>
                         </div>
-                        <div className="frame-text-box">
+                        <div className="adventureer-text-box frame-text-box">
                             <p className="description ftb-inner-margin">{card_faces[0].oracle_text}</p>
                         </div>
                     </div>
