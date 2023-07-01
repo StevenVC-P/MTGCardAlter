@@ -1,4 +1,5 @@
 import React from 'react';
+import "./Universal.css";
 import "./BasicFrame.css";
 
 const BasicFrame = (props) => {
@@ -6,7 +7,7 @@ const BasicFrame = (props) => {
     console.log(name)
     return (
         <div className="card-container">
-            <div className="card-background">
+            <div className="basic-card-background card-background">
                 <div className="card-frame">
                     <div className="frame-header">
                         <h1 className="name">{name}</h1>
@@ -23,15 +24,6 @@ const BasicFrame = (props) => {
                         {(type_line.includes("Creature") || type_line.includes("Vehicle")) && (
                             <div className="power-toughness">{power}/{toughness}</div>
                         )}
-                    </div>
-                    <div className="frame-bottom-info inner-margin">
-                        <div className="fbi-left">
-                            {/* <p>OGW &#x2022; EN <!-- paintbrush symbol --> Wesley Burt</p> */}
-                        </div>
-                        {/* <div className="fbi-center"></div> */}
-                        <div className="fbi-right">
-                            &#x99; &amp; &#169; 2016 Wizards of the Coast
-                        </div>
                     </div>
                 </div>
             </div>
