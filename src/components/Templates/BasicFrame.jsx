@@ -1,5 +1,7 @@
 import React from 'react';
-import "./BasicFrame.css";
+import "./Universal_styles.css"
+import "./BasicFrame_styles.css";
+
 
 const BasicFrame = (props) => {
     const {name, mana_cost, oracle_text,flavor_text, type_line, set, power, toughness, } = props.card;

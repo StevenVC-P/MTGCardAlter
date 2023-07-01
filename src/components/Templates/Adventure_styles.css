@@ -1,0 +1,113 @@
+.card-container {
+ flex-direction: column;
+}
+
+.card-background {
+ height: 300px;
+ margin: 1% 2% 15% 2%;
+ border-radius: 6px;
+ border-top-right-radius: 6px;
+ border-bottom-left-radius: 8%;
+ border-bottom-right-radius: 8%;
+ background-color: #bbb;
+ position: relative;
+}
+
+.card-frame {
+ z-index: 1;
+ position: relative;
+ max-width: 97%;
+ left: 1.2%;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-between;
+}
+
+.frame-header,
+.frame-type-line {
+ margin: 0 5px;
+ padding: 8px 0;
+}
+
+.name,
+.type {
+ font-size: 1.3em;
+ margin-left: 10px;
+ font-weight: 600;
+}
+
+.type {
+ font-size: 1em;
+}
+
+.frame-image {
+    width: 90%;  
+    height: 150px; 
+    margin: 0px auto; 
+    background-color: #ccc;
+}
+
+.bottom-section {
+ display: flex;
+ justify-content: space-between;
+}
+
+.adventure-bottom {
+ display: flex;
+ flex-direction: column;
+ width: 120px;
+}
+
+.adventureframe-header,
+.adventureframe-type-line {
+ background: linear-gradient( 0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3) ),
+ url(https://image.ibb.co/jKByZn/tile_bg_1.jpg);
+ display: flex;
+ margin-top: 0px;
+ padding: 8px 0;
+ justify-content: space-between;
+ border-radius: 18px 0 0 40px;
+ font-size: .4em;
+ position: relative;
+ height: 4px;
+ align-items: center;
+ width: 91%;
+ margin: 0 6px;
+}
+
+.adventureframe-text-box{
+ margin: 0 10px;
+ height: 85px;
+ width: 105px;
+ background: #d3ded6;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-around; 
+ box-sizing: border-box;
+ font-size: .4em;
+ position: relative;
+}
+
+.frame-text-box {
+ margin: 0 10px;
+ height: 125px;
+ width: 95px;
+ margin-left: -5px;
+ background: #d3ded6;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-around; 
+ box-sizing: border-box;
+ font-size: .4em;
+ position: relative;
+ border-left: 2px solid black;
+}
+ 
+.flavour-text {
+ font-style: italic;
+ padding: 10px 0;
+}
+
+p {
+ margin-bottom: 5px;
+}

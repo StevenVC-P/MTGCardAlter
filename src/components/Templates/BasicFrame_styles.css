@@ -1,0 +1,42 @@
+.card-background {
+ height: 300px;
+ margin: 1% 2% 15% 2%;
+ border-radius: 6px;
+ border-top-right-radius: 6px;
+ border-bottom-left-radius: 8%;
+ border-bottom-right-radius: 8%;
+ background-color: #bbb;
+ position: relative;
+}
+
+.card-frame {
+ z-index: 1;
+ position: relative;
+ max-width: 97%;
+ left: 1%;
+ top: 0.5%;
+ left: 1.2%;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-between;
+}
+
+.frame-image {
+    width: 90%; 
+    height: 150px; 
+    margin: 0px auto;
+    background-color: #ccc;  
+}
+
+.frame-text-box {
+ margin: 0 10px;
+ height: 125px;
+ background: #d3ded6;
+ background-image: url(https://image.ibb.co/dFcNx7/tile_bg_2.jpg);
+ display: flex;
+ flex-direction: column;
+ justify-content: space-around; 
+ box-sizing: border-box;
+ font-size: .4em;
+ position: relative;
+}
