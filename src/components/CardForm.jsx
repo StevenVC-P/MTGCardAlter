@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import BasicFrame from "./Templates/BasicFrame";
 import SplitFrame from "./Templates/SplitFrame";
+import Aftermath from "./Templates/Aftermath";
+import Adventure from "./Templates/Adventure";
 import axios from "axios";
 
 const CardForm = () => {
@@ -54,16 +56,23 @@ const CardForm = () => {
           // Find Frame based on card.layout
           let result;
           
-          switch (card.layout) {
-            case 'normal':
-              result = <BasicFrame key={index} card={card} />
-              break;
-            case 'split':
-              result = <SplitFrame key={index} card={card} />
-              break;
-            default:
-              result = <BasicFrame key={index} card={card} />
-              break;
+          if (card.keywords.includes('Aftermath')) {
+            result = <Aftermath key={index} card={card} />;
+          } else {
+            switch (card.layout) {
+              case 'normal':
+                result = <BasicFrame key={index} card={card} />
+                break;
+              case 'split':
+                result = <SplitFrame key={index} card={card} />
+                break;
+              case 'adventure':
+                result = <Adventure key={index} card={card} />
+                break
+              default:
+                result = <BasicFrame key={index} card={card} />
+                break;
+            }
           }
 
           return result
