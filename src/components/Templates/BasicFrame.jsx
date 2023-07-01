@@ -4,7 +4,6 @@ import "./BasicFrame.css";
 
 const BasicFrame = (props) => {
     const {name, mana_cost, oracle_text,flavor_text, type_line, set, power, toughness, } = props.card;
-    console.log(name)
     return (
         <div className="card-container">
             <div className="basic-card-background card-background">

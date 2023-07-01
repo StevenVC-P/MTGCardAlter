@@ -3,6 +3,7 @@ import BasicFrame from "./Templates/BasicFrame";
 import SplitFrame from "./Templates/SplitFrame";
 import Aftermath from "./Templates/Aftermath";
 import Adventure from "./Templates/Adventure";
+import Saga from "./Templates/Saga";
 import axios from "axios";
 
 const CardForm = () => {
@@ -68,6 +69,9 @@ const CardForm = () => {
                 break;
               case 'adventure':
                 result = <Adventure key={index} card={card} />
+                break
+              case 'saga':
+                result = <Saga key={index} card={card} />
                 break
               default:
                 result = <BasicFrame key={index} card={card} />
