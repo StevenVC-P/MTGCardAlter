@@ -55,26 +55,37 @@ const CardForm = () => {
       <div id="card-results">
         {cardData.map((card, index) => {
           // Find Frame based on card.layout
-          let result;
+          let result = [];
           
           if (card.keywords.includes('Aftermath')) {
             result = <Aftermath key={index} card={card} />;
           } else {
             switch (card.layout) {
               case 'normal':
-                result = <BasicFrame key={index} card={card} />
+                result.push = <BasicFrame key={index} card={card} />
                 break;
               case 'split':
-                result = <SplitFrame key={index} card={card} />
+                result.push = <SplitFrame key={index} card={card} />
                 break;
               case 'adventure':
-                result = <Adventure key={index} card={card} />
+                result.push = <Adventure key={index} card={card} />
                 break
               case 'saga':
-                result = <Saga key={index} card={card} />
+                result.push = <Saga key={index} card={card} />
                 break
+              case 'transform':
+                //since card_faces is an arrary, we can iterate over it and then place each result into the higher array (cardData.map makes).
+                //The final key is will be a string like '1-1' or '3-0'
+                card.card_faces.forEach((face, faceIndex) => {
+                  if (face.type_line.includes('Saga')) {
+                    result.push(<Saga key={`${index}-${faceIndex}`} card={card} face={face} />);
+                  } else {
+                    result.push(<BasicFrame key={`${index}-${faceIndex}`} card={card} face={face} />);
+                  }
+                });
+                break;
               default:
-                result = <BasicFrame key={index} card={card} />
+                result.push = <BasicFrame key={index} card={card} />
                 break;
             }
           }
