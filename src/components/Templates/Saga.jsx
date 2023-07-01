@@ -3,7 +3,8 @@ import "./Universal.css";
 import "./Saga.css";
 
 const Saga = (props) => {
-    const {name, mana_cost, oracle_text, type_line, set } = props.card;
+    const source = props.face || props.card;
+    const {name, mana_cost, oracle_text, type_line, set } = source;
     return (
         <div className="card-container">
             <div className="basic-card-background card-background">
