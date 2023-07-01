@@ -1,0 +1,47 @@
+.bottom-section {
+ display: flex;
+ justify-content: space-between;
+}
+
+.adventure-bottom {
+ display: flex;
+ flex-direction: column;
+ width: 120px;
+}
+
+.adventureframe-header,
+.adventureframe-type-line {
+ background: linear-gradient( 0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3) ),
+ url(https://image.ibb.co/jKByZn/tile_bg_1.jpg);
+ display: flex;
+ margin-top: 0px;
+ padding: 8px 0;
+ justify-content: space-between;
+ border-radius: 18px 0 0 40px;
+ font-size: .4em;
+ position: relative;
+ height: 4px;
+ align-items: center;
+ width: 91%;
+ margin: 0 6px;
+}
+
+.adventureframe-text-box{
+ margin: 0 10px;
+ height: 85px;
+ width: 105px;
+ background: #d3ded6;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-around; 
+ box-sizing: border-box;
+ font-size: .4em;
+ position: relative;
+}
+
+.adventureer-text-box {
+ width: 95px;
+ margin-left: -5px;
+ background: #d3ded6;
+ border-left: 2px solid black;
+}
