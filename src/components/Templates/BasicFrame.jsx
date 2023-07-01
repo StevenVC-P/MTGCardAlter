@@ -3,7 +3,8 @@ import "./Universal.css";
 import "./BasicFrame.css";
 
 const BasicFrame = (props) => {
-    const {name, mana_cost, oracle_text,flavor_text, type_line, set, power, toughness, } = props.card;
+    const source = props.face || props.card;
+    const {name, mana_cost, oracle_text,flavor_text, type_line, set, power, toughness, } = source;
     return (
         <div className="card-container">
             <div className="basic-card-background card-background">
