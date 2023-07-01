@@ -29,7 +29,6 @@ const CardForm = () => {
         let sanitizedCardName = sanitizeInput(cardName);
 
         const response = await axios.get(`http://localhost:5000/api/cards/${sanitizedCardName}`);
-        console.log(response.data);
         setCardData(prevCardData => [...prevCardData, response.data]);
         await delay(100); // Adding a delay of 100ms between requests
       } catch (error) {
@@ -62,16 +61,16 @@ const CardForm = () => {
           } else {
             switch (card.layout) {
               case 'normal':
-                result.push = <BasicFrame key={index} card={card} />
+                result.push(<BasicFrame key={index} card={card} />)
                 break;
               case 'split':
-                result.push = <SplitFrame key={index} card={card} />
+                result.push(<SplitFrame key={index} card={card} />)
                 break;
               case 'adventure':
-                result.push = <Adventure key={index} card={card} />
+                result.push(<Adventure key={index} card={card} />)
                 break
               case 'saga':
-                result.push = <Saga key={index} card={card} />
+                result.push(<Saga key={index} card={card} />)
                 break
               case 'transform':
                 //since card_faces is an arrary, we can iterate over it and then place each result into the higher array (cardData.map makes).
@@ -85,7 +84,7 @@ const CardForm = () => {
                 });
                 break;
               default:
-                result.push = <BasicFrame key={index} card={card} />
+                result.push(<BasicFrame key={index} card={card} />)
                 break;
             }
           }
