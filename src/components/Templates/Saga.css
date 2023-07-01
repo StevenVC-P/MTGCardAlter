@@ -1,0 +1,26 @@
+.saga-container {
+    /* width: 95%;  Adjust as needed */
+    display: flex;
+    flex-direction: row;
+    justify-content: center; 
+}
+
+.saga-frame-image {
+    width: 45%;  /* Adjust as needed */
+    height: 270px;  /* Adjust as needed */
+    background-color: #ccc;  /* Placeholder color, remove it when you add an image */
+}
+
+.saga-frame-text-box {
+ width: 45%;  /* Adjust as needed */
+ height: 270px;
+ background: #d3ded6;
+ /* background-image: url(https://image.ibb.co/dFcNx7/tile_bg_2.jpg); */
+ display: flex;
+ flex-direction: column;
+ justify-content: space-around; 
+ box-sizing: border-box;
+ font-size: .4em;
+ position: relative;
+}
+ 
