@@ -9,33 +9,40 @@ import axios from "axios";
 const CardForm = () => {
   const [cardNames, setCardNames] = useState([]);
   const [cardData, setCardData] = useState([]);
-  const [isImageGenerationEnabled, setImageGenerationEnabled] = useState(true);
+  const [isImageGenerationEnabled, setImageGenerationEnabled] = useState(false);
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const sanitizeInput = (input) => {
     let quantity;
-    let sanitizedCardName;
+    let cardName;
 
     const match = input.match(/^(\d+)[x\s-]*(.+)/);
     if (match) {
       quantity = parseInt(match[1], 10) || 1;  // quantity is in match[1]
-      sanitizedCardName = match[2].trim();  // card name is in match[2]
+      cardName = match[2].trim();  // card name is in match[2]
     } else {
       quantity = 1;  // default quantity is 1
-      sanitizedCardName = input.trim();
+      cardName = input.trim();
     }
+    let sanitizedCardName = cardName
+      .replace(/\//g, '%2F')  // replace / with %2F
+      .replace(/\\/g, '%5C'); // replace \ with %5C
 
-    return { quantity, sanitizedCardName };
+    return {quantity, sanitizedCardName}
   }
+
+  const handleClear = (event) => {
+    setCardNames([]);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setCardData([]);
     const cardNamesArr = cardNames.split('\n').filter(name => name !== '');
-
+   
     for (const cardName of cardNamesArr) {
       try {
+        // let sanitizedCardName = sanitizeInput(cardName);
         let {quantity, sanitizedCardName} = sanitizeInput(cardName);
         for(let i = 0; i < quantity; i++) {
           const response = await axios.get(`http://localhost:5000/api/cards/${sanitizedCardName}`);
@@ -60,17 +67,21 @@ const CardForm = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form>
         <textarea onChange={handleInputChange} value={cardNames} className="input-box" placeholder="Copy/Paste Magic card names and quantities" />
         <br />
         <label>
           Enable image generation:
-          <input type="checkbox" checked={isImageGenerationEnabled} onChange={handleCheckboxChange} />
+          <input type="checkbox" checked={isImageGenerationEnabled} onChange={handleCheckboxChange}/>
         </label>
-        <button type="submit" className="submit-button">
+        <button type="submit" className="submit-button" onClick={handleSubmit}>
           Submit
         </button>
+        <button type="submit" className="clear-button" onClick={handleClear}>
+          Clear
+        </button>
       </form>
+
       <div id="card-results">
         {cardData.map((card, index) => {
           // Find Frame based on card.layout
