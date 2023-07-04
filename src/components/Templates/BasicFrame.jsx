@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect, useRef }  from 'react';
 import generateImage from '../../helpers/ImgDataFormatter';
 import "./Universal.css";
 import "./BasicFrame.css";
@@ -7,37 +7,23 @@ const BasicFrame = (props) => {
     const source = props.face || props.card;
     const isImageGenerationEnabled = props.isImageGenerationEnabled;
     const {name, mana_cost, oracle_text,flavor_text, type_line, set, power, toughness, } = source;
-    const [imageGenerated, setImageGenerated] = useState(false);
+    const imageGenerated = useRef(false); // Using useRef instead of useState
     const [imageData, setImageData] = useState(null);
 
     useEffect(() => {
-        // This variable gets updated whenever the component's mount status changes
-        let isMounted = true;
-
-        if (!imageGenerated && isImageGenerationEnabled) {
-        setImageGenerated(true);
-        generateImage([name]) // Pass the name or other suitable text as a prompt for image generation
-            .then((generatedImageData) => {
-                // Only proceed if the component is still mounted
-                if (isMounted) {
-                // Handle the generated image data here (e.g., save it to state, display it, etc.)
-                console.log('Generated image data:', generatedImageData);
-                setImageData(generatedImageData);
-                }
+        if (isImageGenerationEnabled && !imageGenerated.current) {
+            imageGenerated.current = true;
+            generateImage([name])
+                .then((generatedImageData) => {
+                    console.log('Generated image data:', generatedImageData);
+                    setImageData(generatedImageData);
                 })
-            .catch((error) => {
-            console.error('Error generating image:', error);
-            if (isMounted) {
-                setImageGenerated(false);  // Reset this, so that image generation can be attempted again the next time the component renders
-            }
-            });
+                .catch((error) => {
+                    console.error('Error generating image:', error);
+                    imageGenerated.current = false;
+                });
         }
-
-    // Cleanup function
-    return () => {
-        isMounted = false;  // Update this variable when the component unmounts
-    };
-    }, [name, imageGenerated, isImageGenerationEnabled]);
+    }, [name, isImageGenerationEnabled]);
 
     return (
         <div className="card-container">
