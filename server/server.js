@@ -4,10 +4,6 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const app = express();
-const bodyParser = require("body-parser");
-
-// const generateImage = require("./ImgDataFormatter");
-// require("path").posix = require("path-browserify");
 
 app.use(cors());
 app.use(express.json());
@@ -32,10 +28,6 @@ app.get("/api/cards/:cardName", async (req, res) => {
 });
 
 app.post("/api/generate-image", async (req, res) => {
-  console.log("engineId", engineId);
-  console.log("apiHost", apiHost);
-  console.log("apiKey", apiKey);
-  console.log("reqbody", req.body);
   try {
     const { height, width, cfg_scale, clip_guidance_preset, sampler, samples, steps, style_preset, text_prompts } = req.body;
 
@@ -59,9 +51,7 @@ app.post("/api/generate-image", async (req, res) => {
         text_prompts,
       }),
     });
-    //   // Return the generated image URL or data
-    // res.json({ image: generatedImageURL });
-    console.log(response);
+    // Return the generated image URL or data
     if (!response.ok) {
       throw new Error(`Non-200 response: ${await response.text()}`);
     }
