@@ -4,14 +4,20 @@ import SplitFrame from "./Templates/SplitFrame";
 import Aftermath from "./Templates/Aftermath";
 import Adventure from "./Templates/Adventure";
 import Saga from "./Templates/Saga";
+import { v4 as uuidv4 } from 'uuid';
 import axios from "axios";
 
 const CardForm = () => {
   const [cardNames, setCardNames] = useState([]);
   const [cardData, setCardData] = useState([]);
   const [isImageGenerationEnabled, setImageGenerationEnabled] = useState(false);
+  const [isUniqueImageEnabled, setUniqueImageEnabled] = useState(false); // Add this line
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const handleUniqueImageToggleChange = (event) => {
+    setUniqueImageEnabled(event.target.checked);
+  };
 
   const sanitizeInput = (input) => {
     let quantity;
@@ -80,37 +86,46 @@ const CardForm = () => {
         <button type="submit" className="clear-button" onClick={handleClear}>
           Clear
         </button>
+        <label>
+          Generate unique images:
+          <input type="checkbox" checked={isUniqueImageEnabled} onChange={handleUniqueImageToggleChange}/>
+        </label>
       </form>
-
       <div id="card-results">
         {cardData.map((card, index) => {
           // Find Frame based on card.layout
+          let key = index;
+          if (isUniqueImageEnabled) {
+            key = uuidv4();  // If unique images are enabled, generate a new UUID for each card
+          }
           let result = [];
           
           if (card.keywords.includes('Aftermath')) {
-            result = <Aftermath key={index} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />;
+            result = <Aftermath key={key} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />;
           } else {
             switch (card.layout) {
               case 'normal':
-                result.push(<BasicFrame key={index} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />)
+                result.push(<BasicFrame key={key} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />)
                 break;
               case 'split':
-                result.push(<SplitFrame key={index} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />)
+                result.push(<SplitFrame key={key} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />)
                 break;
               case 'adventure':
-                result.push(<Adventure key={index} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />)
+                result.push(<Adventure key={key} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />)
                 break
               case 'saga':
-                result.push(<Saga key={index} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />)
+                result.push(<Saga key={key} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />)
                 break
               case 'transform':
                 //since card_faces is an arrary, we can iterate over it and then place each result into the higher array (cardData.map makes).
                 //The final key is will be a string like '1-1' or '3-0'
                 card.card_faces.forEach((face, faceIndex) => {
+                  // If unique images are enabled, generate a new UUID for each card face
+                  let faceKey = isUniqueImageEnabled ? uuidv4() : `${key}-${faceIndex}`;
                   if (face.type_line.includes('Saga')) {
-                    result.push(<Saga key={`${index}-${faceIndex}`} card={card} face={face} isImageGenerationEnabled={isImageGenerationEnabled} />);
+                    result.push(<Saga key={{faceKey}} card={card} face={face} isImageGenerationEnabled={isImageGenerationEnabled} />);
                   } else {
-                    result.push(<BasicFrame key={`${index}-${faceIndex}`} card={card} face={face} isImageGenerationEnabled={isImageGenerationEnabled} />);
+                    result.push(<BasicFrame key={{faceKey}} card={card} face={face} isImageGenerationEnabled={isImageGenerationEnabled} />);
                   }
                 });
                 break;
