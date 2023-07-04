@@ -7,7 +7,7 @@ body {
 }
 
 .container {
-  max-width: 400px;
+  max-width: 90%;  /* Adjust as needed */
   margin: 0 auto;
 }
 
@@ -60,4 +60,11 @@ body {
 .card-rules {
   font-style: italic;
   margin-top: 10px;
+}
+
+#card-results {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;  /* Align items to the left */
+  gap: 10px;  /* Adjust as needed */
 }
