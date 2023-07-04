@@ -1,8 +1,6 @@
-import React from "react";
 import axios from "axios";
 
 const generateImage = async (textPrompts) => {
-  console.log("steve3")
   const response = await axios.post(`http://localhost:5000/api/generate-image`, {
     height: 512, // height of the output image
     width: 768, // width of the output image
@@ -22,7 +20,6 @@ const generateImage = async (textPrompts) => {
   }
 
   const { image } = response.data;
-
   if (!image) {
     throw new Error('No image data found in the image generation response');
   }
