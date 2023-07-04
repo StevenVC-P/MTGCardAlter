@@ -18,7 +18,6 @@ const CardForm = () => {
       .replace(/\\/g, '%5C'); // replace \ with %5C
   }
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     setCardData([]);
@@ -61,7 +60,7 @@ const CardForm = () => {
           } else {
             switch (card.layout) {
               case 'normal':
-                result.push(<BasicFrame key={index} card={card} />)
+                result.push(<BasicFrame key={index} card={card}/>)
                 break;
               case 'split':
                 result.push(<SplitFrame key={index} card={card} />)

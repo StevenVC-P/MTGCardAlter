@@ -1,10 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect }  from 'react';
+import generateImage from '../../helpers/ImgDataFormatter';
 import "./Universal.css";
 import "./BasicFrame.css";
 
 const BasicFrame = (props) => {
     const source = props.face || props.card;
     const {name, mana_cost, oracle_text,flavor_text, type_line, set, power, toughness, } = source;
+    const [imageGenerated, setImageGenerated] = useState(false);
+    const [imageData, setImageData] = useState(null);
+
+    useEffect(() => {
+        if (!imageGenerated) {
+        generateImage([name]) // Pass the name or other suitable text as a prompt for image generation
+            .then((generatedImageData) => {
+            // Handle the generated image data here (e.g., save it to state, display it, etc.)
+            console.log('Generated image data:', generatedImageData);
+            setImageData(generatedImageData);
+            setImageGenerated(true);
+            })
+            .catch((error) => {
+            console.error('Error generating image:', error);
+            });
+        }
+    }, [name, imageGenerated]);
+
     return (
         <div className="card-container">
             <div className="basic-card-background card-background">
@@ -13,7 +32,9 @@ const BasicFrame = (props) => {
                         <h1 className="name">{name}</h1>
                         {mana_cost}
                     </div>
-                    <div className="frame-image"></div>
+                    <div className="frame-image">
+                        {imageData && <img src={`data:image/png;base64,${imageData}`} alt="Generated Image" />}
+                    </div>
                     <div className="frame-type-line">
                         <h1 className="type">{type_line}</h1>
                         {set}
