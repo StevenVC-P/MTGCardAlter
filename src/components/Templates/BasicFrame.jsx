@@ -11,19 +11,33 @@ const BasicFrame = (props) => {
     const [imageData, setImageData] = useState(null);
 
     useEffect(() => {
+        // This variable gets updated whenever the component's mount status changes
+        let isMounted = true;
+
         if (!imageGenerated && isImageGenerationEnabled) {
+        setImageGenerated(true);
         generateImage([name]) // Pass the name or other suitable text as a prompt for image generation
             .then((generatedImageData) => {
-            // Handle the generated image data here (e.g., save it to state, display it, etc.)
-            console.log('Generated image data:', generatedImageData);
-            setImageData(generatedImageData);
-            setImageGenerated(true);
-            })
+                // Only proceed if the component is still mounted
+                if (isMounted) {
+                // Handle the generated image data here (e.g., save it to state, display it, etc.)
+                console.log('Generated image data:', generatedImageData);
+                setImageData(generatedImageData);
+                }
+                })
             .catch((error) => {
             console.error('Error generating image:', error);
+            if (isMounted) {
+                setImageGenerated(false);  // Reset this, so that image generation can be attempted again the next time the component renders
+            }
             });
         }
-    }, [name, imageGenerated]);
+
+    // Cleanup function
+    return () => {
+        isMounted = false;  // Update this variable when the component unmounts
+    };
+    }, [name, imageGenerated, isImageGenerationEnabled]);
 
     return (
         <div className="card-container">
