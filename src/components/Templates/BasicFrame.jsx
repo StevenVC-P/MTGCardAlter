@@ -3,18 +3,14 @@ import generateImage from '../../helpers/ImgDataFormatter';
 import "./Universal.css";
 import "./BasicFrame.css";
 
-
 const BasicFrame = (props) => {
     const source = props.face || props.card;
     const {name, mana_cost, oracle_text,flavor_text, type_line, set, power, toughness, } = source;
     const [imageGenerated, setImageGenerated] = useState(false);
     const [imageData, setImageData] = useState(null);
 
-
     useEffect(() => {
-        console.log("steve1", imageGenerated)
         if (!imageGenerated) {
-        console.log("steve2")
         generateImage([name]) // Pass the name or other suitable text as a prompt for image generation
             .then((generatedImageData) => {
             // Handle the generated image data here (e.g., save it to state, display it, etc.)

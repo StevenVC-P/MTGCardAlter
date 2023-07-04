@@ -11,7 +11,7 @@ const CardForm = () => {
   const [cardData, setCardData] = useState([]);
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  
+
   const sanitizeInput = (input) => {
     return input
       .replace(/\//g, '%2F')  // replace / with %2F
@@ -28,7 +28,6 @@ const CardForm = () => {
         let sanitizedCardName = sanitizeInput(cardName);
 
         const response = await axios.get(`http://localhost:5000/api/cards/${sanitizedCardName}`);
-
         setCardData(prevCardData => [...prevCardData, response.data]);
         await delay(100); // Adding a delay of 100ms between requests
       } catch (error) {
@@ -61,7 +60,7 @@ const CardForm = () => {
           } else {
             switch (card.layout) {
               case 'normal':
-                result.push(<BasicFrame key={index} card={card} imageBase64={card.imageBase64}/>)
+                result.push(<BasicFrame key={index} card={card}/>)
                 break;
               case 'split':
                 result.push(<SplitFrame key={index} card={card} />)

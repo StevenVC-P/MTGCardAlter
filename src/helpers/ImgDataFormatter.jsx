@@ -17,7 +17,6 @@ const generateImage = async (textPrompts) => {
       weight: index === 0 ? 1.0 : 0.8, // set weight 1.0 for the first prompt, 0.8 for others
     })),
   });
-  console.log("steve5")
   if (response.status !== 200) {
     throw new Error(`Non-200 response: ${response.statusText}`);
   }
