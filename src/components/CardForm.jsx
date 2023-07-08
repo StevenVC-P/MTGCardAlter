@@ -1,70 +1,81 @@
 import React, { useState } from "react";
+import axios from "axios";
+import generateImageForCard from '../helpers/imgGenerator';
 import BasicFrame from "./Templates/BasicFrame";
 import SplitFrame from "./Templates/SplitFrame";
 import Aftermath from "./Templates/Aftermath";
 import Adventure from "./Templates/Adventure";
 import Saga from "./Templates/Saga";
-import { v4 as uuidv4 } from 'uuid';
-import axios from "axios";
 
+// Main function component for the form
 const CardForm = () => {
+  // Using React's useState hook for managing state
   const [cardNames, setCardNames] = useState([]);
   const [cardData, setCardData] = useState([]);
-  const [isImageGenerationEnabled, setImageGenerationEnabled] = useState(false);
-  const [isUniqueImageEnabled, setUniqueImageEnabled] = useState(false); // Add this line
-
+  const [images, setImages] = useState({});
+  
+   // This function helps to create delay or pause execution for certain milliseconds
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  const handleUniqueImageToggleChange = (event) => {
-    setUniqueImageEnabled(event.target.checked);
-  };
-
+  // Sanitizes the card name input and separates quantity
   const sanitizeInput = (input) => {
     let quantity;
     let cardName;
 
     const match = input.match(/^(\d+)[x\s-]*(.+)/);
     if (match) {
-      quantity = parseInt(match[1], 10) || 1;  // quantity is in match[1]
-      cardName = match[2].trim();  // card name is in match[2]
+      quantity = parseInt(match[1], 10) || 1;
+      cardName = match[2].trim();
     } else {
-      quantity = 1;  // default quantity is 1
+      quantity = 1;
       cardName = input.trim();
     }
     let sanitizedCardName = cardName
-      .replace(/\//g, '%2F')  // replace / with %2F
-      .replace(/\\/g, '%5C'); // replace \ with %5C
+      .replace(/\//g, '%2F')
+      .replace(/\\/g, '%5C');
 
     return {quantity, sanitizedCardName}
   }
 
-  const handleClear = (event) => {
+  // Function to clear the current data
+  const handleClear = () => {
     setCardNames([]);
+    setCardData([]);
+    setImages({});
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    
+    // Splitting user input into an array of card names
     const cardNamesArr = cardNames.split('\n').filter(name => name !== '');
+    let newImages = {};
    
     for (const cardName of cardNamesArr) {
       try {
-        // let sanitizedCardName = sanitizeInput(cardName);
         let {quantity, sanitizedCardName} = sanitizeInput(cardName);
+
+        const response = await axios.get(`http://localhost:5000/api/cards/${sanitizedCardName}`);
+        let imageData = await generateImageForCard(response);
+
+        // Creating new card objects based on the quantity
         for(let i = 0; i < quantity; i++) {
-          const response = await axios.get(`http://localhost:5000/api/cards/${sanitizedCardName}`);
-          setCardData(prevCardData => [...prevCardData, response.data]);
-          await delay(100); // Adding a delay of 100ms between requests
+          // Creating a unique key for each card object
+          const key = `${sanitizedCardName}-${i}`;
+
+          // Saving the image to the newImages object
+          newImages[key] = imageData;
+          setCardData(prevCardData => [...prevCardData, {...response.data, imageKey: key}]);
+          await delay(100);
         }
       } catch (error) {
         console.error("Error fetching card data:", error);
       }
     }
-    setCardNames("");
-  };
 
-  const handleCheckboxChange = (event) => {
-    setImageGenerationEnabled(event.target.checked);
-    console.log("steve", event.target.checked)
+    // Clearing the input and saving the new images to the images state
+    setCardNames("");
+    setImages(prevImages => ({...prevImages, ...newImages}));
   };
 
   const handleInputChange = (event) => {
@@ -73,70 +84,52 @@ const CardForm = () => {
 
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <textarea onChange={handleInputChange} value={cardNames} className="input-box" placeholder="Copy/Paste Magic card names and quantities" />
-        <br />
-        <label>
-          Enable image generation:
-          <input type="checkbox" checked={isImageGenerationEnabled} onChange={handleCheckboxChange}/>
-        </label>
-        <button type="submit" className="submit-button" onClick={handleSubmit}>
+        <button type="submit" className="submit-button">
           Submit
         </button>
-        <button type="submit" className="clear-button" onClick={handleClear}>
+        <button type="button" className="clear-button" onClick={handleClear}>
           Clear
         </button>
-        <label>
-          Generate unique images:
-          <input type="checkbox" checked={isUniqueImageEnabled} onChange={handleUniqueImageToggleChange}/>
-        </label>
       </form>
       <div id="card-results">
-        {cardData.map((card, index) => {
-          // Find Frame based on card.layout
-          let key = index;
-          if (isUniqueImageEnabled) {
-            key = uuidv4();  // If unique images are enabled, generate a new UUID for each card
-          }
-          let result = [];
+        {cardData.map((card) => {
+          const imageData = images[card.imageKey];
           
-          if (card.keywords.includes('Aftermath')) {
-            result = <Aftermath key={key} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />;
-          } else {
-            switch (card.layout) {
-              case 'normal':
-                result.push(<BasicFrame key={key} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />)
-                break;
-              case 'split':
-                result.push(<SplitFrame key={key} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />)
-                break;
-              case 'adventure':
-                result.push(<Adventure key={key} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />)
-                break
-              case 'saga':
-                result.push(<Saga key={key} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />)
-                break
-              case 'transform':
-                //since card_faces is an arrary, we can iterate over it and then place each result into the higher array (cardData.map makes).
-                //The final key is will be a string like '1-1' or '3-0'
-                card.card_faces.forEach((face, faceIndex) => {
-                  // If unique images are enabled, generate a new UUID for each card face
-                  let faceKey = isUniqueImageEnabled ? uuidv4() : `${key}-${faceIndex}`;
-                  if (face.type_line.includes('Saga')) {
-                    result.push(<Saga key={{faceKey}} card={card} face={face} isImageGenerationEnabled={isImageGenerationEnabled} />);
-                  } else {
-                    result.push(<BasicFrame key={{faceKey}} card={card} face={face} isImageGenerationEnabled={isImageGenerationEnabled} />);
-                  }
-                });
-                break;
-              default:
-                result.push(<BasicFrame key={index} card={card} isImageGenerationEnabled={isImageGenerationEnabled} />)
-                break;
+          const Component = () => {
+            if (card.keywords.includes('Aftermath')) {
+              return <Aftermath card={card} imageData={imageData}/>;
+            } else {
+              switch (card.layout) {
+                case 'normal':
+                  return <BasicFrame card={card} imageData={imageData}/>;
+                case 'split':
+                  return <SplitFrame card={card} imageData={imageData}/>;
+                case 'adventure':
+                  return <Adventure card={card}imageData={imageData}/>;
+                case 'saga':
+                  return <Saga card={card} imageData={imageData}/>;
+                case 'transform':
+                  return card.card_faces.map((face, faceIndex) => {
+                    let faceKey = `${card.imageKey}-${faceIndex}`;
+                    if (face.type_line.includes('Saga')) {
+                      return <Saga key={faceKey} card={card} face={face} imageData={imageData}/>;
+                    } else {
+                      return <BasicFrame key={faceKey} card={card} face={face} imageData={imageData}/>;
+                    }
+                  });
+                default:
+                  return <BasicFrame card={card} imageData={imageData}/>;
+              }
             }
-          }
-
-          return result
-        })}
+          };
+          return (
+            <React.Fragment key={card.imageKey}>
+              <Component />
+            </React.Fragment>
+          );
+          })}
       </div>
     </div>
   );
