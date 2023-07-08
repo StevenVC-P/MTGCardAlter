@@ -3,7 +3,6 @@
 import generateImage from "./ImgDataFormatter";
 
 export default function generateImageForCard(cardData) {
-  console.log("steve1 ", cardData.data);
   const { name, color_identity, type_line } = cardData.data;
   const colorCodeToName = {
     W: "White",
