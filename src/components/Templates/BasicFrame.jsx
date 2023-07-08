@@ -6,7 +6,7 @@ const BasicFrame = (props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
     const {name, mana_cost, oracle_text, flavor_text, type_line, set, power, toughness} = source;
-    console.log("steve imageData", imageData)
+
     return (
         <div className="card-container">
             <div className="basic-card-background card-background">
