@@ -1,29 +1,11 @@
-import React, { useState, useEffect, useRef }  from 'react';
-import generateImage from '../../helpers/ImgDataFormatter';
+import React from 'react';
 import "./Universal.css";
 import "./BasicFrame.css";
 
 const BasicFrame = (props) => {
     const source = props.face || props.card;
-    const isImageGenerationEnabled = props.isImageGenerationEnabled;
-    const {name, mana_cost, oracle_text,flavor_text, type_line, set, power, toughness, } = source;
-    const imageGenerated = useRef(false); // Using useRef instead of useState
-    const [imageData, setImageData] = useState(null);
-
-    useEffect(() => {
-        if (isImageGenerationEnabled && !imageGenerated.current) {
-            imageGenerated.current = true;
-            generateImage([name])
-                .then((generatedImageData) => {
-                    console.log('Generated image data:', generatedImageData);
-                    setImageData(generatedImageData);
-                })
-                .catch((error) => {
-                    console.error('Error generating image:', error);
-                    imageGenerated.current = false;
-                });
-        }
-    }, [name, isImageGenerationEnabled]);
+    const imageData = props.imageData;
+    const {name, mana_cost, oracle_text, flavor_text, type_line, set, power, toughness} = source;
 
     return (
         <div className="card-container">
