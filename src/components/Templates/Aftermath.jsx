@@ -4,6 +4,7 @@ import "./Aftermath.css";
 //Compenent is a starting point for split card, currently works for cards such as Fire/Ice
 const Aftermath = (props) => {
     const {set, card_faces} = props.card;
+    const imageData = props.imageData;
     return (
         <div className="card-container">
             <div className="aftermath-card-half-top">
@@ -13,7 +14,9 @@ const Aftermath = (props) => {
                             <h1 className="name">{card_faces[1].name}</h1>
                             {card_faces[1].mana_cost}
                         </div>
-                        <div className="frame-image"></div>
+                        <div className="frame-image">
+                            {imageData && imageData.secondImage && <img src={`data:image/png;base64,${imageData.secondImage}`} alt="Second" />}
+                        </div>
                         <div className="frame-type-line">
                             <h1 className="type">{card_faces[1].type_line}</h1>
                             {set}
@@ -31,7 +34,9 @@ const Aftermath = (props) => {
                             <h1 className="name">{card_faces[0].name}</h1>
                             {card_faces[0].mana_cost}
                         </div>
-                        <div className="frame-image"></div>
+                        <div className="frame-image">
+                            {imageData && imageData.firstImage && <img src={`data:image/png;base64,${imageData.firstImage}`} alt="First" />}
+                        </div>
                         <div className="frame-type-line">
                             <h1 className="type">{card_faces[0].type_line}</h1>
                             {set}
