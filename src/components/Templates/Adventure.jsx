@@ -4,6 +4,7 @@ import "./Adventure.css";
 
 const Adventure = (props) => {
     const {set, card_faces} = props.card;
+    const imageData = props.imageData;
     return (
         <div className="card-container">
             <div className="basic-card-background card-background">
@@ -12,7 +13,7 @@ const Adventure = (props) => {
                         <h1 className="name">{card_faces[0].name}</h1>
                         {card_faces[1].mana_cost}
                     </div>
-                    <div className="frame-image"></div>
+                    <div className="frame-image">{imageData && <img src={`data:image/png;base64,${imageData.image}`} alt="Generated" />}</div>
                     <div className="frame-type-line">
                         <h1 className="type">{card_faces[0].type_line}</h1>
                         {set}

@@ -57,7 +57,7 @@ const CardForm = () => {
 
         const response = await axios.get(`http://localhost:5000/api/cards/${sanitizedCardName}`);
         let imageData = await generateImageForCard(response);
-
+        console.log(imageData)
         // Creating new card objects based on the quantity
         for(let i = 0; i < quantity; i++) {
           // Creating a unique key for each card object
@@ -107,16 +107,20 @@ const CardForm = () => {
                 case 'split':
                   return <SplitFrame card={card} imageData={imageData}/>;
                 case 'adventure':
-                  return <Adventure card={card}imageData={imageData}/>;
+                  return <Adventure card={card} imageData={imageData}/>;
                 case 'saga':
                   return <Saga card={card} imageData={imageData}/>;
                 case 'transform':
                   return card.card_faces.map((face, faceIndex) => {
                     let faceKey = `${card.imageKey}-${faceIndex}`;
+                    let safeImageData = imageData || {};
+                    let faceImageData = {
+                      image: faceIndex === 0 ? safeImageData.firstImage : safeImageData.secondImage
+                    };
                     if (face.type_line.includes('Saga')) {
-                      return <Saga key={faceKey} card={card} face={face} imageData={imageData}/>;
+                      return <Saga key={faceKey} card={card} face={face} imageData={faceImageData}/>;
                     } else {
-                      return <BasicFrame key={faceKey} card={card} face={face} imageData={imageData}/>;
+                      return <BasicFrame key={faceKey} card={card} face={face} imageData={faceImageData}/>;
                     }
                   });
                 default:
