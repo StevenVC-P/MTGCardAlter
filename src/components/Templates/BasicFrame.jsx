@@ -16,7 +16,7 @@ const BasicFrame = (props) => {
                         {mana_cost}
                     </div>
                     <div className="frame-image">
-                        {imageData && <img src={`data:image/png;base64,${imageData}`} alt="Generated Image" />}
+                        {imageData && <img src={`data:image/png;base64,${imageData.image}`} alt="Generated" />}
                     </div>
                     <div className="frame-type-line">
                         <h1 className="type">{type_line}</h1>
