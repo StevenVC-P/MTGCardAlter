@@ -14,7 +14,7 @@ export default async function generateImageForCard(cardData) {
 
     const colorNames = color_identity.map((colorCode) => colorCodeToName[colorCode]);
     //if the layout is split, generate two images.
-    if (layout === "split" && card_faces) {
+    if ((layout === "split" || layout === "transform") && card_faces) {
         // generate images for each face
         const firstImage = await generateImage([card_faces[0].name, ...colorNames, card_faces[0].type_line]);
         const secondImage = await generateImage([card_faces[1].name, ...colorNames, card_faces[1].type_line]);
