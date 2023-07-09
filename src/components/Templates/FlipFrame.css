@@ -1,0 +1,26 @@
+.flip {
+    transform: rotate(180deg);
+}
+
+.flip-frame-text-box {
+ margin: 0 10px;
+ height: 50px;
+ background: #d3ded6;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-around; 
+ box-sizing: border-box;
+ font-size: .4em;
+ position: relative;
+}
+
+.flip-card-background {
+ height: 335px;
+ margin: 15% 2% 15% 2%;
+ border-radius: 6px;
+ border-top-right-radius: 6px;
+ border-bottom-left-radius: 6px;
+ border-bottom-right-radius: 6px;
+ background-color: #bbb;
+ position: relative;
+}
