@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const generateImage = async (textPrompts) => {
+const generateImage = async (textPrompts, height, width) => {
   const response = await axios.post(`http://localhost:5000/api/generate-image`, {
-    height: 512, // height of the output image
-    width: 512, // width of the output image
+    height: height, // height of the output image
+    width: width, // width of the output image
     cfg_scale: 25, // replace with the desired cfg_scale
     clip_guidance_preset: 'NONE', // replace with the desired clip_guidance_preset
     // sampler: 'K_DPM_2_ANCESTRAL', // replace with the desired sampler
