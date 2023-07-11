@@ -6,13 +6,19 @@
 }
 
 .saga-frame-image {
-    width: 45%;  /* Adjust as needed */
-    height: 270px;  /* Adjust as needed */
+    max-width: 96px;  
+    height: auto;  
     background-color: #ccc;  /* Placeholder color, remove it when you add an image */
 }
 
+.saga-frame-image img {
+    width: 100%;
+    height: auto;
+}
+
+
 .saga-frame-text-box {
- width: 45%;  /* Adjust as needed */
+ width: 45%;  
  height: 270px;
  background: #d3ded6;
  /* background-image: url(https://image.ibb.co/dFcNx7/tile_bg_2.jpg); */
