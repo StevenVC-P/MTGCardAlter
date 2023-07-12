@@ -6,6 +6,7 @@ import SplitFrame from "./Templates/SplitFrame";
 import Aftermath from "./Templates/Aftermath";
 import Adventure from "./Templates/Adventure";
 import FlipFrame from "./Templates/FlipFrame";
+import Battle from "./Templates/Battles";
 import Saga from "./Templates/Saga";
 
 // Main function component for the form
@@ -122,7 +123,10 @@ const CardForm = () => {
                     };
                     if (face.type_line.includes('Saga')) {
                       return <Saga key={faceKey} card={card} face={face} imageData={faceImageData}/>;
-                    } else {
+                    } else if (face.type_line.includes('Battle')) {
+                      return <Battle key={faceKey} card={card} face={face} imageData={faceImageData}/>;
+                    }
+                    else {
                       return <BasicFrame key={faceKey} card={card} face={face} imageData={faceImageData}/>;
                     }
                   });

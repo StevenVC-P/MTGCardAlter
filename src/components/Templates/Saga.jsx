@@ -30,7 +30,6 @@ const Saga = (props) => {
             </div>
         </div>
     )
-
 }
 
 export default Saga

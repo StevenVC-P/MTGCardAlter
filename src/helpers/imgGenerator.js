@@ -30,8 +30,9 @@ export default async function generateImageForCard(cardData) {
         for (let face of card_faces) {
           let image;
           if (face.type_line.includes("Saga")) {
-            console.log("steve saga")
             image = await generateImage([face.name, ...colorNames, face.type_line], 1600, 576);
+          } else if (face.type_line.includes("Battle")) {
+            image = await generateImage([face.name, ...colorNames, face.type_line], 576, 1600);
           } else {
             image = await generateImage([face.name, ...colorNames, face.type_line], 512, 640);
           }
