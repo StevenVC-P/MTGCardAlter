@@ -9,7 +9,7 @@
  align-items: center;
  text-align: center;
  display:flex;
- font-size:  1.5em;
+ font-size: 1.5em;
  border-radius: 6px;
  box-sizing: border-box;
  background: #171314;
@@ -17,11 +17,12 @@
 }
 
 .basic-card-background {
- height: 300px;
+ height: 320px;
+ width: 235px;
 }
 
 .card-background {
- margin: 1% 2% 15% 2%;
+ margin: 12% 2% 15% 2%;
  border-radius: 6px;
  border-top-right-radius: 6px;
  border-bottom-left-radius: 8%;
@@ -33,53 +34,63 @@
 .card-frame {
  z-index: 1;
  position: relative;
- max-width: 97%;
- left: 1.2%;
- top: 0.5%;
+ width: 100%; /* adjusted from 244px */
  display: flex;
  flex-direction: column;
  justify-content: space-between;
+ height: 315px;
+ margin-top: 5px;
 }
 
 .frame-header,
 .frame-type-line {
- background: 
- linear-gradient( 0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3) ), 
- url(https://image.ibb.co/jKByZn/tile_bg_1.jpg); 
- display: flex;
- margin-top: 0px;
- margin-left: 5px;
- margin-right: 5px;
- padding: 8px 0;
- justify-content: space-between;
- border-radius: 18px/40px;
- font-size: .5em;
- position: relative;
- height: 5px;
- align-items: center;
+    background: 
+        linear-gradient(0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3)), 
+        url(https://image.ibb.co/jKByZn/tile_bg_1.jpg); 
+    display: flex;
+    margin-top: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 93%; /* or whatever percentage or pixel value you prefer */
+    padding: 8px 0;
+    justify-content: space-between;
+    border-radius: 18px/40px;
+    font-size: clamp(0.2em, .2vw, .5em);
+    position: relative;
+    height: 4px;
+    align-items: center;
+    border: 2px solid green;
 }
 
 .name,
 .type {
- font-size: 1.3em;
- margin-left: 10px;
+ 
+ margin-left: 5px;
  font-weight: 600;
 }
 
-.type {
- font-size: 1em;
+.description, .flavour-text {
+    font-size: clamp(0.4em, .5vw, .8em);
 }
 
 .frame-image {
-    width: 90%;  /* Adjust as needed */
-    height: 150px;  /* Adjust as needed */
-    margin: 0px auto;  /* Adjust as needed, auto for horizontal centering */
-    background-color: #ccc;  /* Placeholder color, remove it when you add an image */
+    width: 90%; 
+    height: 65%; 
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    border: 2px solid green;
 }
 
 .frame-image img {
-    max-width: 100%;
-    max-height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit:fill;
+    object-position: center;
 }
 
 #mana-icon {
@@ -101,35 +112,31 @@
  align-self: center;
 }
 
-.frame-type-line {
- margin-top: 0;
-}
-
 .frame-text-box {
- margin: 0 10px;
+ margin: 0 8px;
  height: 125px;
  background: #d3ded6;
- /* background-image: url(https://image.ibb.co/dFcNx7/tile_bg_2.jpg); */
  display: flex;
  flex-direction: column;
  justify-content: space-around; 
  box-sizing: border-box;
- font-size: .4em;
  position: relative;
+ border: 2px solid green;
+ max-height: 125px; 
 }
  
 .flavour-text {
  font-style: italic;
- padding: 10px 0;
+ padding: 3px 0;
 }
 
 p {
- margin-bottom: 5px;
+ margin-bottom: 1px;
 }
 
 .power-toughness {
     position: absolute;
-    bottom: -5px; 
+    bottom: -12px; 
     right: -5px; 
     width: 35px; 
     height: 17px; 
@@ -139,10 +146,5 @@ p {
     justify-content: center;
     align-items: center;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
-}
-
-.card-background {
- /* background-image: url(../images/green-background.jpg);  */
- background-repeat: no-repeat;
- background-size: cover; 
+    font-size: clamp(0.5em, .8vw, .8em);
 }
