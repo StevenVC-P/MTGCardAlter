@@ -23,7 +23,7 @@ const BasicFrame = (props) => {
                         {set}
                     </div>
                     <div className="frame-text-box">
-                        <p className="description ftb-inner-margin">{oracle_text}</p>
+                        <p className="description">{oracle_text}</p>
                         <p className="flavour-text">{flavor_text}</p>
                         {(type_line.includes("Creature") || type_line.includes("Vehicle")) && (
                             <div className="power-toughness">{power}/{toughness}</div>
