@@ -21,7 +21,7 @@ const FlipFrame = (props) => {
                     <div className="frame-type-line">
                         <h1 className="type">{card_faces[0].type_line}</h1>
                         {(card_faces[0].type_line.includes("Creature") || card_faces[0].type_line.includes("Vehicle")) && (
-                            <div className="power-toughness">{card_faces[0].power}/{card_faces[0].toughness}</div>
+                            <div className="flip-power-toughness">{card_faces[0].power}/{card_faces[0].toughness}</div>
                         )}
                     </div>
                     <div className="frame-image">
@@ -30,7 +30,7 @@ const FlipFrame = (props) => {
                     <div className="frame-type-line flip">
                         <h1 className="type">{card_faces[1].type_line}</h1>
                         {(card_faces[1].type_line.includes("Creature") || card_faces[1].type_line.includes("Vehicle")) && (
-                            <div className="power-toughness">{card_faces[1].power}/{card_faces[1].toughness}</div>
+                            <div className="flip-power-toughness">{card_faces[1].power}/{card_faces[1].toughness}</div>
                         )}
                     </div>
                     <div className="flip-frame-text-box flip">
