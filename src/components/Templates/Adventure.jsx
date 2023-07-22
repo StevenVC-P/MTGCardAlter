@@ -29,13 +29,17 @@ const Adventure = (props) => {
                                 {set}
                             </div>
                             <div className="adventureframe-text-box">
-                                <p className="description ftb-inner-margin">{card_faces[1].oracle_text}</p>
+                                <p className="oracle_text">{card_faces[1].oracle_text}</p>
                             </div>
                         </div>
                         <div className="adventureer-text-box frame-text-box">
-                            <p className="description ftb-inner-margin">{card_faces[0].oracle_text}</p>
+                            <p className="oracle_text">{card_faces[0].oracle_text}</p>
+                            {(card_faces[0].type_line.includes("Creature") || card_faces[0].type_line.includes("Vehicle")) && (
+                            <div className="power-toughness">{card_faces[0].power}/{card_faces[0].toughness}</div>
+                            )}
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </div>

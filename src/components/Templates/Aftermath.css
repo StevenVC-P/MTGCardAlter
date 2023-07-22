@@ -1,43 +1,80 @@
 /* These two styles rotate the card and postion them */
 .aftermath-card-half-top {
     order: 1;
-    height: 340px;
-    transform: translateX(75px);
+    height: 390px;
+    transform: translateX(-5px);
     /* margin-left: 20px; */
 }
 
 .aftermath-card-half-bottom {
-    transform: rotate(90deg)  translate(-120px, 180px); 
+    transform: rotate(90deg)  translate(35px, 0px); 
     order: 2;
     transform-origin: bottom left;
 }
 
 .aftermath-card-background {
- height: 180px;
+ height: 160px;
  width: 235px;
+ transform-origin: top;
 }
 
 .aftermath-bottom-card-background {
  height: 235px;
- width: 155px;
+ width: 105px;
  margin: 1% 2% 15% 2%;
  border-radius: 6px;
  border-top-right-radius: 6px;
  border-bottom-left-radius: 8%;
  border-bottom-right-radius: 8%;
  background-color: #bbb;
- position: relative;
+ position: absolute;
+}
+
+.aftermath-bottom-card-background > * {
+ transform: scale(1.05);  /* increased scale */
 }
 
 .aftermath-card-frame {
  z-index: 1;
  position: relative;
- max-width: 97%;
- max-height: 97%;
- left: 1%;
- top: 0.5%;
- left: 1.2%;
+ top: 4.5%;
  display: flex;
  flex-direction: column;
  justify-content: space-between;
+  transform: scale(1.02)
+}
+
+
+.aftermath-text-box {
+ position: absolute; /* Allows the box to be positioned relative to the nearest positioned ancestor */
+ bottom: -55px;
+ margin: 0px 8px;
+ height: 55px;
+ width: 215px;
+ background: #d3ded6;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-around; 
+ box-sizing: border-box;
+ border: 2px solid green;
+ overflow: hidden;
+}
+
+.aftermath-bottom-text-box {
+ position: absolute; /* Allows the box to be positioned relative to the nearest positioned ancestor */
+ bottom: -80px;
+ margin: 0px 6px;
+ height: 80px;
+ width: 95px;
+ background: #d3ded6;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-around; 
+ box-sizing: border-box;
+ border: 2px solid green;
+ overflow: hidden;
+}
+
+.aftermath-bottom-card-background > .aftermath-bottom-card-frame {
+    transform: scale(1.2)  translate(0px, 18px);;
 }

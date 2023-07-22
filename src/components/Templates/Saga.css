@@ -3,30 +3,33 @@
     display: flex;
     flex-direction: row;
     justify-content: center; 
+    
 }
 
 .saga-frame-image {
     max-width: 96px;  
     height: auto;  
     background-color: #ccc;  /* Placeholder color, remove it when you add an image */
+    border: 2px solid green;
 }
 
 .saga-frame-image img {
     width: 100%;
-    height: auto;
+    height:  100%;
 }
 
 
 .saga-frame-text-box {
- width: 45%;  
- height: 270px;
+ width: 50%;  
+ height: 275px;
  background: #d3ded6;
  /* background-image: url(https://image.ibb.co/dFcNx7/tile_bg_2.jpg); */
  display: flex;
  flex-direction: column;
  justify-content: space-around; 
  box-sizing: border-box;
- font-size: .4em;
+ font-size: clamp(0.5em, 1em, 1.8em);
  position: relative;
+ border: 2px solid green;
 }
  

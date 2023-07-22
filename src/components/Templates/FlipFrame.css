@@ -10,8 +10,9 @@
  flex-direction: column;
  justify-content: space-around; 
  box-sizing: border-box;
- font-size: .4em;
+  font-size: clamp(0.2em, .65em, 1em);
  position: relative;
+  border: 2px solid green;
 }
 
 .flip-card-background {
@@ -23,4 +24,20 @@
  border-bottom-right-radius: 6px;
  background-color: #bbb;
  position: relative;
+}
+
+.flip-power-toughness {
+    position: absolute;
+    bottom: -12px; 
+    right: -5px; 
+    width: 35px; 
+    height: 17px; 
+    background-color: #ccc; 
+    border-radius: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    font-size: 3em;
+    z-index: 1;
 }
