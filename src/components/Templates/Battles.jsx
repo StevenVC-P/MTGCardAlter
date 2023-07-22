@@ -5,7 +5,7 @@ import "./Battles.css";
 const Battles = (props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
-    const {name, mana_cost, oracle_text, type_line, set } = source;
+    const {name, mana_cost, oracle_text, type_line, set, defense } = source;
     return (
         <div className="card-container">
             <div className="battle-card-background card-background">
@@ -22,7 +22,8 @@ const Battles = (props) => {
                             {set}
                         </div>
                         <div className="battle-frame-text-box">
-                            <p className="description ftb-inner-margin">{oracle_text}</p>
+                            <p className="oracle_text">{oracle_text}</p>
+                            <div className="defense">{defense}</div>
                         </div>
                 </div>
             </div>

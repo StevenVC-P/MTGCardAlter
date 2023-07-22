@@ -1,12 +1,12 @@
 /* These two styles rotate the card and postion them */
 .card-half-top {
-    transform: rotate(-90deg)  translate(0, 165px); 
+    transform: rotate(-90deg)  translate(0, 158px); 
     transform-origin: center left;
     order: 1;
 }
 
 .card-half-bottom {
-    transform: rotate(-90deg)  translate(-40px, 138px); 
+    transform: rotate(-90deg)  translate(-30px, 138px); 
     order: 2;
     transform-origin: bottom left;
 }
@@ -26,4 +26,22 @@
  display: flex;
  flex-direction: column;
  justify-content: space-between;
+}
+
+.frame-split-image {
+    width: 90%; 
+    height: 65%; 
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    border: 2px solid green;
+}
+
+.frame-split-image img {
+    width: 100%;
+    height: 100%;
+    object-fit:fill;
+    object-position: center;
+    vertical-align: bottom;
 }
