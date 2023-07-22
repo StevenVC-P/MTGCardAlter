@@ -9,7 +9,6 @@
  align-items: center;
  text-align: center;
  display:flex;
- font-size: 1.5em;
  border-radius: 6px;
  box-sizing: border-box;
  background: #171314;
@@ -55,27 +54,26 @@
     padding: 8px 0;
     justify-content: space-between;
     border-radius: 18px/40px;
-    font-size: clamp(0.2em, .2vw, .5em);
+    font-size: clamp(0.3em, .2em, .5em);
     position: relative;
-    height: 4px;
+    height: 2px;
     align-items: center;
     border: 2px solid green;
 }
 
 .name,
 .type {
- 
  margin-left: 5px;
  font-weight: 600;
 }
 
-.description, .flavour-text {
-    font-size: clamp(0.4em, .5vw, .8em);
+.oracle_text, .flavour-text {
+    font-size: clamp(0.2em, .6em, .8em);
 }
 
 .frame-image {
-    width: 90%; 
-    height: 65%; 
+    width: 91%; 
+    height: 47%; 
     position: relative;
     margin-left: auto;
     margin-right: auto;
@@ -113,7 +111,7 @@
 }
 
 .frame-text-box {
- margin: 0 8px;
+ margin: 0px 10px;
  height: 125px;
  background: #d3ded6;
  display: flex;
@@ -132,6 +130,7 @@
 
 p {
  margin-bottom: 1px;
+ margin-top: 0px;
 }
 
 .power-toughness {
@@ -146,5 +145,23 @@ p {
     justify-content: center;
     align-items: center;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
-    font-size: clamp(0.5em, .8vw, .8em);
+    font-size: clamp(0.9em, 1em, 2em);
+    z-index: 1;
 }
+
+.defense {
+    position: absolute;
+    bottom: -1px; 
+    right: 10px; 
+    width: 35px; 
+    height: 25px; 
+    background-color: #ccc; 
+    border-radius: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    font-size: clamp(0.5em, .8em, 2em);
+    z-index: 1;
+}
+

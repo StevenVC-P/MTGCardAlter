@@ -16,7 +16,7 @@ const Saga = (props) => {
                     </div>
                     <div className="saga-container">
                         <div className="saga-frame-text-box">
-                            <p className="description ftb-inner-margin">{oracle_text}</p>
+                            <p className="oracle_text">{oracle_text}</p>
                         </div>
                         <div className="saga-frame-image">
                             {imageData && <img src={`data:image/png;base64,${imageData.image}`} alt="Generated" />}
