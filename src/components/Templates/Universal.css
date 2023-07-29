@@ -67,7 +67,7 @@
  font-weight: 600;
 }
 
-.oracle_text, .flavour-text {
+.oracle_text, .saga_text, .flavour-text {
     font-size: clamp(0.2em, .6em, .8em);
 }
 
@@ -147,6 +147,8 @@ p {
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
     font-size: clamp(0.9em, 1em, 2em);
     z-index: 1;
+    border: 1px solid black;
+    font-size: clamp(0.5em, .8em, 2em);
 }
 
 .defense {
@@ -165,3 +167,25 @@ p {
     z-index: 1;
 }
 
+.planeswalker {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.planeswalker-cost-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1em; /* Adjust as needed */
+}
+
+.planeswalker-cost {
+    position: absolute;
+    font-size: 0.6em;  
+    color: white;  
+}
+
+.planeswalker.highlight {
+    background-color: rgba(186, 0, 0, 0.1); /* Adjust the rgba value as needed */
+}
