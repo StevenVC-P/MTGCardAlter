@@ -1,16 +1,13 @@
 .saga-container {
-    /* width: 95%;  Adjust as needed */
     display: flex;
     flex-direction: row;
     justify-content: center; 
-    
 }
 
 .saga-frame-image {
     max-width: 96px;  
     height: auto;  
-    background-color: #ccc;  /* Placeholder color, remove it when you add an image */
-    border: 2px solid green;
+    background-color: #ccc;
 }
 
 .saga-frame-image img {
@@ -18,18 +15,102 @@
     height:  100%;
 }
 
-
 .saga-frame-text-box {
  width: 50%;  
  height: 275px;
  background: #d3ded6;
- /* background-image: url(https://image.ibb.co/dFcNx7/tile_bg_2.jpg); */
  display: flex;
  flex-direction: column;
- justify-content: space-around; 
+ justify-content: flex-start; 
  box-sizing: border-box;
  font-size: clamp(0.5em, 1em, 1.8em);
  position: relative;
- border: 2px solid green;
 }
- 
+
+.roman-numeral {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: black; 
+    font-weight: bold;
+}
+
+.roman-numeral svg {
+    width: 30px;
+    height: 30px;
+    color: red;
+}
+
+.roman-numeral span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    font-size: 0.7em; 
+    z-index: 2;
+}
+
+.saga_oracle {
+    border-top: 1px solid #000;
+    padding-top:5px;
+    height: 90%;
+}
+
+.frame-type-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hex-icon {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.numeral-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* this is now horizontal alignment due to row direction */
+  justify-content: flex-start;
+  position: relative;
+  margin-right: .5em; /* add some space between the numeral and the text */
+}
+
+.numeral-container span {
+    /* Remove absolute positioning here */
+    font-size: 0.7em;
+}
+
+.numeral-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+.numeral-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+.abilities {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+}
+
+.ability {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content:  flex-start;
+  width: 100%;
+  flex: 1; /* share available height */
+}
