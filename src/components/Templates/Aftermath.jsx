@@ -1,4 +1,6 @@
 import React from 'react';
+import ManaCost from '../Shared/ManaCost';
+import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import "./Aftermath.css";
 
 //Compenent is a starting point for split card, currently works for cards such as Fire/Ice
@@ -12,7 +14,7 @@ const Aftermath = (props) => {
                     <div className="aftermath-card-frame">
                         <div className="frame-header">
                             <h1 className="name">{card_faces[0].name}</h1>
-                            {card_faces[0].mana_cost}
+                            <ManaCost manaCost={card_faces[0].mana_cost}/>
                         </div>
                         <div className="frame-split-image">
                             {imageData && imageData.firstImage && <img src={`data:image/png;base64,${imageData.firstImage}`} alt="First" />}
@@ -22,7 +24,7 @@ const Aftermath = (props) => {
                             {set}
                         </div>
                         <div className="aftermath-text-box">
-                            <p className="oracle_text">{card_faces[0].oracle_text}</p>
+                            <OracleTextCleaner text={card_faces[0].oracle_text}/>
                         </div>
                     </div>
                 </div>
@@ -32,7 +34,7 @@ const Aftermath = (props) => {
                     <div className="aftermath-bottom-card-frame">
                         <div className="frame-header">
                             <h1 className="name">{card_faces[1].name}</h1>
-                            {card_faces[1].mana_cost}
+                            <ManaCost manaCost={card_faces[1].mana_cost}/>
                         </div>
                         <div className="frame-split-image">
                             {imageData && imageData.secondImage && <img src={`data:image/png;base64,${imageData.secondImage}`} alt="Second" />}
@@ -42,7 +44,7 @@ const Aftermath = (props) => {
                             {set}
                         </div>
                         <div className="aftermath-bottom-text-box">
-                            <p className="oracle_text">{card_faces[1].oracle_text}</p>
+                            <OracleTextCleaner text={card_faces[1].oracle_text}/>
                         </div>
                     </div>
                 </div>
