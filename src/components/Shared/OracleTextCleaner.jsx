@@ -3,7 +3,7 @@
 import React from 'react';
 import { manaSymbols } from './ManaSymbols'; // adjust this path to point to your ManaSymbols.js
 
-const OracleTextCleaner = ({ text }) => {
+const OracleTextCleaner = ({ text, className }) => {
     if (!text) return null;
   // Regex to match the curly braces and the content inside them
   const regex = /{([^}]+)}/g;
@@ -32,9 +32,9 @@ const OracleTextCleaner = ({ text }) => {
     parts.push(text.slice(lastIndex));
   }
   return (
-    <p className="oracle_text">
-      {parts}
-    </p>
+        <p className={`oracle_text ${className || ''}`}>
+            {parts}
+        </p>
   );
 };
 
