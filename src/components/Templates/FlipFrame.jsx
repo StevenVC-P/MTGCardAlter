@@ -1,4 +1,6 @@
 import React from 'react';
+import ManaCost from '../Shared/ManaCost';
+import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import "./Universal.css";
 import "./FlipFrame.css";
 
@@ -13,10 +15,10 @@ const FlipFrame = (props) => {
                 <div className="card-frame">
                     <div className="frame-header">
                         <h1 className="name">{card_faces[0].name}</h1>
-                        {card_faces[0].mana_cost}
+                        <ManaCost manaCost={card_faces[0].mana_cost}/>
                     </div>
                     <div className="flip-frame-text-box">
-                        <p className="description ftb-inner-margin">{card_faces[0].oracle_text}</p>
+                        <OracleTextCleaner text={card_faces[0].oracle_text}/>
                     </div>
                     <div className="frame-type-line">
                         <h1 className="type">{card_faces[0].type_line}</h1>
@@ -34,7 +36,7 @@ const FlipFrame = (props) => {
                         )}
                     </div>
                     <div className="flip-frame-text-box flip">
-                        <p className="description ftb-inner-margin">{card_faces[1].oracle_text}</p>
+                        <OracleTextCleaner text={card_faces[1].oracle_text}/>
                     </div>
                     <div className="frame-header flip">
                         <h1 className="name">{card_faces[1].name}</h1>

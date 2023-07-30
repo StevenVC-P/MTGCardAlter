@@ -1,4 +1,6 @@
 import React from 'react';
+import ManaCost from '../Shared/ManaCost';
+import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import "./Universal.css";
@@ -31,6 +33,7 @@ const Saga = (props) => {
                             ))
                         }
                     </div>
+
                     <p className="oracle_text saga_oracle">{text}</p>
                 </div>
             );
@@ -46,7 +49,7 @@ const Saga = (props) => {
                 <div className="card-frame">
                     <div className="frame-header">
                         <h1 className="name">{name}</h1>
-                        {mana_cost}
+                        <ManaCost manaCost={mana_cost}/>
                     </div>
                     <div className="saga-container">
                         <div className="saga-frame-text-box">

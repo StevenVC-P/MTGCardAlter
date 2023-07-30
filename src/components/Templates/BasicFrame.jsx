@@ -1,6 +1,8 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
+import ManaCost from '../Shared/ManaCost';
+import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import "./Universal.css";
 import "./BasicFrame.css";
 
@@ -24,7 +26,7 @@ const BasicFrame = (props) => {
                 <div className="card-frame">
                     <div className="frame-header">
                         <h1 className="name">{name}</h1>
-                        {mana_cost}
+                        <ManaCost manaCost={mana_cost}/>
                     </div>
                     <div className="frame-image">
                         {imageData && <img src={`data:image/png;base64,${imageData.image}`} alt="Generated" />}
@@ -45,13 +47,13 @@ const BasicFrame = (props) => {
                                 </div>
                             ))
                         ) : (
-                            <p className="oracle_text">{oracle_text}</p>
+                            <OracleTextCleaner text={oracle_text}/>
                         )}
                         <p className="flavour-text">{flavor_text}</p>
                         {type_line.includes("Creature") || type_line.includes("Vehicle") ? (
                                 <div className="power-toughness">{power}/{toughness}</div>
                             ) : type_line.includes("Planeswalker") ? (
-                                <div className="power-toughness">{source.loyalty}</div>
+                                <div className="power-toughness">{loyalty}</div>
                             ) : null}
                     </div>
                 </div>
