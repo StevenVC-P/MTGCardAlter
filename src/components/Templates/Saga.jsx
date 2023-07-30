@@ -33,8 +33,8 @@ const Saga = (props) => {
                             ))
                         }
                     </div>
-
-                    <p className="oracle_text saga_oracle">{text}</p>
+                    <OracleTextCleaner className="oracle_text saga_oracle" text={text} />
+                    {/* <p className="oracle_text saga_oracle">{text}</p> */}
                 </div>
             );
         } 
