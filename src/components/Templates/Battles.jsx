@@ -1,4 +1,6 @@
 import React from 'react';
+import ManaCost from '../Shared/ManaCost';
+import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import "./Universal.css";
 import "./Battles.css";
 
@@ -12,7 +14,7 @@ const Battles = (props) => {
                 <div className="battle-card-frame">
                     <div className="battle-frame-header">
                         <h1 className="name">{name}</h1>
-                        {mana_cost}
+                        <ManaCost manaCost={mana_cost}/>
                     </div>
                         <div className="battle-frame-image">
                             {imageData && <img src={`data:image/png;base64,${imageData.image}`} alt="Generated" />}
@@ -22,7 +24,7 @@ const Battles = (props) => {
                             {set}
                         </div>
                         <div className="battle-frame-text-box">
-                            <p className="oracle_text">{oracle_text}</p>
+                            <OracleTextCleaner text={oracle_text}/>
                             <div className="defense">{defense}</div>
                         </div>
                 </div>

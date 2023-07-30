@@ -91,15 +91,13 @@
     object-position: center;
 }
 
-#mana-icon {
- font-size: 1.4em;
- background: #ADD3AC;
+.mana-icon {
  border-radius: 50%;
  box-sizing: border-box;
  box-shadow: -0.05em 0.12em 0px 0 black;
- margin-right: 5px;
- height: 20px;
+ height: 15px;
  align-self: center;
+ object-fit: cover
 }
 
 #set-icon {
