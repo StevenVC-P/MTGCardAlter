@@ -1,6 +1,7 @@
 import React from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
+import CardBackground from '../CardBackground';
 import "./Universal.css";
 import "./FlipFrame.css";
 
@@ -11,7 +12,7 @@ const FlipFrame = (props) => {
 
     return (
         <div className="card-container">
-            <div className="flip-card-background">
+            <CardBackground type_line={card_faces[0].type_line} colors={source.colors} mana_cost={card_faces[0].mana_cost}>
                 <div className="card-frame">
                     <div className="frame-header">
                         <h1 className="name">{card_faces[0].name}</h1>
@@ -43,7 +44,7 @@ const FlipFrame = (props) => {
                         {mana_cost}
                     </div>
                 </div>
-            </div>
+            </CardBackground>
         </div>
     )
 }
