@@ -21,13 +21,16 @@
 }
 
 .card-background {
- margin: 12% 2% 15% 2%;
+ margin: 10% 2% 15% 2%;
  border-radius: 6px;
  border-top-right-radius: 6px;
  border-bottom-left-radius: 8%;
  border-bottom-right-radius: 8%;
  background-color: #bbb;
  position: relative;
+ background-position: center;
+ background-repeat: no-repeat; /* Do not repeat the image */
+ background-size: cover; /* Resize the background image to cover the entire container */
 }
 
 .card-frame {
