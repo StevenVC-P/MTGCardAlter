@@ -1,16 +1,17 @@
 import React from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
+import CardBackground from '../CardBackground';
 import "./Universal.css";
 import "./Battles.css";
 
 const Battles = (props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
-    const {name, mana_cost, oracle_text, type_line, set, defense } = source;
+    const {name, mana_cost, oracle_text, type_line, set, defense, colors } = source;
     return (
         <div className="card-container">
-            <div className="battle-card-background card-background">
+            <CardBackground type_line={type_line} colors={colors} mana_cost={mana_cost} className={"battle-card-background"}>
                 <div className="battle-card-frame">
                     <div className="battle-frame-header">
                         <h1 className="name">{name}</h1>
@@ -28,7 +29,7 @@ const Battles = (props) => {
                             <div className="defense">{defense}</div>
                         </div>
                 </div>
-            </div>
+            </CardBackground>
         </div>
     )
 }
