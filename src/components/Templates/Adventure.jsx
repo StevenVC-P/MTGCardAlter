@@ -1,15 +1,17 @@
 import React from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
+import CardBackground from '../CardBackground';
 import "./Universal.css"
 import "./Adventure.css";
 
 const Adventure = (props) => {
     const {set, card_faces} = props.card;
     const imageData = props.imageData;
+
     return (
         <div className="card-container">
-            <div className="basic-card-background card-background">
+            <CardBackground type_line={card_faces[0].type_line} colors={card_faces[0].colors} mana_cost={card_faces[0].mana_cost}>
                 <div className="card-frame">
                     <div className="frame-header">
                         <h1 className="name">{card_faces[0].name}</h1>
@@ -43,7 +45,7 @@ const Adventure = (props) => {
                     </div>
                     
                 </div>
-            </div>
+            </CardBackground>
         </div>
     )
 }

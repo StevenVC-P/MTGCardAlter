@@ -1,6 +1,7 @@
 import React from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
+import CardBackground from '../CardBackground';
 import "./Aftermath.css";
 
 //Compenent is a starting point for split card, currently works for cards such as Fire/Ice
@@ -10,7 +11,7 @@ const Aftermath = (props) => {
     return (
         <div className="card-container">
             <div className="aftermath-card-half-top">
-                <div className="card-background aftermath-card-background">
+                <CardBackground type_line={card_faces[0].type_line} colors={card_faces[0].colors} mana_cost={card_faces[0].mana_cost} className ="aftermath-card-background">
                     <div className="aftermath-card-frame">
                         <div className="frame-header">
                             <h1 className="name">{card_faces[0].name}</h1>
@@ -27,10 +28,10 @@ const Aftermath = (props) => {
                             <OracleTextCleaner text={card_faces[0].oracle_text}/>
                         </div>
                     </div>
-                </div>
+                </CardBackground>
             </div>
             <div className="aftermath-card-half-bottom">
-                <div className="aftermath-bottom-card-background">
+                <CardBackground type_line={card_faces[1].type_line} colors={card_faces[1].colors} mana_cost={card_faces[1].mana_cost} className="aftermath-bottom-card-background">
                     <div className="aftermath-bottom-card-frame">
                         <div className="frame-header">
                             <h1 className="name">{card_faces[1].name}</h1>
@@ -47,7 +48,7 @@ const Aftermath = (props) => {
                             <OracleTextCleaner text={card_faces[1].oracle_text}/>
                         </div>
                     </div>
-                </div>
+                </CardBackground>
             </div>
         </div>
     )

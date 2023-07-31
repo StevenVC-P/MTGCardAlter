@@ -1,6 +1,7 @@
 import React from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
+import CardBackground from '../CardBackground';
 import "./Universal.css";
 import "./SplitFrame.css";
 
@@ -12,7 +13,7 @@ const SplitFrame = (props) => {
     return (
         <div className="card-container">
             <div className="card-half-top">
-                <div className="split-card-background card-background">
+                <CardBackground type_line={card_faces[1].type_line} colors={card_faces[1].colors} mana_cost={card_faces[1].mana_cost} className="split-card-background">
                     <div className="split-card-frame">
                         <div className="frame-header">
                             <h1 className="name">{card_faces[1].name}</h1>
@@ -29,10 +30,10 @@ const SplitFrame = (props) => {
                             <OracleTextCleaner text={card_faces[1].oracle_text}/>
                         </div>
                     </div>
-                </div>
+                </CardBackground>
             </div>
             <div className="card-half-bottom">
-                <div className="split-card-background card-background">
+                <CardBackground type_line={card_faces[0].type_line} colors={card_faces[0].colors} mana_cost={card_faces[0].mana_cost} className="split-card-background">
                     <div className="split-card-frame">
                         <div className="frame-header">
                             <h1 className="name">{card_faces[0].name}</h1>
@@ -49,7 +50,7 @@ const SplitFrame = (props) => {
                             <OracleTextCleaner text={card_faces[0].oracle_text}/>
                         </div>
                     </div>
-                </div>
+                </CardBackground>
             </div>
         </div>
     )

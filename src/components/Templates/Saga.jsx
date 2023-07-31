@@ -1,6 +1,7 @@
 import React from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
+import CardBackground from '../CardBackground';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import "./Universal.css";
@@ -9,7 +10,7 @@ import "./Saga.css";
 const Saga = (props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
-    const {name, mana_cost, oracle_text, type_line, set } = source;
+    const {name, mana_cost, oracle_text, type_line, set, colors } = source;
 
     const oracle_parts = oracle_text.split('\n');
     let saga_text = "";
@@ -44,7 +45,7 @@ const Saga = (props) => {
 
     return (
         <div className="card-container">
-            <div className="basic-card-background card-background">
+             <CardBackground type_line={type_line} colors={colors} mana_cost={mana_cost}>
                 <div className="card-frame">
                     <div className="frame-header">
                         <h1 className="name">{name}</h1>
@@ -66,7 +67,7 @@ const Saga = (props) => {
                         {set}
                     </div>
                 </div>
-            </div>
+            </CardBackground>
         </div>
     )
 }
