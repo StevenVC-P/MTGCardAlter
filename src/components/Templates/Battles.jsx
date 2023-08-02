@@ -1,7 +1,7 @@
 import React from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
-import CardBackground from '../CardBackground';
+import CardBackground from '../Shared/CardBackground';
 import "./Universal.css";
 import "./Battles.css";
 
