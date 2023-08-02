@@ -71,7 +71,7 @@
 }
 
 .oracle_text, .saga_text, .flavour-text {
-    font-size: clamp(0.2em, .6em, .8em);
+    font-size: clamp(0.2em, .5em, .8em);
 }
 
 .frame-image {
@@ -113,15 +113,14 @@
 
 .frame-text-box {
  margin: 0px 10px;
- height: 125px;
  background: #d3ded6;
  display: flex;
  flex-direction: column;
- justify-content: space-around; 
+ justify-content: flex-start;  /* Adjusted from space-around */ 
  box-sizing: border-box;
  position: relative;
  border: 2px solid green;
- max-height: 125px; 
+ height: 125px; 
 }
  
 .flavour-text {
@@ -178,7 +177,7 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 1em; /* Adjust as needed */
+    margin-right: .3em; /* Adjust as needed */
 }
 
 .planeswalker-cost {
@@ -189,4 +188,66 @@ p {
 
 .planeswalker.highlight {
     background-color: rgba(186, 0, 0, 0.1); /* Adjust the rgba value as needed */
+}
+
+.mana-cost {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.oracle_text .mana-icon {
+    height: 8px; /* adjust this value to suit your needs */
+}
+
+.ability {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.ability-cost-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1em; /* Adjust as needed */
+}
+
+.ability-cost {
+    position: absolute;
+    font-size: 0.6em;  
+    color: white;  
+}
+
+.planeswalker_abilities {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+}
+
+.levels {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}
+
+.level-stats {
+    min-width: 25px; 
+    height: 17px; 
+    background-color: #ccc; 
+    border-radius: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    border: 1px solid black;
+    font-size: clamp(0.5em, .8em, 2em);
 }

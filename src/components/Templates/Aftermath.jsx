@@ -1,7 +1,7 @@
 import React from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
-import CardBackground from '../CardBackground';
+import CardBackground from '../Shared/CardBackground';
 import "./Aftermath.css";
 
 //Compenent is a starting point for split card, currently works for cards such as Fire/Ice

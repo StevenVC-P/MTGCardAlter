@@ -18,7 +18,7 @@ const OracleTextCleaner = ({ text, className }) => {
     }
 
     // Remove "/" from the match result and convert to uppercase
-    const iconName = matches[1].replace("/", "").toUpperCase();
+    const iconName = matches[1].replace(/\//g, "").toUpperCase();
     const iconPath = manaSymbols[`${iconName}.jpg`];
 
     // Add image in place of the match

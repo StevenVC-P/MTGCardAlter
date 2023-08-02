@@ -106,7 +106,7 @@
   height: 100%;
 }
 
-.ability {
+.saga_ability {
   display: flex;
   flex-direction: row;
   align-items: stretch;
