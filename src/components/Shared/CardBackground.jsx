@@ -1,9 +1,9 @@
 import React from 'react';
-import { importAll } from './Utils/utils';
+import { importAll } from '../Utils/utils';
 
 // Get all images from the backgrounds directory
-export const backgroundsSolid = importAll(require.context('../assets/Backgrounds/solid', false, /\.(png|jpe?g|svg)$/));
-export const backgroundsHybrid = importAll(require.context('../assets/Backgrounds/hybrid', false, /\.(png|jpe?g|svg)$/));
+export const backgroundsSolid = importAll(require.context('../../assets/Backgrounds/solid', false, /\.(png|jpe?g|svg)$/));
+export const backgroundsHybrid = importAll(require.context('../../assets/Backgrounds/hybrid', false, /\.(png|jpe?g|svg)$/));
 
 // Map color initials to full color names
 const colorMap = {

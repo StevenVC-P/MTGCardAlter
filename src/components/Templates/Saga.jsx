@@ -1,7 +1,7 @@
 import React from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
-import CardBackground from '../CardBackground';
+import CardBackground from '../Shared/CardBackground';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import "./Universal.css";
@@ -23,7 +23,7 @@ const Saga = (props) => {
             const text = part.replace(/((I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV|XVI|XVII|XVIII|XIX|XX),?\s*)+—/g, '').trim();
             const splitNumerals = numerals[0].split(',').map(num => num.replace(/[\s—]/g, '').trim());
             abilities.push(
-                <div className="ability" key={index}>
+                <div className="saga_ability" key={index}>
                     <div className="roman-numeral">
                         {
                             splitNumerals.map((numeral, numIndex) => (
