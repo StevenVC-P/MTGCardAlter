@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
 import { getBorderStyle } from '../Shared/Borders';
+import html2canvas from 'html2canvas'
+import { jsPDF } from 'jspdf';
 import "./Universal.css"
 import "./Adventure.css";
 
@@ -10,8 +12,24 @@ const Adventure = (props) => {
     const {set, card_faces, colors} = props.card;
     const imageData = props.imageData;
 
+    const cardRef = useRef(null); // Step 1
+
+    useEffect(() => {
+        if (imageData && cardRef.current) {
+            html2canvas(cardRef.current).then((canvas) => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF();
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save("download.pdf");
+            });
+        }
+    }, [imageData]);
+
     return (
-        <div className="card-container">
+        <div className="card-container" ref={cardRef}>
             <CardBackground type_line={card_faces[0].type_line} colors={card_faces[0].colors} mana_cost={card_faces[0].mana_cost}>
                 <div className="card-frame">
                     <div className="frame-header card-color-border" style={getBorderStyle(colors, card_faces[0].mana_cost)}>
