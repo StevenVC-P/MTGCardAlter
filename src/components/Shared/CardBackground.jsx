@@ -77,7 +77,7 @@ const CardBackground = ({ children, type_line, colors, mana_cost, className }) =
     
     const backgroundImage = getBackgroundImage();
     return (
-        <div className={`card-background ${className || ''}`} style={{ backgroundImage: `url(${backgroundImage})` }}>
+        <div className={`card-background ${className || ''}`} style={{ backgroundImage: `url(${backgroundImage})`, zIndex: 0}}>
             {children}
         </div>
     );
