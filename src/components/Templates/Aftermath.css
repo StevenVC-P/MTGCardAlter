@@ -22,11 +22,7 @@
 .aftermath-bottom-card-background {
  height: 235px;
  width: 105px;
- margin: 1% 2% 15% 2%;
- border-radius: 6px;
- border-top-right-radius: 6px;
- border-bottom-left-radius: 8%;
- border-bottom-right-radius: 8%;
+ margin-left: 5px ;
  background-color: #bbb;
  position: absolute;
 }
@@ -53,7 +49,6 @@
  flex-direction: column;
  justify-content: space-around; 
  box-sizing: border-box;
- border: 2px solid green;
  overflow: hidden;
 }
 
@@ -68,10 +63,9 @@
  flex-direction: column;
  justify-content: space-around; 
  box-sizing: border-box;
- border: 2px solid green;
  overflow: hidden;
 }
 
 .aftermath-bottom-card-background > .aftermath-bottom-card-frame {
-    transform: scale(1.2)  translate(0px, 18px);;
+    transform: scale(1.2)  translate(0px, 12px);;
 }
