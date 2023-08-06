@@ -11,9 +11,7 @@ const ManaCost = ({ manaCost }) => {
     let manaIcons = [];
 
     while ((matches = regex.exec(manaCost)) !== null) {
-        console.log("steve", matches[1])
         const iconName = matches[1].replace(/\//g, "").toUpperCase();
-        // console.log("steve ", iconName)
         const iconPath = manaSymbols[`${iconName}.jpg`];
         manaIcons.push(
             <img key={matches.index} src={`${iconPath}`} alt={iconName} className="mana-icon"/>
