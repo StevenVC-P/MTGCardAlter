@@ -59,7 +59,6 @@ const CardForm = () => {
 
         const response = await axios.get(`http://localhost:5000/api/cards/${sanitizedCardName}`);
         let imageData = await generateImageForCard(response);
-        console.log(imageData)
         // Creating new card objects based on the quantity
         for(let i = 0; i < quantity; i++) {
           // Creating a unique key for each card object
