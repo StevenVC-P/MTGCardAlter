@@ -56,22 +56,19 @@
     width: 93%; /* or whatever percentage or pixel value you prefer */
     padding: 8px 0;
     justify-content: space-between;
-    border-radius: 18px/40px;
+    border-radius: 18px/40px !important;
     font-size: clamp(0.3em, .2em, .5em);
     position: relative;
     height: 2px;
     align-items: center;
-    border: 2px solid green;
+    z-index: 1;
 }
 
 .name,
 .type {
  margin-left: 5px;
  font-weight: 600;
-}
-
-.oracle_text, .saga_text, .flavour-text {
-    font-size: clamp(0.2em, .5em, .8em);
+ border-radius: 50% !important;
 }
 
 .frame-image {
@@ -81,7 +78,7 @@
     margin-left: auto;
     margin-right: auto;
     box-sizing: border-box;
-    border: 2px solid green;
+    z-index: 0;
 }
 
 .frame-image img {
@@ -99,8 +96,16 @@
  box-sizing: border-box;
  box-shadow: -0.05em 0.12em 0px 0 black;
  height: 15px;
- align-self: center;
- object-fit: cover
+ object-fit: cover;
+   margin: 0;
+  padding: 0;
+  display: inline-block;
+  vertical-align: middle;
+ 
+}
+
+.mana-icon {
+  vertical-align: px; /* or '-2px', etc. */
 }
 
 #set-icon {
@@ -116,11 +121,11 @@
  background: #d3ded6;
  display: flex;
  flex-direction: column;
- justify-content: flex-start;  /* Adjusted from space-around */ 
  box-sizing: border-box;
  position: relative;
- border: 2px solid green;
  height: 125px; 
+ justify-content: space-around;
+ align-items: space-around;
 }
  
 .flavour-text {
@@ -131,6 +136,7 @@
 p {
  margin-bottom: 1px;
  margin-top: 0px;
+ height: 100%; 
 }
 
 .power-toughness {
@@ -145,8 +151,7 @@ p {
     justify-content: center;
     align-items: center;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
-    font-size: clamp(0.9em, 1em, 2em);
-    z-index: 1;
+    z-index: 2;
     border: 1px solid black;
     font-size: clamp(0.5em, .8em, 2em);
 }
@@ -154,10 +159,11 @@ p {
 .defense {
     position: absolute;
     bottom: -1px; 
-    right: 10px; 
+    right: -10px; 
     width: 35px; 
     height: 25px; 
     background-color: #ccc; 
+    border: 1px solid black;
     border-radius: 5%;
     display: flex;
     justify-content: center;
@@ -196,10 +202,6 @@ p {
     justify-content: flex-start;
     align-items: center;
     flex-wrap: nowrap;
-}
-
-.oracle_text .mana-icon {
-    height: 8px; /* adjust this value to suit your needs */
 }
 
 .ability {
@@ -250,4 +252,42 @@ p {
     z-index: 1;
     border: 1px solid black;
     font-size: clamp(0.5em, .8em, 2em);
+}
+
+.card-color-border::before {
+    content: "";
+    position: absolute;
+    top: -1.5px;
+    left: -1.5px;
+    right: -1.5px;
+    bottom: -1.5px;
+    border: 1px solid black;
+    z-index: 2;
+    border-radius: 18px/40px;
+    box-sizing: border-box;
+}
+
+.card-color-border-square::before {
+    content: "";
+    position: absolute;
+    top: -1.5px;
+    left: -1.5px;
+    right: -1.5px;
+    bottom: -1.5px;
+    border: 1px solid black;
+    z-index: 1;
+    box-sizing: border-box;
+}
+
+.textcontainer {
+  display: flex;
+  flex-direction: column; /* Align children vertically */
+  justify-content: space-around; /* Spread children evenly with space around them */
+  align-items: center; /* Center children horizontally */
+  height: 100%;
+}
+
+.flavor-text {
+    font-style: italic;
+    /* Other styling as needed... */
 }
