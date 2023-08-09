@@ -45,7 +45,7 @@ export const stylingFormatter = (type_line, className, text) => {
       styles.flexDirection = 'column';
       styles.iconSize = '8px';
     } else if (text.length > 200) {
-      styles.fontSize = '0.55em';
+      styles.fontSize = '0.45em';
       styles.flexDirection = 'column';
       styles.alignItems = 'space-around';
       styles.iconSize = '8px';

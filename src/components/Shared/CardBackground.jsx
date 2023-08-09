@@ -1,10 +1,28 @@
 import React from 'react';
-import { importAll } from '../Utils/utils';
 
-// Get all images from the backgrounds directory
-export const backgroundsSolid = importAll(require.context('../../assets/Backgrounds/solid', false, /\.(png|jpe?g|svg)$/));
-export const backgroundsHybrid = importAll(require.context('../../assets/Backgrounds/hybrid', false, /\.(png|jpe?g|svg)$/));
+export const backgroundsSolid = {
+    'White': 'Backgrounds/solid/White.jpg',
+    'Blue': 'Backgrounds/solid/Blue.jpg',
+    'Black': 'Backgrounds/solid/Black.jpg',
+    'Red': 'Backgrounds/solid/Red.jpg',
+    'Green': 'Backgrounds/solid/Green.jpg',
+    'Land': 'Backgrounds/solid/Land.jpg',
+    'Artifact': 'Backgrounds/solid/Artifact.jpg',
+    'Gold': 'Backgrounds/solid/Gold.jpg',
+};
 
+export const backgroundsHybrid = {
+    'BG': 'Backgrounds/hybrid/BG.jpg',
+    'BR': 'Backgrounds/hybrid/BR.jpg',
+    'GU': 'Backgrounds/hybrid/GU.jpg',
+    'GW': 'Backgrounds/hybrid/GW.jpg',
+    'RG': 'Backgrounds/hybrid/RG.jpg',
+    'RW': 'Backgrounds/hybrid/RW.jpg',
+    'UB': 'Backgrounds/hybrid/UB.jpg',
+    'UR': 'Backgrounds/hybrid/UR.jpg',
+    'WB': 'Backgrounds/hybrid/WB.jpg',
+    'WU': 'Backgrounds/hybrid/WU.jpg',
+};
 // Map color initials to full color names
 const colorMap = {
     'W': 'White',
@@ -17,10 +35,10 @@ const colorMap = {
 const CardBackground = ({ children, type_line, colors, mana_cost, className }) => {
     const getBackgroundImage = () => {
         if (type_line.includes('Land')) {
-            return backgroundsSolid['Land.jpg'];
+            return backgroundsSolid['Land'];
         }
         else if (type_line.includes('Artifact')) {
-            return backgroundsSolid['Artifact.jpg'];
+            return backgroundsSolid['Artifact'];
         }
         else {
             const costElements = mana_cost ? mana_cost.match(/{[^}]+}/g) : [];
@@ -59,25 +77,25 @@ const CardBackground = ({ children, type_line, colors, mana_cost, className }) =
             }
 
             if (Array.from(manaColors).sort().join("") !== Array.from(hybridColors).sort().join("") && hybridColors.length !== 0 ) {
-                return backgroundsSolid['Gold.jpg'];
+                return backgroundsSolid['Gold'];
             } 
             else if (hybridColors.length === 1 && manaColors.size !== 1) {
                 const colorPair = hybridColors[0].charAt(0) + hybridColors[0].charAt(1);
-                return backgroundsHybrid[`${colorPair}.jpg`];
+                return backgroundsHybrid[`${colorPair}`];
             } 
             else if (hybridColors.length > 1 || manaColors.size > 1) {
-                return backgroundsSolid['Gold.jpg'];
+                return backgroundsSolid['Gold'];
             }
             else {
                 const color = colorMap[Array.from(manaColors)[0]];
-                return backgroundsSolid[`${color}.jpg`];
+                return backgroundsSolid[`${color}`];
             }
         }
     }
     
     const backgroundImage = getBackgroundImage();
     return (
-        <div className={`card-background ${className || ''}`} style={{ backgroundImage: `url(${backgroundImage})`, zIndex: 0}}>
+        <div className={`${className || ''}`} style={{ backgroundImage: `url(${backgroundImage})`, zIndex: 0}}>
             {children}
         </div>
     );

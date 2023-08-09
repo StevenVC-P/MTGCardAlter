@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback  } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
@@ -6,46 +6,60 @@ import { getBorderStyle } from '../Shared/Borders';
 import "./Universal.css"
 import "./Adventure.css";
 
-const Adventure = (props) => {
-    const {set, card_faces, colors} = props.card;
-    const imageData = props.imageData;
+const AdventureComponent  = (props) => {
+  const {set, card_faces, colors} = props.card;
+  const imageData = props.imageData;
 
-    const [fullImageData, setFullImageData] = useState(null);
-    const cardContainerRef = useRef(null);
+  const [fullImageData, setFullImageData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [hasConverted, setHasConverted] = useState(false);
+  const cardContainerRef = useRef(null);
 
-    useEffect(() => {
-    async function convertCardToImage() {
-        if (!props.imageData) {
-            return;
-        }
+  const convertCardToImage = useCallback(async () => {
+    if (!loading && !fullImageData) {
+        setLoading(true);
         if (cardContainerRef.current) {
             const cardHTML = cardContainerRef.current.outerHTML;
             try {
-            const response = await fetch("http://localhost:5000/api/convert-to-image", {
+                const response = await fetch("http://localhost:5000/api/convert-to-image", {
                 method: "POST",
                 headers: {
-                "Content-Type": "application/json",
+                    "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ htmlContent: cardHTML }),
-            });
+                body: JSON.stringify({
+                    htmlContent: cardHTML,
+                    type_line: card_faces[0].type_line,
+                    colors: card_faces[0].colors,
+                    mana_cost: card_faces[0].mana_cost,
+                }),
+                });
 
-            const data = await response.json();
-            setFullImageData(`data:image/png;base64,${data.image}`);
+                const data = await response.json();
+                setFullImageData(`data:image/png;base64,${data.image}`);
+                setHasConverted(true); // Add this line
             } catch (error) {
-            console.error("Error converting to image:", error);
+                console.error("Error converting to image:", error);
             }
-        }
-    }
+            setLoading(false);
+            }
+        };
+    }, [loading, fullImageData, card_faces, ]);
 
-    convertCardToImage();
-  }, [props.card, props.imageData]);
+    const hasConvertedRef = useRef(false);
+
+    useEffect(() => {
+    if (!hasConverted && !fullImageData && props.imageData) {
+        convertCardToImage();
+        hasConvertedRef.current = true;
+    }
+    }, [fullImageData, props.imageData, convertCardToImage, hasConverted]); 
 
     return (
         <div className="card-container" ref={cardContainerRef}>
         {fullImageData ? (
             <img src={fullImageData} alt="Card" />
         ) : (
-            <CardBackground type_line={card_faces[0].type_line} colors={card_faces[0].colors} mana_cost={card_faces[0].mana_cost}>
+            <CardBackground className= {"card-background"} type_line={card_faces[0].type_line} colors={card_faces[0].colors} mana_cost={card_faces[0].mana_cost}>
                 <div className="card-frame">
                     <div className="frame-header card-color-border" style={getBorderStyle(colors, card_faces[0].mana_cost)}>
                         <h1 className="name">{card_faces[0].name}</h1>
@@ -85,5 +99,11 @@ const Adventure = (props) => {
     </div>
   );
 };
+
+const arePropsEqual = (prevProps, nextProps) => {
+  return prevProps.imageData === nextProps.imageData;
+};
+
+const Adventure = React.memo(AdventureComponent, arePropsEqual);
 
 export default Adventure;
