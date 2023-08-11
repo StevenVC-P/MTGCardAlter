@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
 import { getBorderStyle } from '../Shared/Borders';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
+import domtoimage from 'dom-to-image';
 import "./Universal.css";
 import "./Saga.css";
 
@@ -17,7 +18,30 @@ const Saga = (props) => {
     let saga_text = "";
     let abilities = [];
 
+    const cardRef = useRef(null);
+    const [imageURL, setImageURL] = useState(null);
 
+    useEffect(() => {
+    let isCancelled = false;
+
+    if (imageData && cardRef.current) {
+        domtoimage.toPng(cardRef.current)
+            .then((imgData) => {
+                if (!isCancelled) {
+                    setImageURL(imgData);
+                }
+            })
+            .catch((error) => {
+                if (!isCancelled) {
+                    console.error('Error generating image:', error);
+                }
+            });
+    }
+
+    return () => {
+        isCancelled = true;
+    };
+    }, [imageData]);
     
     oracle_parts.forEach((part, index) => {
         const romanNumeralRegex = /^((I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV|XVI|XVII|XVIII|XIX|XX),?\s*)+—/;
@@ -47,8 +71,10 @@ const Saga = (props) => {
         }
     });
 
-    return (
-        <div className="card-container">
+    return imageURL ? (
+        <img src={imageURL} alt="Generated Card" />
+    ) : (
+        <div className="card-container" ref={cardRef}>
              <CardBackground type_line={type_line} colors={colors} mana_cost={mana_cost}>
                 <div className="card-frame">
                     <div className="frame-header card-color-border" style={getBorderStyle(colors)}>

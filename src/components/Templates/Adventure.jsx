@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
 import { getBorderStyle } from '../Shared/Borders';
+import domtoimage from 'dom-to-image';
 import "./Universal.css"
 import "./Adventure.css";
 
@@ -10,8 +11,35 @@ const Adventure = (props) => {
     const {set, card_faces, colors} = props.card;
     const imageData = props.imageData;
 
-    return (
-        <div className="card-container">
+    const cardRef = useRef(null);
+    const [imageURL, setImageURL] = useState(null);
+
+    useEffect(() => {
+    let isCancelled = false;
+
+    if (imageData && cardRef.current) {
+        domtoimage.toPng(cardRef.current)
+            .then((imgData) => {
+                if (!isCancelled) {
+                    setImageURL(imgData);
+                }
+            })
+            .catch((error) => {
+                if (!isCancelled) {
+                    console.error('Error generating image:', error);
+                }
+            });
+    }
+
+    return () => {
+        isCancelled = true;
+    };
+    }, [imageData]);
+
+    return imageURL ? (
+        <img src={imageURL} alt="Generated Card" />
+    ) : (
+        <div className="card-container" ref={cardRef}>
             <CardBackground type_line={card_faces[0].type_line} colors={card_faces[0].colors} mana_cost={card_faces[0].mana_cost}>
                 <div className="card-frame">
                     <div className="frame-header card-color-border" style={getBorderStyle(colors, card_faces[0].mana_cost)}>

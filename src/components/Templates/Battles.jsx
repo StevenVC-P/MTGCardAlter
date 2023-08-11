@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
 import { getBorderStyle } from '../Shared/Borders';
+import domtoimage from 'dom-to-image';
 import "./Universal.css";
 import "./Battles.css";
 
@@ -10,8 +11,36 @@ const Battles = (props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
     const {name, mana_cost, oracle_text, type_line, set, defense, colors } = source;
-    return (
-        <div className="card-container">
+
+    const cardRef = useRef(null);
+    const [imageURL, setImageURL] = useState(null);
+
+    useEffect(() => {
+    let isCancelled = false;
+
+    if (imageData && cardRef.current) {
+        domtoimage.toPng(cardRef.current)
+            .then((imgData) => {
+                if (!isCancelled) {
+                    setImageURL(imgData);
+                }
+            })
+            .catch((error) => {
+                if (!isCancelled) {
+                    console.error('Error generating image:', error);
+                }
+            });
+    }
+
+    return () => {
+        isCancelled = true;
+    };
+    }, [imageData]);
+
+    return imageURL ? (
+        <img src={imageURL} alt="Generated Card" />
+    ) : (
+        <div className="card-container" ref={cardRef}>
             <CardBackground type_line={type_line} colors={colors} mana_cost={mana_cost} className={"battle-card-background"}>
                 <div className="battle-card-frame">
                     <div className="battle-frame-header card-color-border" style={getBorderStyle(colors)}>
