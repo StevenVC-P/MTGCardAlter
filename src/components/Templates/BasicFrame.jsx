@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
 import { getBorderStyle } from '../Shared/Borders';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
+import domtoimage from 'dom-to-image';
 import "./Universal.css";
 import "./BasicFrame.css";
 
@@ -13,8 +14,33 @@ const BasicFrame = (props) => {
     const imageData = props.imageData;
     const {name, mana_cost, oracle_text, type_line, set, power, toughness, loyalty, colors, flavor_text } = source;
 
+    const cardRef = useRef(null);
+    const [imageURL, setImageURL] = useState(null);
+
     let planeswalker_text = "";
     let abilities = [];
+
+    useEffect(() => {
+    let isCancelled = false;
+
+    if (imageData && cardRef.current) {
+        domtoimage.toPng(cardRef.current)
+            .then((imgData) => {
+                if (!isCancelled) {
+                    setImageURL(imgData);
+                }
+            })
+            .catch((error) => {
+                if (!isCancelled) {
+                    console.error('Error generating image:', error);
+                }
+            });
+    }
+
+    return () => {
+        isCancelled = true;
+    };
+    }, [imageData]);
 
     function escapeRegex(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -78,13 +104,15 @@ const BasicFrame = (props) => {
         });
     }
 
-    return (
-        <div className="card-container">
+    return imageURL ? (
+        <img src={imageURL} alt="Generated Card" />
+    ) : (
+        <div className="card-container" ref={cardRef}>
             <CardBackground type_line={type_line} colors={colors} mana_cost={mana_cost} className={"basic-card-background"}>
                 <div className="card-frame">
                     <div className="frame-header card-color-border" style={getBorderStyle(colors, mana_cost)}>
-                        <h1 className="name">{name}</h1>
-                        <ManaCost manaCost={mana_cost}/>
+                            <h1 className="name">{name}</h1>
+                            <ManaCost manaCost={mana_cost}/>
                     </div>
                     <div className="frame-image card-color-border-square" style={getBorderStyle(colors, mana_cost)}>
                         {imageData && <img src={`data:image/png;base64,${imageData.image}`} alt="Generated" />}
@@ -94,32 +122,32 @@ const BasicFrame = (props) => {
                         {set}
                     </div>
                     <div className="frame-text-box card-color-border-square" style={getBorderStyle(colors, mana_cost)}>
-                       {type_line.includes("Planeswalker") ? (
-                            <React.Fragment>
-                                {planeswalker_text &&<OracleTextCleaner text={planeswalker_text} className="planeswalker_text" /> }
-                                <div className="planeswalker_abilities">
-                                    {abilities}
-                                </div>
-                            </React.Fragment>
-                        ) : type_line.includes("Creature") && oracle_text.includes("Level up") ? (
-                            <div className="levels">
-                                {levels}
-                            </div>
-                        ) : (
-                            <React.Fragment>
-                                <OracleTextCleaner className="card-color-border-square" text={oracle_text} />
-                                {flavor_text && (
-                                    <div className="flavor-text">
-                                        <OracleTextCleaner text={flavor_text} />
+                        {type_line.includes("Planeswalker") ? (
+                                <React.Fragment>
+                                    {planeswalker_text &&<OracleTextCleaner text={planeswalker_text} className="planeswalker_text" /> }
+                                    <div className="planeswalker_abilities">
+                                        {abilities}
                                     </div>
-                                )}
-                                {(type_line.includes("Creature") || type_line.includes("Vehicle")) && !oracle_text.includes("Level up") ? (
-                                    <div className="power-toughness">{power}/{toughness}</div>
-                                ) : type_line.includes("Planeswalker") ? (
-                                    <div className="power-toughness">{loyalty}</div>
-                                ) : null}
-                            </React.Fragment>
-                        )}
+                                </React.Fragment>
+                            ) : type_line.includes("Creature") && oracle_text.includes("Level up") ? (
+                                <div className="levels">
+                                    {levels}
+                                </div>
+                            ) : (
+                                <React.Fragment>
+                                    <OracleTextCleaner className="card-color-border-square" text={oracle_text} />
+                                    {flavor_text && (
+                                        <div className="flavor-text">
+                                            <OracleTextCleaner text={flavor_text} />
+                                        </div>
+                                    )}
+                                    {(type_line.includes("Creature") || type_line.includes("Vehicle")) && !oracle_text.includes("Level up") ? (
+                                        <div className="power-toughness">{power}/{toughness}</div>
+                                    ) : type_line.includes("Planeswalker") ? (
+                                        <div className="power-toughness">{loyalty}</div>
+                                    ) : null}
+                                </React.Fragment>
+                            )}
                     </div>
                 </div>
             </CardBackground>
