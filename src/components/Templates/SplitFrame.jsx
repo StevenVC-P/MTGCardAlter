@@ -1,18 +1,46 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
 import { getBorderStyle } from '../Shared/Borders';
+import domtoimage from 'dom-to-image';
 import "./Universal.css";
 import "./SplitFrame.css";
 
 //Compenent is a starting point for split card, currently works for cards such as Fire/Ice
 const SplitFrame = (props) => {
-    const {set, card_faces, colors} = props.card;
+    const {set, card_faces} = props.card;
     const imageData = props.imageData;
-// style={getBorderStyle(card_faces[1].colors)}
-    return (
-        <div className="card-container">
+
+    const cardRef = useRef(null);
+    const [imageURL, setImageURL] = useState(null);
+
+    useEffect(() => {
+    let isCancelled = false;
+
+    if (imageData && cardRef.current) {
+        domtoimage.toPng(cardRef.current)
+            .then((imgData) => {
+                if (!isCancelled) {
+                    setImageURL(imgData);
+                }
+            })
+            .catch((error) => {
+                if (!isCancelled) {
+                    console.error('Error generating image:', error);
+                }
+            });
+    }
+
+    return () => {
+        isCancelled = true;
+    };
+    }, [imageData]);
+
+    return imageURL ? (
+        <img src={imageURL} alt="Generated Card" />
+    ) : (
+        <div className="card-container" ref={cardRef}>
             <div className="card-half-top">
                 <CardBackground type_line={card_faces[1].type_line} colors={card_faces[1].colors} mana_cost={card_faces[1].mana_cost} className="split-card-background">
                     <div className="split-card-frame" >
