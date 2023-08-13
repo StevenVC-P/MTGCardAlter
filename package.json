@@ -49,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4"
