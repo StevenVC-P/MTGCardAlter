@@ -9,14 +9,14 @@ import Saga from "./Templates/Saga";
 import CardInputForm from "../components/Inputs/CardInputForms"; 
 
 // Main function component for the form
-const CardForm = () => {
+const CardForm = ({ sidebarText, sidebarWeight }) => {
   // Using React's useState hook for managing state
   const [cardData, setCardData] = useState([]);
   const [images, setImages] = useState({});
 
   return (
-    <div>
-      <CardInputForm setCardData={setCardData} setImages={setImages} />
+    <div className="card-form-container">
+      <CardInputForm setCardData={setCardData} setImages={setImages} sidebarText={sidebarText} sidebarWeight={sidebarWeight}/>
       <div id="card-results">
         {cardData.map((card) => {
           const imageData = images[card.imageKey];

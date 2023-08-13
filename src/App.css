@@ -4,11 +4,22 @@ body {
   font-family: Arial, sans-serif;
   text-align: center;
   padding-top: 50px;
+  margin: 0; /* To remove default margins */
+    height: 100%;
 }
 
+
 .container {
-  max-width: 90%;  /* Adjust as needed */
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+ /* To stack Header and content vertically */
+}
+
+.content {
+  flex-grow: 1; /* Allow content to grow and take up remaining space */
+  display: flex;
+  height: 100%;
 }
 
 .header {
@@ -67,4 +78,33 @@ body {
   flex-wrap: wrap;
   justify-content: flex-start;  /* Align items to the left */
   gap: 10px;  /* Adjust as needed */
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  flex-shrink: 0;
+  height: 100%;
+  position: fixed; /* Prevent shrinking */
+}
+
+.card-form-container { /* Apply this class to the CardForm component */
+  flex-grow: 1; /* Allow it to take up the remaining available width */
+  margin-left: 200px;
+}
+
+.sidebar textarea {
+  width: 100%;
+  padding: 5px;
+  background-color: #333;
+  border: none;
+  color: #fff;
+  resize: none; /* Prevent resizing */
+}
+
+.sidebar label {
+  display: block;
+  margin-bottom: 10px;
 }
