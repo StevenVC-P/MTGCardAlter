@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import generateImageForCard from '../../helpers/imgGenerator';
 
-const CardInputForm = ({ setCardData, setImages }) => {
+const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight }) => {
   const [cardNames, setCardNames] = useState([]);
   const [cardCounts, setCardCounts] = useState({});
 
@@ -46,7 +46,7 @@ const CardInputForm = ({ setCardData, setImages }) => {
           let {quantity, sanitizedCardName} = sanitizeInput(cardName);
 
           const response = await axios.get(`http://localhost:5000/api/cards/${sanitizedCardName}`);
-          let imageData = await generateImageForCard(response);
+          let imageData = await generateImageForCard(response, sidebarText, sidebarWeight);
 
           // Creating new card objects based on the quantity
           for(let i = 0; i < quantity; i++) {
