@@ -3,7 +3,7 @@
 import generateImage from "./ImgDataFormatter";
 import setThemes from "../assets/Misc/mtg_set_themes.json";
 
-export default async function generateImageForCard(cardData) {
+export default async function generateImageForCard(cardData, sidebarText, sidebarWeight) {
   const { name, color_identity, type_line, layout, card_faces, keywords, all_parts, set_name, flavor_text } = cardData.data;
   const colorCodeToName = {
     W: "White",
@@ -12,6 +12,8 @@ export default async function generateImageForCard(cardData) {
     B: "Black",
     U: "Blue",
   };
+
+
 
   const colorNamesEach = color_identity.map((colorCode) => colorCodeToName[colorCode]);
   const colorNames = colorNamesEach.join(", ");
@@ -61,23 +63,30 @@ export default async function generateImageForCard(cardData) {
     return Array.from(groupedPrompts.values());
   }
 
+  sidebarWeight /= 10;
 
   //if the layout is split, generate two images.
   if (keywords.includes("Aftermath")) {
-    const firstImagePrompts = [{ text: card_faces[0].name, weight: 1.0 },
+    const firstImagePrompts = [
+      { text: card_faces[0].name, weight: 1.0 },
       { text: colorNames, weight: 0.8 },
       { text: card_faces[0].type_line, weight: 0.8 },
       { text: tokenPrompts, weight: 0.8 },
-      { text: themes, weight: 0.5 }];
+      { text: themes, weight: 0.5 },
+      { text: sidebarText, weight: sidebarWeight},
+    ];
 
     const firstCombinedPrompts = combinePromptsByWeight(firstImagePrompts);
     const firstImage = await generateImage(firstCombinedPrompts, 576, 1600);
 
-    const secondImagePrompts = [{ text: card_faces[1].name, weight: 1.0 },
+    const secondImagePrompts = [
+      { text: card_faces[1].name, weight: 1.0 },
       { text: colorNames, weight: 0.8 },
       { text: card_faces[1].type_line, weight: 0.8 },
       { text: tokenPrompts, weight: 0.8 },
-      { text: themes, weight: 0.5 }];
+      { text: themes, weight: 0.5 },
+      { text: sidebarText, weight: sidebarWeight },
+    ];
     const secondCombinedPrompts = combinePromptsByWeight(secondImagePrompts);
     const secondImage = await generateImage(secondCombinedPrompts, 512, 832);
 
@@ -85,19 +94,25 @@ export default async function generateImageForCard(cardData) {
   }
   if (layout === "split" && card_faces) {
     // generate images for each face
-    const firstImagePrompts = [{ text: card_faces[0].name, weight: 1.0 },
+    const firstImagePrompts = [
+      { text: card_faces[0].name, weight: 1.0 },
       { text: colorNames, weight: 0.8 },
       { text: card_faces[0].type_line, weight: 0.8 },
       { text: tokenPrompts, weight: 0.8 },
-      { text: themes, weight: 0.5 }];
+      { text: themes, weight: 0.5 },
+      { text: sidebarText, weight: sidebarWeight },
+    ];
     const firstCombinedPrompts = combinePromptsByWeight(firstImagePrompts);
     const firstImage = await generateImage(firstCombinedPrompts, 512, 640);
 
-    const secondImagePrompts = [{ text: card_faces[1].name, weight: 1.0 },
+    const secondImagePrompts = [
+      { text: card_faces[1].name, weight: 1.0 },
       { text: colorNames, weight: 0.8 },
       { text: card_faces[1].type_line, weight: 0.8 },
       { text: tokenPrompts, weight: 0.8 },
-      { text: themes, weight: 0.5 }];
+      { text: themes, weight: 0.5 },
+      { text: sidebarText, weight: sidebarWeight },
+    ];
     const secondCombinedPrompts = combinePromptsByWeight(secondImagePrompts);
     const secondImage = await generateImage(secondCombinedPrompts, 512, 640);
     // return an object containing both images
@@ -107,21 +122,26 @@ export default async function generateImageForCard(cardData) {
     for (let face of card_faces) {
       let image;
       if (face.type_line.includes("Saga")) {
-        const imagePrompts = [{ text: name, weight: 1.0 },
+        const imagePrompts = [
+          { text: name, weight: 1.0 },
           { text: colorNames, weight: 0.8 },
           { text: type_line, weight: 0.8 },
           { text: tokenPrompts, weight: 0.8 },
-          { text: themes, weight: 0.5 }];
+          { text: themes, weight: 0.5 },
+          { text: sidebarText, weight: sidebarWeight },
+        ];
 
         const combinedPrompts = combinePromptsByWeight(imagePrompts);
         image = await generateImage(combinedPrompts, 1600, 576);
-
       } else if (face.type_line.includes("Battle")) {
-        const imagePrompts = [{ text: name, weight: 1.0 },
+        const imagePrompts = [
+          { text: name, weight: 1.0 },
           { text: colorNames, weight: 0.8 },
           { text: type_line, weight: 0.8 },
           { text: tokenPrompts, weight: 0.8 },
-          { text: themes, weight: 0.5 }];
+          { text: themes, weight: 0.5 },
+          { text: sidebarText, weight: sidebarWeight },
+        ];
 
         const combinedPrompts = combinePromptsByWeight(imagePrompts);
         image = await generateImage(combinedPrompts, 512, 1280);
@@ -133,7 +153,8 @@ export default async function generateImageForCard(cardData) {
           { text: tokenPrompts, weight: 0.8 },
           { text: themes, weight: 0.5 },
           { text: flavor_text, weight: 0.5 },
-        ];;
+          { text: sidebarText, weight: sidebarWeight },
+        ];
 
         const combinedPrompts = combinePromptsByWeight(imagePrompts);
         image = await generateImage(combinedPrompts, 512, 640);
@@ -149,37 +170,41 @@ export default async function generateImageForCard(cardData) {
       { text: tokenPrompts, weight: 0.8 },
       { text: themes, weight: 0.5 },
       { text: flavor_text, weight: 0.5 },
+      { text: sidebarText, weight: sidebarWeight },
     ];
 
     const combinedPrompts = combinePromptsByWeight(imagePrompts);
     const image = await generateImage(combinedPrompts, 1600, 576);
     return { image };
   } else if (layout === "adventure" && card_faces) {
-      const imagePrompts = [
-        { text: card_faces[0].name, weight: 1.0 },
-        { text: card_faces[1].name, weight: 1.0 },
-        { text: colorNames, weight: 0.8 },
-        { text: card_faces[0].type_line, weight: 0.8 },
-        { text: tokenPrompts, weight: 0.8 },
-        { text: themes, weight: 0.5 },
-        { text: flavor_text, weight: 0.5 }
-      ];
+    const imagePrompts = [
+      { text: card_faces[0].name, weight: 1.0 },
+      { text: card_faces[1].name, weight: 1.0 },
+      { text: colorNames, weight: 0.8 },
+      { text: card_faces[0].type_line, weight: 0.8 },
+      { text: tokenPrompts, weight: 0.8 },
+      { text: themes, weight: 0.5 },
+      { text: flavor_text, weight: 0.5 },
+      { text: sidebarText, weight: sidebarWeight },
+    ];
 
-      const combinedPrompts = combinePromptsByWeight(imagePrompts);
-      const image = await generateImage(combinedPrompts, 512, 640);
-      return { image };
+    const combinedPrompts = combinePromptsByWeight(imagePrompts);
+    const image = await generateImage(combinedPrompts, 512, 640);
+    return { image };
   } else {
     // if card is not split, generate single image as before
-    const imagePrompts = [{ text: name, weight: 1.0 },
+    const imagePrompts = [
+      { text: name, weight: 1.0 },
       { text: colorNames, weight: 0.8 },
       { text: type_line, weight: 1.0 },
       { text: tokenPrompts, weight: 0.8 },
       { text: themes, weight: 0.5 },
-      { text: flavor_text, weight: 0.5 }
+      { text: flavor_text, weight: 0.5 },
+      { text: sidebarText, weight: sidebarWeight },
     ];
 
-      const combinedPrompts = combinePromptsByWeight(imagePrompts);
-      const image = await generateImage(combinedPrompts, 512, 640);
+    const combinedPrompts = combinePromptsByWeight(imagePrompts);
+    const image = await generateImage(combinedPrompts, 512, 640);
     return { image };
   }
 }
