@@ -13,6 +13,7 @@ const Aftermath = (props) => {
 
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
     let isCancelled = false;

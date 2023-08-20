@@ -27,8 +27,9 @@ const finalParts = lines.map((line, lineIndex) => {
     iconName = iconName.replace(/\//g, "").toUpperCase();
     const iconPath = manaSymbols[`${iconName}.jpg`];
 
-    // Check if followed by a colon and if that colon is followed by a space or end of line
-    if (line[offset + match.length] === ':' && (line[offset + match.length + 1] === ' ' || offset + match.length + 1 === line.length)) {
+// Check if followed by a colon and if that colon is followed by a space or if it's a comma, or end of line
+    if ((line[offset + match.length] === ':' && (line[offset + match.length + 1] === ' ' || offset + match.length + 1 === line.length))
+        || line[offset + match.length] === ',' || offset + match.length === line.length) {
       if (iconSequence.length > 0) {
         parts.push(<span key={`icon-sequence-${offset}`} style={{ display: 'inline-block', flexDirection: 'row' }}>{iconSequence}</span>);
         iconSequence = [];
@@ -41,7 +42,6 @@ const finalParts = lines.map((line, lineIndex) => {
         <img key={offset} src={`${iconPath}`} alt={iconName} className="mana-icon" style={{ height: iconSize, width: iconSize }} />,
       );
     }
-
     lastIndex = offset + match.length;
   });
 

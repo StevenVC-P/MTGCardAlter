@@ -13,28 +13,42 @@ const Adventure = (props) => {
 
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-    let isCancelled = false;
+        // Check for the required props
+        if (card_faces && colors && imageData && cardRef.current) {
+            setLoading(true); // Trigger the loading state if all required props are available
+        }
+    }, [card_faces, colors, imageData]);
 
-    if (imageData && cardRef.current) {
-        domtoimage.toPng(cardRef.current)
-            .then((imgData) => {
-                if (!isCancelled) {
-                    setImageURL(imgData);
-                }
-            })
-            .catch((error) => {
-                if (!isCancelled) {
-                    console.error('Error generating image:', error);
-                }
-            });
-    }
 
-    return () => {
-        isCancelled = true;
-    };
-    }, [imageData]);
+    useEffect(() => {
+        let isCancelled = false;
+
+        if (loading && imageData && cardRef.current) {
+            domtoimage.toPng(cardRef.current)
+                .then((imgData) => {
+                    if (!isCancelled) {
+                        setImageURL(imgData);
+                        setLoading(false);
+                    }
+                })
+                .catch((error) => {
+                    if (!isCancelled) {
+                        console.error('Error generating image:', error);
+                        setLoading(false);
+                    }
+                });
+        }
+
+        return () => {
+            isCancelled = true;
+        };
+    }, [loading, imageData]);
+
+
+
 
     return imageURL ? (
         <img src={imageURL} alt="Generated Card" />
