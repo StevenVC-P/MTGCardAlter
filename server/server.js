@@ -4,10 +4,11 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const app = express();
+const puppeteer = require("puppeteer");
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 const engineId = "stable-diffusion-v1-5";
 const apiHost = process.env.API_HOST;
@@ -69,5 +70,29 @@ app.post("/api/generate-image", async (req, res) => {
     res.status(500).json({ message: "Error generating image" });
   }
 });
+
+app.post("/api/generateCard", async (req, res) => {
+  try {
+    const htmlContent = req.body.html;
+
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    // Set the HTML content and render it
+    await page.setContent(htmlContent);
+
+    // Take a screenshot
+    const imageBuffer = await page.screenshot();
+
+    // Close the browser
+    await browser.close();
+
+    res.set("Content-Type", "image/png");
+    res.send(imageBuffer);
+  } catch (error) {
+    res.status(500).json({ message: "Error generating image" });
+  }
+});
+
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

@@ -16,31 +16,54 @@ const BasicFrame = (props) => {
 
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     let planeswalker_text = "";
     let abilities = [];
 
     useEffect(() => {
-    let isCancelled = false;
+        if (name && colors && imageData && cardRef.current) {
+            setLoading(true); // Trigger the loading state if all required props are available
+        }
+    }, [name, colors, imageData]);
 
-    if (imageData && cardRef.current) {
-        domtoimage.toPng(cardRef.current)
-            .then((imgData) => {
-                if (!isCancelled) {
-                    setImageURL(imgData);
-                }
+    useEffect(() => {
+        let isCancelled = false;
+
+        if (loading && imageData && cardRef.current) {
+            // Convert the card element to an HTML string, or send relevant data to the server
+            const cardHtml = cardRef.current.innerHTML;
+
+            // Send a request to your server-side endpoint
+            fetch('http://localhost:5000/api/generateCard', {
+                method: 'POST',
+                body: JSON.stringify({ html: cardHtml }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             })
-            .catch((error) => {
-                if (!isCancelled) {
-                    console.error('Error generating image:', error);
-                }
-            });
-    }
+                .then((response) => response.blob()) // Changed this line to handle binary response
+                .then((blob) => {
+                    if (!isCancelled) {
+                        // Create a URL for the image blob
+                        const imageUrl = URL.createObjectURL(blob);
+                        setImageURL(imageUrl);
+                        setLoading(false);
+                    }
+                })
+                .catch((error) => {
+                    if (!isCancelled) {
+                        console.error('Error generating image:', error);
+                        setLoading(false);
+                    }
+                });
+        }
 
-    return () => {
-        isCancelled = true;
-    };
-    }, [imageData]);
+        return () => {
+            isCancelled = true;
+        };
+    }, [loading, imageData]);
+
 
     function escapeRegex(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
