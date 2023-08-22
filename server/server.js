@@ -4,8 +4,14 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const app = express();
+const request = require("request");
 
 app.use(cors());
+app.use((req, res, next) => {
+  // Add this middleware
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -67,6 +73,21 @@ app.post("/api/generate-image", async (req, res) => {
   } catch (error) {
     console.error("Error generating image:", error);
     res.status(500).json({ message: "Error generating image" });
+  }
+});
+
+app.get("/proxy-image", async (req, res) => {
+  const url = req.query.url;
+
+  try {
+    const response = await axios.get(url, { responseType: "arraybuffer" });
+
+    res.setHeader("Content-Type", response.headers["content-type"]);
+    res.setHeader("Access-Control-Allow-Origin", "*"); // include the CORS header
+    res.end(Buffer.from(response.data, "binary"));
+  } catch (error) {
+    console.error("Error fetching image:", error);
+    res.status(500).end("Error fetching image");
   }
 });
 

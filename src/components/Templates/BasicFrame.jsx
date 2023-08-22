@@ -9,7 +9,7 @@ import domtoimage from 'dom-to-image';
 import "./Universal.css";
 import "./BasicFrame.css";
 
-const BasicFrame = (props) => {
+const BasicFrame = React.memo((props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
     const {name, mana_cost, oracle_text, type_line, set, power, toughness, loyalty, colors, flavor_text } = source;
@@ -153,6 +153,6 @@ const BasicFrame = (props) => {
             </CardBackground>
         </div>
     )
-}
+})
 
 export default BasicFrame;

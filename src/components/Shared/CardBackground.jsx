@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { importAll } from '../Utils/utils';
 
 // Get all images from the backgrounds directory
@@ -15,7 +15,7 @@ const colorMap = {
 };
 
 const CardBackground = ({ children, type_line, colors, mana_cost, className }) => {
-    const getBackgroundImage = () => {
+    const backgroundImage = useMemo(() => {
         if (type_line.includes('Land')) {
             return backgroundsSolid['Land.jpg'];
         }
@@ -73,9 +73,8 @@ const CardBackground = ({ children, type_line, colors, mana_cost, className }) =
                 return backgroundsSolid[`${color}.jpg`];
             }
         }
-    }
+    }, [type_line, colors, mana_cost]);
     
-    const backgroundImage = getBackgroundImage();
     return (
         <div className={`card-background ${className || ''}`} style={{ backgroundImage: `url(${backgroundImage})`, zIndex: 0}}>
             {children}
