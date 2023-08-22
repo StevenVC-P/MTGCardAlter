@@ -164,12 +164,12 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
     return { firstImage: images[0], secondImage: images[1] };
   } else if (layout === "saga") {
     const imagePrompts = [
-      { text: name, weight: 1.0 },
-      { text: colorNames, weight: 0.8 },
-      { text: type_line, weight: 0.8 },
-      { text: tokenPrompts, weight: 0.8 },
-      { text: themes, weight: 0.5 },
-      { text: flavor_text, weight: 0.5 },
+      // { text: name, weight: 1.0 },
+      // { text: colorNames, weight: 0.8 },
+      // { text: type_line, weight: 0.8 },
+      // { text: tokenPrompts, weight: 0.8 },
+      // { text: themes, weight: 0.5 },
+      // { text: flavor_text, weight: 0.5 },
       { text: sidebarText, weight: sidebarWeight },
     ];
 
@@ -180,12 +180,12 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
     const imagePrompts = [
       { text: card_faces[0].name, weight: 1.0 },
       { text: card_faces[1].name, weight: 1.0 },
-      { text: colorNames, weight: 0.8 },
+      { text: colorNames, weight: 0.3 },
       { text: card_faces[0].type_line, weight: 0.8 },
-      { text: tokenPrompts, weight: 0.8 },
-      { text: themes, weight: 0.5 },
-      { text: flavor_text, weight: 0.5 },
-      { text: sidebarText, weight: sidebarWeight },
+      // { text: tokenPrompts, weight: 0.4 },
+      { text: themes, weight: 0.1 },
+      { text: flavor_text, weight: 0.2 },
+      // { text: sidebarText, weight: sidebarWeight },
     ];
 
     const combinedPrompts = combinePromptsByWeight(imagePrompts);
@@ -195,12 +195,12 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
     // if card is not split, generate single image as before
     const imagePrompts = [
       { text: name, weight: 1.0 },
-      { text: colorNames, weight: 0.8 },
-      { text: type_line, weight: 1.0 },
-      { text: tokenPrompts, weight: 0.8 },
-      { text: themes, weight: 0.5 },
-      { text: flavor_text, weight: 0.5 },
-      { text: sidebarText, weight: sidebarWeight },
+      { text: colorNames, weight: 0.3 },
+      { text: type_line, weight: 0.8 },
+      // { text: tokenPrompts, weight: 0.4 },
+      { text: themes, weight: 0.1 },
+      { text: flavor_text, weight: 0.2 },
+      // { text: sidebarText, weight: sidebarWeight },
     ];
 
     const combinedPrompts = combinePromptsByWeight(imagePrompts);

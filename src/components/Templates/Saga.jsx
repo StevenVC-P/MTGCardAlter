@@ -9,7 +9,7 @@ import domtoimage from 'dom-to-image';
 import "./Universal.css";
 import "./Saga.css";
 
-const Saga = (props) => {
+const Saga = React.memo((props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
     const {name, mana_cost, oracle_text, type_line, set, colors } = source;
@@ -100,6 +100,6 @@ const Saga = (props) => {
             </CardBackground>
         </div>
     )
-}
+})
 
 export default Saga;
