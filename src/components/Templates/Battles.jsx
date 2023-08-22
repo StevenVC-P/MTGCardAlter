@@ -7,7 +7,7 @@ import domtoimage from 'dom-to-image';
 import "./Universal.css";
 import "./Battles.css";
 
-const Battles = (props) => {
+const Battles = React.memo((props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
     const {name, mana_cost, oracle_text, type_line, set, defense, colors } = source;
@@ -62,6 +62,6 @@ const Battles = (props) => {
             </CardBackground>
         </div>
     )
-}
+})
 
 export default Battles

@@ -8,7 +8,7 @@ import "./Universal.css";
 import "./SplitFrame.css";
 
 //Compenent is a starting point for split card, currently works for cards such as Fire/Ice
-const SplitFrame = (props) => {
+const SplitFrame = React.memo((props) => {
     const {set, card_faces} = props.card;
     const imageData = props.imageData;
 
@@ -83,7 +83,6 @@ const SplitFrame = (props) => {
             </div>
         </div>
     )
-
-}
+})
 
 export default SplitFrame

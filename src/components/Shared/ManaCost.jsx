@@ -3,6 +3,7 @@
 import React from 'react';
 import { manaSymbols } from './ManaSymbols'; // adjust this path to point to your ManaSymbols.js
 
+
 const ManaCost = ({ manaCost }) => {
     if (!manaCost) return null;
     // Regex to match the curly braces and the content inside them

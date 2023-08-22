@@ -9,61 +9,38 @@ import domtoimage from 'dom-to-image';
 import "./Universal.css";
 import "./BasicFrame.css";
 
-const BasicFrame = (props) => {
+const BasicFrame = React.memo((props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
     const {name, mana_cost, oracle_text, type_line, set, power, toughness, loyalty, colors, flavor_text } = source;
 
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
-    const [loading, setLoading] = useState(false);
 
     let planeswalker_text = "";
     let abilities = [];
 
     useEffect(() => {
-        if (name && colors && imageData && cardRef.current) {
-            setLoading(true); // Trigger the loading state if all required props are available
-        }
-    }, [name, colors, imageData]);
+    let isCancelled = false;
 
-    useEffect(() => {
-        let isCancelled = false;
-
-        if (loading && imageData && cardRef.current) {
-            // Convert the card element to an HTML string, or send relevant data to the server
-            const cardHtml = cardRef.current.innerHTML;
-
-            // Send a request to your server-side endpoint
-            fetch('http://localhost:5000/api/generateCard', {
-                method: 'POST',
-                body: JSON.stringify({ html: cardHtml }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+    if (imageData && cardRef.current) {
+        domtoimage.toPng(cardRef.current)
+            .then((imgData) => {
+                if (!isCancelled) {
+                    setImageURL(imgData);
+                }
             })
-                .then((response) => response.blob()) // Changed this line to handle binary response
-                .then((blob) => {
-                    if (!isCancelled) {
-                        // Create a URL for the image blob
-                        const imageUrl = URL.createObjectURL(blob);
-                        setImageURL(imageUrl);
-                        setLoading(false);
-                    }
-                })
-                .catch((error) => {
-                    if (!isCancelled) {
-                        console.error('Error generating image:', error);
-                        setLoading(false);
-                    }
-                });
-        }
+            .catch((error) => {
+                if (!isCancelled) {
+                    console.error('Error generating image:', error);
+                }
+            });
+    }
 
-        return () => {
-            isCancelled = true;
-        };
-    }, [loading, imageData]);
-
+    return () => {
+        isCancelled = true;
+    };
+    }, [imageData]);
 
     function escapeRegex(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -176,6 +153,6 @@ const BasicFrame = (props) => {
             </CardBackground>
         </div>
     )
-}
+})
 
 export default BasicFrame;

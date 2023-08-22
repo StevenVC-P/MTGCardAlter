@@ -26,7 +26,7 @@
     height: 10%; /* Adjust as needed */
     /* padding: 5px 0; */
     font-size: clamp(0.4em, .3em, .8em);
-    background: linear-gradient( 0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3) ), url(https://image.ibb.co/jKByZn/tile_bg_1.jpg); 
+    background: linear-gradient( 0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3) ); 
     border-radius: 18px/40px;
 }
 

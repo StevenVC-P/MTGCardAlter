@@ -41,6 +41,8 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight }) =
       let newImages = {};
       let newCardCounts = { ...cardCounts }; // Make a copy of the current counts
 
+      let tempCardData = [];
+
       for (const cardName of cardNamesArr) {
         try {
           let {quantity, sanitizedCardName} = sanitizeInput(cardName);
@@ -59,7 +61,7 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight }) =
 
             // Saving the image to the newImages object
             newImages[key] = imageData;
-            setCardData(prevCardData => [...prevCardData, {...response.data, imageKey: key}]);
+            tempCardData.push({...response.data, imageKey: key});
             await delay(100);
           }
         } catch (error) {
@@ -67,6 +69,8 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight }) =
         }
       }
 
+      // Update the cardData state with the temporary array
+      setCardData(prevCardData => [...prevCardData, ...tempCardData]);
       // Update the cardCounts state
       setCardCounts(newCardCounts);
 
@@ -76,14 +80,16 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight }) =
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className={"form"} onSubmit={handleSubmit}>
       <textarea onChange={e => setCardNames(e.target.value)} value={cardNames} className="input-box" placeholder="Copy/Paste Magic card names and quantities" />
-      <button type="submit" className="submit-button">
-        Submit
-      </button>
-      <button type="button" className="clear-button" onClick={handleClear}>
-        Clear
-      </button>
+      <div className={"form-buttons"}>
+        <button type="submit" className="submit-button">
+          Submit
+        </button>
+        <button type="button" className="clear-button" onClick={handleClear}>
+          Clear
+        </button>
+      </div>
     </form>
   );
 };

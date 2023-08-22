@@ -7,7 +7,7 @@ import domtoimage from 'dom-to-image';
 import "./Universal.css";
 import "./FlipFrame.css";
 
-const FlipFrame = (props) => {
+const FlipFrame = React.memo((props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
     const {mana_cost, card_faces, colors} = source;
@@ -76,6 +76,6 @@ const FlipFrame = (props) => {
             </CardBackground>
         </div>
     )
-}
+})
 
 export default FlipFrame

@@ -7,48 +7,34 @@ import domtoimage from 'dom-to-image';
 import "./Universal.css"
 import "./Adventure.css";
 
-const Adventure = (props) => {
+const Adventure = React.memo((props) => {
     const {set, card_faces, colors} = props.card;
     const imageData = props.imageData;
 
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // Check for the required props
-        if (card_faces && colors && imageData && cardRef.current) {
-            setLoading(true); // Trigger the loading state if all required props are available
-        }
-    }, [card_faces, colors, imageData]);
+    let isCancelled = false;
 
+    if (imageData && cardRef.current) {
+        domtoimage.toPng(cardRef.current)
+            .then((imgData) => {
+                if (!isCancelled) {
+                    setImageURL(imgData);
+                }
+            })
+            .catch((error) => {
+                if (!isCancelled) {
+                    console.error('Error generating image:', error);
+                }
+            });
+    }
 
-    useEffect(() => {
-        let isCancelled = false;
-
-        if (loading && imageData && cardRef.current) {
-            domtoimage.toPng(cardRef.current)
-                .then((imgData) => {
-                    if (!isCancelled) {
-                        setImageURL(imgData);
-                        setLoading(false);
-                    }
-                })
-                .catch((error) => {
-                    if (!isCancelled) {
-                        console.error('Error generating image:', error);
-                        setLoading(false);
-                    }
-                });
-        }
-
-        return () => {
-            isCancelled = true;
-        };
-    }, [loading, imageData]);
-
-
-
+    return () => {
+        isCancelled = true;
+    };
+    }, [imageData]);
 
     return imageURL ? (
         <img src={imageURL} alt="Generated Card" />
@@ -57,8 +43,8 @@ const Adventure = (props) => {
             <CardBackground type_line={card_faces[0].type_line} colors={card_faces[0].colors} mana_cost={card_faces[0].mana_cost}>
                 <div className="card-frame">
                     <div className="frame-header card-color-border" style={getBorderStyle(colors, card_faces[0].mana_cost)}>
-                        <h1 className="name">{card_faces[0].name}</h1>
-                        <ManaCost manaCost={card_faces[0].mana_cost}/>
+                            <h1 className="name">{card_faces[0].name}</h1>
+                            <ManaCost manaCost={card_faces[0].mana_cost}/>
                     </div>
                     <div className="frame-image card-color-border-square" style={getBorderStyle(colors,card_faces[0].mana_cost)}>
                         {imageData && <img src={`data:image/png;base64,${imageData.image}`} alt="Generated" />}
@@ -92,6 +78,6 @@ const Adventure = (props) => {
             </CardBackground>
         </div>
     )
-}
+})
 
 export default Adventure
