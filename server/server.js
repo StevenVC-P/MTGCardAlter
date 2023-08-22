@@ -4,11 +4,16 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const app = express();
-const puppeteer = require("puppeteer");
+const request = require("request");
 
 app.use(cors());
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+app.use((req, res, next) => {
+  // Add this middleware
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const engineId = "stable-diffusion-v1-5";
 const apiHost = process.env.API_HOST;
@@ -71,28 +76,19 @@ app.post("/api/generate-image", async (req, res) => {
   }
 });
 
-app.post("/api/generateCard", async (req, res) => {
+app.get("/proxy-image", async (req, res) => {
+  const url = req.query.url;
+
   try {
-    const htmlContent = req.body.html;
+    const response = await axios.get(url, { responseType: "arraybuffer" });
 
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-
-    // Set the HTML content and render it
-    await page.setContent(htmlContent);
-
-    // Take a screenshot
-    const imageBuffer = await page.screenshot();
-
-    // Close the browser
-    await browser.close();
-
-    res.set("Content-Type", "image/png");
-    res.send(imageBuffer);
+    res.setHeader("Content-Type", response.headers["content-type"]);
+    res.setHeader("Access-Control-Allow-Origin", "*"); // include the CORS header
+    res.end(Buffer.from(response.data, "binary"));
   } catch (error) {
-    res.status(500).json({ message: "Error generating image" });
+    console.error("Error fetching image:", error);
+    res.status(500).end("Error fetching image");
   }
 });
-
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

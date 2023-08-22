@@ -7,13 +7,12 @@ import domtoimage from 'dom-to-image';
 import "./Aftermath.css";
 
 //Compenent is a starting point for split card, currently works for cards such as Fire/Ice
-const Aftermath = (props) => {
+const Aftermath = React.memo((props) => {
     const {set, card_faces} = props.card;
     const imageData = props.imageData;
 
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
     let isCancelled = false;
@@ -83,6 +82,6 @@ const Aftermath = (props) => {
             </div>
         </div>
     )
-}
+})
 
 export default Aftermath

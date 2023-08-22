@@ -182,10 +182,10 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
       { text: card_faces[1].name, weight: 1.0 },
       { text: colorNames, weight: 0.3 },
       { text: card_faces[0].type_line, weight: 0.8 },
-      { text: tokenPrompts, weight: 0.4 },
+      // { text: tokenPrompts, weight: 0.4 },
       { text: themes, weight: 0.1 },
       { text: flavor_text, weight: 0.2 },
-      { text: sidebarText, weight: sidebarWeight },
+      // { text: sidebarText, weight: sidebarWeight },
     ];
 
     const combinedPrompts = combinePromptsByWeight(imagePrompts);
