@@ -25,7 +25,16 @@ body {
 .header {
   font-size: 24px;
   margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+.header-text {
+  flex-grow: 1;
+  text-align: center;
+}
+
 
 .input-box {
   width: 100%;
@@ -129,4 +138,10 @@ body {
 .submit-button,
 .clear-button {
   margin: 10px;
+}
+
+.patreon-button {
+  width: 100px;
+  height: 50px;
+  margin-left: 50px;
 }
