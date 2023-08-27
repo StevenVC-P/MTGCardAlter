@@ -37,6 +37,7 @@ const SplitFrame = React.memo((props) => {
     };
     }, [imageData]);
 
+    console.log("steve", props.card)
     return imageURL ? (
         <img src={imageURL} alt="Generated Card" />
     ) : (
