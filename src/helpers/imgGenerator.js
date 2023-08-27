@@ -152,7 +152,7 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
           { text: type_line, weight: 0.8 },
           { text: tokenPrompts, weight: 0.8 },
           { text: themes, weight: 0.5 },
-          { text: flavor_text, weight: 0.5 },
+          // { text: flavor_text, weight: 0.5 },
           { text: sidebarText, weight: sidebarWeight },
         ];
 
@@ -184,7 +184,7 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
       { text: card_faces[0].type_line, weight: 0.8 },
       // { text: tokenPrompts, weight: 0.4 },
       { text: themes, weight: 0.1 },
-      { text: flavor_text, weight: 0.2 },
+      // { text: flavor_text, weight: 0.2 },
       // { text: sidebarText, weight: sidebarWeight },
     ];
 
