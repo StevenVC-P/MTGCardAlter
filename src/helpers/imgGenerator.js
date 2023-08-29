@@ -164,12 +164,12 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
     return { firstImage: images[0], secondImage: images[1] };
   } else if (layout === "saga") {
     const imagePrompts = [
-      // { text: name, weight: 1.0 },
-      // { text: colorNames, weight: 0.8 },
-      // { text: type_line, weight: 0.8 },
+      { text: name, weight: 1.0 },
+      { text: colorNames, weight: 0.8 },
+      { text: type_line, weight: 0.8 },
       // { text: tokenPrompts, weight: 0.8 },
       // { text: themes, weight: 0.5 },
-      // { text: flavor_text, weight: 0.5 },
+      { text: flavor_text, weight: 0.5 },
       { text: sidebarText, weight: sidebarWeight },
     ];
 

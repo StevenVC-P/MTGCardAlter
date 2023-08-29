@@ -39,8 +39,8 @@ class Card {
     card.color_identity = CardColorIdentities.map((row) => row.color_identity);
 
     // For CardFaces table, assuming you want to collect `name`, `type_line` etc.
-    const [CardFaces] = await pool.execute("SELECT id, name, type_line, mana_cost, oracle_text, watermark FROM CardFaces WHERE card_id = ? ORDER BY id ASC", [card.card_id]);
-    card.card_faces = CardFaces.map((row) => ({ id: row.id, name: row.name, type_line: row.type_line, mana_cost: row.mana_cost, oracle_text: row.oracle_text, watermark: row.watermark }));
+    const [CardFaces] = await pool.execute("SELECT id, name, type_line, mana_cost, oracle_text, watermark, power, toughness FROM CardFaces WHERE card_id = ? ORDER BY id ASC", [card.card_id]);
+    card.card_faces = CardFaces.map((row) => ({ id: row.id, name: row.name, type_line: row.type_line, mana_cost: row.mana_cost, oracle_text: row.oracle_text, watermark: row.watermark, power: row.power, toughness: row.toughness }));
 
     // For RelatedCards table, assuming you want to collect `related_card_id`, `component` etc.
     const [RelatedCards] = await pool.execute("SELECT related_card_id, component FROM RelatedCards WHERE card_id = ?", [card.card_id]);

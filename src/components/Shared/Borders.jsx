@@ -11,21 +11,30 @@ const colorMap = {
 
 const extractColorsFromManaCost = (manaCost) => {
     const colors = [];
-    const pattern = /\{([WUBRG])\}/g;
+    const manaString = manaCost.join(",");
+    console.log("steve ", manaString)
+    const pattern = /([WUBRG])/g;
     let match;
-    while ((match = pattern.exec(manaCost)) !== null) {
+    while ((match = pattern.exec(manaString)) !== null) {
         colors.push(match[1]);
     }
     return [...new Set(colors)];
 };
 
-export const getBorderStyle = (colors, manaCost) => {
-    const boxShadow = "4px 4px 3px rgba(0, 0, 0, 0.5) boxShadow";
-
+export const getBorderStyle = (colors, manaCost, color_identity) => {
+    const boxShadow = "4px 4px 3px rgba(0, 0, 0, 0.5)";
     if (!colors || colors.length === 0) {
-        colors = extractColorsFromManaCost(manaCost);
+        if (!color_identity || color_identity.length === 0) {
+            colors = extractColorsFromManaCost(manaCost);  // Update colors here
+        } else {
+            return {
+                borderColor: colorMap[color_identity[0]],
+                borderWidth: '3px',
+                borderStyle: 'solid',
+                boxShadow: boxShadow,
+            };
+        }
     }
-
     if (colors.length === 1) {
         return {
             borderColor: colorMap[colors[0]],
@@ -42,7 +51,7 @@ export const getBorderStyle = (colors, manaCost) => {
             boxShadow: boxShadow,
         };
     } 
-    else if (colors.length >= 2) {
+    else if (colors.length > 2) {
         return {
             borderColor: colorMap["gold"],
             borderWidth: '3px',
