@@ -38,14 +38,9 @@ app.post("/api/generate-image", async (req, res) => {
     const { height, width, cfg_scale, clip_guidance_preset, sampler, samples, steps, style_preset, text_prompts } = req.body;
 
     // Perform the image generation using Stability.AI API
-    const response = await fetch(`${apiHost}/v1/generation/${engineId}/text-to-image`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
+    const response = await axios.post(
+      `${apiHost}/v1/generation/${engineId}/text-to-image`,
+      {
         height,
         width,
         cfg_scale,
@@ -55,14 +50,22 @@ app.post("/api/generate-image", async (req, res) => {
         steps,
         style_preset,
         text_prompts,
-      }),
-    });
-    // Return the generated image URL or data
-    if (!response.ok) {
-      throw new Error(`Non-200 response: ${await response.text()}`);
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+      }
+    );
+    
+    // Check the response
+    if (response.status !== 200) {
+      throw new Error(`Non-200 response: ${response.statusText}`);
     }
 
-    const { artifacts } = await response.json();
+    const { artifacts } = response.data;
 
     if (artifacts.length === 0) {
       throw new Error("No artifacts found in the image generation response");
