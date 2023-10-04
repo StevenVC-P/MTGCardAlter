@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Header from "./components/Header.jsx";
 import CardForm from "./components/CardForm";
 import Sidebar from "./components/Sidebar";
-import LoginPage from "./components/LoginPage"; // Import your Login component
+import LoginPage from "./pages/LoginPage"; // Import your Login component
 import "./App.css";
 
 const MainPage = () => {
@@ -22,17 +22,15 @@ const MainPage = () => {
 };
 
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // add this line
+
   return (
-    <Router>
-      <Switch>
-        <Route path="/login">
-          <LoginPage />
-        </Route>
-        <Route path="/">
-          <MainPage />
-        </Route>
-      </Switch>
-    </Router>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <LoginPage setIsLoggedIn={setIsLoggedIn} />} /> {/* updated this line */}
+        <Route path="/" element={isLoggedIn ? <MainPage /> : <Navigate to="/login" />} /> {/* updated this line */}
+      </Routes>
+    </BrowserRouter>
   );
 };
 
