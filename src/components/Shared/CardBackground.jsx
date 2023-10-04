@@ -77,7 +77,7 @@ const CardBackground = ({ children, type_line, colors, mana_cost, className, col
                 return backgroundsSolid[`${color}.jpg`];
             }
         }
-    }, [type_line, colors, mana_cost]);
+    }, [type_line, colors, mana_cost, color_identity]);
     
     return (
         <div className={`card-background ${className || ''}`} style={{ backgroundImage: `url(${backgroundImage})`, zIndex: 0}}>

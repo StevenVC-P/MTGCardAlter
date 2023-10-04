@@ -1,5 +1,5 @@
 // helper.js
-
+const axios = require("axios");
 // Normalize a Magic: The Gathering card name to match database format
 const normalizeCardName = (input) => {
   let normalized = input;
@@ -11,9 +11,25 @@ const normalizeCardName = (input) => {
   return normalized;
 };
 
+
+async function validatePatreonToken(token) {
+  try {
+    // Replace with actual Patreon API call to validate token and get user info
+    const response = await axios.get("https://www.patreon.com/api/oauth2/v2/identity", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error validating Patreon token:", error);
+    return null;
+  }
+}
 // Add other utility functions here as needed...
 
 module.exports = {
   normalizeCardName,
+  validatePatreonToken,
   // ... export other utility functions here
 };
