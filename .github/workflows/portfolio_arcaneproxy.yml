@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'ArcaneProxy'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_841AF9C0BA6B4C798AB8E3295E18B780 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_348F4870752E49D2ADFED4F6267EC11F }}
           package: .
