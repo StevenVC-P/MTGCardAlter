@@ -14,7 +14,7 @@ const colorMap = {
     'G': 'Green'
 };
 
-const CardBackground = ({ children, type_line, colors, mana_cost, className, color_identity }) => {
+const CardBackground = ({ children, type_line, colors, mana_cost, className }) => {
     const backgroundImage = useMemo(() => {
         if (type_line.includes('Land')) {
             return backgroundsSolid['Land.jpg'];
@@ -56,10 +56,6 @@ const CardBackground = ({ children, type_line, colors, mana_cost, className, col
             // Fallback to the 'colors' prop if 'mana_cost' is not available
             if (manaColors.size === 0 && colors && colors.length > 0) {
                 colors.forEach(color => manaColors.add(color));
-            }
-
-            if (manaColors.size === 0 && color_identity && color_identity.length > 0) {
-                color_identity.forEach(color => manaColors.add(color));
             }
 
             if (Array.from(manaColors).sort().join("") !== Array.from(hybridColors).sort().join("") && hybridColors.length !== 0 ) {
