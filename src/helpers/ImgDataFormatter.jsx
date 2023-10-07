@@ -1,8 +1,9 @@
 import axios from "axios";
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const generateImage = async (textPromptsWithWeights, height, width) => {
   try {
-    const response = await axios.post(`http://localhost:5000/api/generate-image`, {
+    const response = await axios.post(`${backendUrl}/api/generate-image`, {
       height: height, // height of the output image
       width: width, // width of the output image
       cfg_scale: 25, // replace with the desired cfg_scale

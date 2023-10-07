@@ -3,8 +3,8 @@ require("dotenv").config({ path: "../env/.env" });
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
+const path = require("path");
 const app = express();
-const request = require("request");
 
 app.use(cors());
 app.use((req, res, next) => {
@@ -13,7 +13,12 @@ app.use((req, res, next) => {
   next();
 });
 app.use(express.json());
+app.use(express.static('static'))
 app.use(express.urlencoded({ extended: true }));
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../build")));
+}
 
 const engineId = "stable-diffusion-v1-5";
 const apiHost = process.env.API_HOST;
@@ -38,6 +43,7 @@ app.post("/api/generate-image", async (req, res) => {
     const { height, width, cfg_scale, clip_guidance_preset, sampler, samples, steps, style_preset, text_prompts } = req.body;
 
     // Perform the image generation using Stability.AI API
+    
     const response = await axios.post(
       `${apiHost}/v1/generation/${engineId}/text-to-image`,
       {
@@ -59,7 +65,7 @@ app.post("/api/generate-image", async (req, res) => {
         },
       }
     );
-    
+
     // Check the response
     if (response.status !== 200) {
       throw new Error(`Non-200 response: ${response.statusText}`);
@@ -86,12 +92,19 @@ app.get("/proxy-image", async (req, res) => {
     const response = await axios.get(url, { responseType: "arraybuffer" });
 
     res.setHeader("Content-Type", response.headers["content-type"]);
-    res.setHeader("Access-Control-Allow-Origin", "*"); // include the CORS header
+    // res.setHeader("Access-Control-Allow-Origin", "*"); 
     res.end(Buffer.from(response.data, "binary"));
   } catch (error) {
     console.error("Error fetching image:", error);
     res.status(500).end("Error fetching image");
   }
 });
+
+// Handle React routing for production, return all requests to React app
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'static/index.html'));
+});
+
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

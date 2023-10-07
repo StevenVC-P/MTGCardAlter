@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import generateImageForCard from '../../helpers/imgGenerator';
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight }) => {
   const [cardNames, setCardNames] = useState([]);
@@ -47,7 +48,7 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight }) =
         try {
           let {quantity, sanitizedCardName} = sanitizeInput(cardName);
 
-          const response = await axios.get(`http://localhost:5000/api/cards/${sanitizedCardName}`);
+          const response = await axios.get(`/api/cards/${sanitizedCardName}`);
           let imageData = await generateImageForCard(response, sidebarText, sidebarWeight);
 
           // Creating new card objects based on the quantity
