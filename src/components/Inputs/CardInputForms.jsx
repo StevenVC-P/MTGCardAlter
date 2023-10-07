@@ -47,7 +47,7 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight }) =
         try {
           let {quantity, sanitizedCardName} = sanitizeInput(cardName);
 
-          const response = await axios.get(`http://localhost:5000/api/cards/${sanitizedCardName}`);
+          const response = await axios.get(`http://localhost:5000/api/cards/name/${sanitizedCardName}`);
           let imageData = await generateImageForCard(response, sidebarText, sidebarWeight);
 
           // Creating new card objects based on the quantity
