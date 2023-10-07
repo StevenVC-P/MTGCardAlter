@@ -13,7 +13,8 @@ const BasicFrame = React.memo((props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
     const {name, mana_cost, oracle_text, type_line, set, power, toughness, loyalty, colors, flavor_text } = source;
-
+    const {color_identity} = props.card;
+    
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
 
@@ -108,20 +109,20 @@ const BasicFrame = React.memo((props) => {
         <img src={imageURL} alt="Generated Card" />
     ) : (
         <div className="card-container" ref={cardRef}>
-            <CardBackground type_line={type_line} colors={colors} mana_cost={mana_cost} className={"basic-card-background"}>
+            <CardBackground type_line={type_line} colors={(colors, color_identity)} mana_cost={mana_cost} className={"basic-card-background"}>
                 <div className="card-frame">
-                    <div className="frame-header card-color-border" style={getBorderStyle(colors, mana_cost)}>
+                    <div className="frame-header card-color-border" style={getBorderStyle(colors, mana_cost, color_identity)}>
                             <h1 className="name">{name}</h1>
                             <ManaCost manaCost={mana_cost}/>
                     </div>
-                    <div className="frame-image card-color-border-square" style={getBorderStyle(colors, mana_cost)}>
+                    <div className="frame-image card-color-border-square" style={getBorderStyle(colors, mana_cost, color_identity)}>
                         {imageData && <img src={`data:image/png;base64,${imageData.image}`} alt="Generated" />}
                     </div>
-                    <div className="frame-type-line card-color-border" style={getBorderStyle(colors, mana_cost)}>
+                    <div className="frame-type-line card-color-border" style={getBorderStyle(colors, mana_cost, color_identity)}>
                         <h1 className="type">{type_line}</h1>
                         {set}
                     </div>
-                    <div className="frame-text-box card-color-border-square" style={getBorderStyle(colors, mana_cost)}>
+                    <div className="frame-text-box card-color-border-square" style={getBorderStyle(colors, mana_cost,color_identity)}>
                         {type_line.includes("Planeswalker") ? (
                                 <React.Fragment>
                                     {planeswalker_text &&<OracleTextCleaner text={planeswalker_text} className="planeswalker_text" /> }
