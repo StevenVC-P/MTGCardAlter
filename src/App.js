@@ -4,6 +4,8 @@ import Header from "./components/Header.jsx";
 import CardForm from "./components/CardForm";
 import Sidebar from "./components/Sidebar";
 import LoginPage from "./pages/LoginPage"; // Import your Login component
+import RegisterPage from "./pages/RegistrationPage.jsx";
+import EmailLoginPage from "./components/Inputs/EmailLoginForm.jsx";
 import "./App.css";
 
 const MainPage = () => {
@@ -29,6 +31,8 @@ const App = () => {
       <Routes>
         <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <LoginPage setIsLoggedIn={setIsLoggedIn} />} /> {/* updated this line */}
         <Route path="/" element={isLoggedIn ? <MainPage /> : <Navigate to="/login" />} /> {/* updated this line */}
+        <Route path="/register" element={!isLoggedIn ? <RegisterPage /> : <Navigate to="/" />} />
+        <Route path="/login/email" element={!isLoggedIn ? <EmailLoginPage setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );

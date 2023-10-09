@@ -2,33 +2,25 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 // const { OAuth2Client } = require("google-auth-library");
 // const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const FB = require("fb");
 // const PatreonStrategy = require("patreon").OAuth;
 const { getUserById, createUser } = require('../db');
  const { validatePatreonToken } = require("./helpers/helpers");
+const User = require('../models/User');
 
 
 // router.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 // router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/" }), function (req, res) {
-//   res.json({ token: req.user }); // req.user will contain the JWT
+  // res.json({ token: req.user }); // req.user will contain the JWT
 // });
 
 router.get("/auth/facebook", passport.authenticate("facebook"));
 router.get("/auth/facebook/callback", passport.authenticate("facebook", { failureRedirect: "/" }), function (req, res) {
   res.json({ token: req.user }); // req.user will contain the JWT
 });
-
-// router.post("/auth/google/token", async (req, res) => {
-//   try {
-//     const { token } = req.body;
-//     // Verify Google token and do your logic here
-//     res.json({ status: "success", token });
-//   } catch (error) {
-//     res.status(500).json({ status: "error", message: error.message });
-//   }
-// });
 
 router.post("/auth/facebook/token", async (req, res) => {
   try {
@@ -39,37 +31,6 @@ router.post("/auth/facebook/token", async (req, res) => {
     res.status(500).json({ status: "error", message: error.message });
   }
 });
-
-// router.post("/google/token", async (req, res) => {
-//     try {
-//         const googleToken = req.body.token;
-//         const ticket = await client.verifyIdToken({
-//         idToken: googleToken,
-//         audience: process.env.GOOGLE_CLIENT_ID,
-//         });
-
-//         const payload = ticket.getPayload();
-//         const googleId = payload["sub"];
-//         const email = payload["email"];
-//         const name = payload["name"];
-//         const picture = payload["picture"];
-
-//     let user = await getUserById(googleId, "google");
-
-//     if (!user) {
-//     user = await createUser({ id: googleId, email, name, picture }, "google");
-//     }
-//         // Generate JWT token
-//         const jwtToken = jwt.sign({ id: googleId, email, name }, process.env.JWT_SECRET, {
-//         expiresIn: "1h",
-//         });
-
-//         res.json({ user, token: jwtToken });
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json({ message: "Error processing Google token" });
-//     }
-// });
 
 router.post("/auth/facebook/token", async (req, res) => {
   try {
@@ -104,32 +65,62 @@ router.post("/auth/facebook/token", async (req, res) => {
   }
 });
 
-// router.post("/auth/patreon/token", async (req, res) => {
-//   try {
-//     const { token } = req.body;
+router.post("/register", async (req, res) => {
+  try {
+    const { email, username, password } = req.body;
+    console.log("steve" ,req)
+    // Check if user already exists
+    const existingUser = await User.findOne({ where: { email } });
 
-//     // Assuming that you have a function to validate the Patreon token and get user data.
-//     // This is just placeholder logic; you would actually call Patreon's API to validate the token and get user data.
-//     const response = await validatePatreonToken(token);
+    if (existingUser) {
+      return res.status(400).json({ success: false, message: "User already exists!" });
+    }
 
-//     const patreonId = response.id;
-//     const email = response.email;
-//     const name = response.name;
+    // Hash the password before storing it
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    await User.create({
+      email,
+      username,
+      password_hash: hashedPassword,
+    });
+    // Store the user in the database
 
-//     let user = await getUserById(patreonId, "patreon");
+    res.status(200).json({ success: true, message: "User registered successfully" });
+  } catch (error) {
+    console.error("Error registering user:", error);
+    res.status(500).json({ success: false, message: "Error registering user" });
+  }
+});
 
-//     if (!user) {
-//       user = await createUser({ id: patreonId, email, name }, "patreon");
-//     }
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ where: { email } });
 
-//     const jwtToken = jwt.sign({ id: patreonId, email, name }, process.env.JWT_SECRET, {
-//       expiresIn: "1h",
-//     });
+    // If no user is found, return an error
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Invalid email or password." });
+    }
 
-//     res.json({ user, token: jwtToken });
-//   } catch (error) {
-//     res.status(500).json({ status: "error", message: error.message });
-//   }
-// });
+    // Compare the inputted password with the stored hashed password
+    const isMatch = await bcrypt.compare(password, user.password_hash);
+
+    if (!isMatch) {
+      return res.status(400).json({ success: false, message: "Invalid email or password." });
+    }
+
+    // If user is authenticated, generate a JWT token
+    // const jwtToken = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
+    //   expiresIn: "1h",
+    // });
+
+    // res.status(200).json({ success: true, token: jwtToken });
+    res.status(200).json({ success: true});
+  } catch (error) {
+    console.error("Error logging in user:", error);
+    res.status(500).json({ success: false, message: "Error logging in user" });
+  }
+});
 
 module.exports = router;
