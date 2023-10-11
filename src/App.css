@@ -1,7 +1,7 @@
 body {
   background-color: #222;
   color: #fff;
-  font-family: Arial, sans-serif;
+  font-family: 'Times New Roman', serif;
   text-align: center;
   padding-top: 50px;
   margin: 0; /* To remove default margins */
@@ -14,6 +14,14 @@ body {
   flex-direction: column;
   height: 100%;
  /* To stack Header and content vertically */
+}
+
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
 }
 
 .content {
@@ -144,4 +152,46 @@ body {
   width: 100px;
   height: 50px;
   margin-left: 50px;
+}
+
+.card {
+    background: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); /* Cyan glow for the futuristic AI theme */
+    border: 2px solid #00ffff; /* Neon cyan border */
+}
+
+input, button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #00ffff;
+    transition: all 0.3s;
+}
+
+input:focus, button:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
+}
+
+button {
+    cursor: pointer;
+    background-color: #1b263b; /* A shade from the MTG theme */
+}
+
+button:hover {
+    background-color: #0d1b2a; /* A darker shade */
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.7); /* Increase the glow on hover */
+}
+
+.auth-container .card input[type="email"], 
+.auth-container .card input[type="password"],
+.auth-container .card input[type="username"] {
+    width: 100%;
+    box-sizing: border-box;  /* This ensures padding and border are included in the total width */
 }
