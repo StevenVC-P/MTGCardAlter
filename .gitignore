@@ -23,3 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 .env
 
+localhost-key.pem
+localhost.pem
+new_server.cert
+new_server.key

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Header from "./components/Header.jsx";
 import CardForm from "./components/CardForm";
@@ -25,6 +25,14 @@ const MainPage = () => {
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // add this line
+
+   // Check on component mount if a token is already present
+   useEffect(() => {
+     const token = localStorage.getItem("jwt");
+     if (token) {
+       setIsLoggedIn(true);
+     }
+   }, []);
 
   return (
     <BrowserRouter>
