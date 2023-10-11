@@ -19,6 +19,7 @@
     "google-auth-library": "^9.0.0",
     "jsonwebtoken": "^9.0.1",
     "jspdf": "^2.5.1",
+    "mkcert": "^3.0.0",
     "mysql2": "^3.6.1",
     "node-fetch": "^3.3.2",
     "passport": "^0.6.0",
