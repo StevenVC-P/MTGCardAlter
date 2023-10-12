@@ -17,14 +17,22 @@ router.post("/register", async (req, res) => {
     // Hash the password before storing it
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    await User.create({
+    const newUser = await User.create({
       email,
       username,
       password_hash: hashedPassword,
     });
     // Store the user in the database
 
-    res.status(200).json({ success: true, message: "User registered successfully" });
+    res.status(200).json({
+      success: true,
+      message: "User registered successfully",
+      user: {
+        id: newUser.id,
+        email: newUser.email,
+        username: newUser.username,
+      },
+    });
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ success: false, message: "Error registering user" });
