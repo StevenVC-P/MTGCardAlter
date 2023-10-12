@@ -191,7 +191,31 @@ button:hover {
 
 .auth-container .card input[type="email"], 
 .auth-container .card input[type="password"],
-.auth-container .card input[type="username"] {
+.auth-container .card input[type="text"] {
     width: 100%;
     box-sizing: border-box;  /* This ensures padding and border are included in the total width */
+}
+
+.requirements-container {
+    background-color: #333; 
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.requirements-container h4 {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.requirements-container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.requirements-container li {
+    color: #aaa; 
+    margin-bottom: 5px;
 }
