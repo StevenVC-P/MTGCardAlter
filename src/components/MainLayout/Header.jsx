@@ -1,5 +1,5 @@
 import React from "react";
-import patreonLogo from '../assets/Patreon Brand Assets/Patreon Wordmark/JPG/Digital-Patreon-Wordmark_FieryCoralOnWhite-Sm.jpg'; // Make sure to provide the correct path to your image
+import patreonLogo from '../../assets/Patreon Brand Assets/Patreon Wordmark/JPG/Digital-Patreon-Wordmark_FieryCoralOnWhite-Sm.jpg'; // Make sure to provide the correct path to your image
 
 const Header = () => {
   return <div className="header">

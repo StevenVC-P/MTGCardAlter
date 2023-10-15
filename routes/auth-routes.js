@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const User = require('../models/User');
 
 router.post("/register", async (req, res) => {
@@ -24,6 +25,8 @@ router.post("/register", async (req, res) => {
     });
     // Store the user in the database
 
+    const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
     res.status(200).json({
       success: true,
       message: "User registered successfully",
@@ -32,6 +35,7 @@ router.post("/register", async (req, res) => {
         email: newUser.email,
         username: newUser.username,
       },
+      token
     });
   } catch (error) {
     console.error("Error registering user:", error);
@@ -54,7 +58,13 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid email or password." });
     }
 
-    res.status(200).json({ success: true});
+    const token = jwt.sign(
+      { id: user.id, email: user.email }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: "1h" }
+    );
+
+    res.status(200).json({ success: true, token });
   } catch (error) {
     console.error("Error logging in user:", error);
     res.status(500).json({ success: false, message: "Error logging in user" });

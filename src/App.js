@@ -1,8 +1,8 @@
 import React, { useState, useEffect, createContext } from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import Header from "./components/Header.jsx";
-import CardForm from "./components/CardForm";
-import Sidebar from "./components/Sidebar";
+import Header from "./components/MainLayout/Header.jsx";
+import CardForm from "./components/MainLayout/CardForm.jsx";
+import Sidebar from "./components/MainLayout/Sidebar";
 import LoginPage from "./pages/LoginPage"; // Import your Login component
 import RegisterPage from "./pages/RegistrationPage.jsx";
 import EmailLoginPage from "./components/Inputs/EmailLoginForm.jsx";
@@ -26,14 +26,14 @@ const MainPage = () => {
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // add this line
-  const [user, setUser] = useState(null); 
-   // Check on component mount if a token is already present
-   useEffect(() => {
-     const token = localStorage.getItem("jwt");
-     if (token) {
-       setIsLoggedIn(true);
-     }
-   }, []);
+  const [user, setUser] = useState(null);
+  // Check on component mount if a token is already present
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
