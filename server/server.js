@@ -18,12 +18,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/auth", authRoutes); // Added this line
-app.use("/api/cards", cardRoutes);
 app.use((req, res, next) => {
   console.log(`Received ${req.method} request to ${req.path}`);
   next();
 });
+app.use("/api/auth", authRoutes); // Added this line
+app.use("/api/cards", cardRoutes);
+
 
 app.use((req, res, next) => {
   const authHeader = req.headers.authorization;

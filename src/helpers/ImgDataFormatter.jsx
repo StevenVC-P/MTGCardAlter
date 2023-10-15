@@ -2,33 +2,45 @@ import axios from "axios";
 
 const generateImage = async (textPromptsWithWeights, height, width) => {
   try {
-    const response = await axios.post(`http://localhost:5000/api/generate-image`, {
-      height: height, // height of the output image
-      width: width, // width of the output image
-      cfg_scale: 25, // replace with the desired cfg_scale
-      clip_guidance_preset: 'NONE', // replace with the desired clip_guidance_preset
-      samples: 1, // replace with the desired number of samples
-      steps: 75, // replace with the desired number of steps
-      style_preset: 'digital-art', // replace with the desired style_preset
+    const authToken = localStorage.getItem('authToken');
+    const url = 'http://localhost:5000/api/generate-image';
+
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
+    };
+
+    const data = {
+      height,
+      width,
+      cfg_scale: 25,
+      clip_guidance_preset: 'NONE',
+      samples: 1,
+      steps: 75,
+      style_preset: 'digital-art',
       text_prompts: textPromptsWithWeights.map(prompt => ({
         text: prompt.text,
         weight: prompt.weight,
       })),
-    });
+    };
+
+    const response = await axios.post(url, data, config);
+
     if (response.status !== 200) {
       throw new Error(`Non-200 response: ${response.statusText}`);
     }
 
     const { image } = response.data;
+
     if (!image) {
       throw new Error('No image data found in the image generation response');
     }
 
-    // Return the generated image URL or data
     return image;
   } catch (error) {
     console.log('Error generating image:', error.message);
-    throw error; // You may also choose to reformat the error before throwing it, if necessary
+    throw error;
   }
 };
 
