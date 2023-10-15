@@ -6,18 +6,19 @@ const ValidatedInput = ({ type, placeholder, value, onChange, validator, errorMe
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
     if (shouldValidate && validator && typeof validator === 'function') {
-      if (!validator(inputValue)) {
-        setValidationMessage(errorMessage);
-      } else {
-        setValidationMessage('');
-      }
+      setValidationMessage(validator(inputValue) ? '' : errorMessage);
     }
     onChange(e);
   };
 
   return (
     <div>
-      <input type={type} placeholder={placeholder} value={value} onChange={handleInputChange} />
+      <input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={handleInputChange}
+      />
       {validationMessage && <small>{validationMessage}</small>}
     </div>
   );
