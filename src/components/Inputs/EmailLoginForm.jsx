@@ -27,6 +27,7 @@ const EmailLoginForm = ({ onSuccessfulLogin }) => {
 
       const data = await response.json();
       if (data.success) {
+        localStorage.setItem('authToken', data.token);
         onSuccessfulLogin();
       } else {
         setMessage(data.message);

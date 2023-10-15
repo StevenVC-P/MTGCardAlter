@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import BasicFrame from "./Templates/BasicFrame";
-import SplitFrame from "./Templates/SplitFrame";
-import Aftermath from "./Templates/Aftermath";
-import Adventure from "./Templates/Adventure";
-import FlipFrame from "./Templates/FlipFrame";
-import Battle from "./Templates/Battles";
-import Saga from "./Templates/Saga";
-import CardInputForm from "../components/Inputs/CardInputForms"; 
+import BasicFrame from "../Templates/BasicFrame";
+import SplitFrame from "../Templates/SplitFrame";
+import Aftermath from "../Templates/Aftermath";
+import Adventure from "../Templates/Adventure";
+import FlipFrame from "../Templates/FlipFrame";
+import Battle from "../Templates/Battles";
+import Saga from "../Templates/Saga";
+import CardInputForm from "../Inputs/CardInputForms"; 
 
 import { FixedSizeGrid as Grid } from 'react-window';
 
@@ -58,7 +58,7 @@ const CardForm = ({ sidebarText, sidebarWeight }) => {
 
   const renderCell = ({ columnIndex, rowIndex, style }) => {
     const index = rowIndex * NUM_COLUMNS + columnIndex;
-    if (index >= cardData.length) return; // Return empty if index is outside the range of data
+    if (index >= cardData.length) return null; // Return empty if index is outside the range of data
 
     const card = cardData[index];
     const imageData = images[card.imageKey];

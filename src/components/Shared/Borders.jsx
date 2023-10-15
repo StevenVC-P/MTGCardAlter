@@ -10,61 +10,42 @@ const colorMap = {
 };
 
 const extractColorsFromManaCost = (manaCost) => {
-    const colors = [];
+    const colors = new Set();
     const manaString = manaCost.join(",");
-    console.log("steve ", manaString)
     const pattern = /([WUBRG])/g;
     let match;
     while ((match = pattern.exec(manaString)) !== null) {
-        colors.push(match[1]);
+        colors.add(match[1]);
     }
-    return [...new Set(colors)];
+    return Array.from(colors);
 };
 
 export const getBorderStyle = (colors, manaCost, color_identity) => {
     const boxShadow = "4px 4px 3px rgba(0, 0, 0, 0.5)";
+
     if (!colors || colors.length === 0) {
         if (!color_identity || color_identity.length === 0) {
-            colors = extractColorsFromManaCost(manaCost);  // Update colors here
+            colors = extractColorsFromManaCost(manaCost);
         } else {
             return {
                 borderColor: colorMap[color_identity[0]],
                 borderWidth: '3px',
                 borderStyle: 'solid',
-                boxShadow: boxShadow,
+                boxShadow,
             };
         }
     }
-    if (colors.length === 1) {
-        return {
-            borderColor: colorMap[colors[0]],
-            borderWidth: '3px',
-            borderStyle: 'solid',
-            boxShadow: boxShadow,
-        };
-    } 
-    else if (colors.length === 2) {
-        return {
-            borderColor: colorMap["black"],
-            borderWidth: '2px',
-            borderStyle: 'solid',
-            boxShadow: boxShadow,
-        };
-    } 
-    else if (colors.length > 2) {
-        return {
-            borderColor: colorMap["gold"],
-            borderWidth: '3px',
-            borderStyle: 'solid',
-            boxShadow: boxShadow,
-        };
-    }
-    else {
-        return {
-            borderColor: colorMap["artifact"],
-            borderWidth: '3px',
-            borderStyle: 'solid',
-            boxShadow: boxShadow,
-        }
-    }
+
+    const borderColor = colors.length === 1 ? colorMap[colors[0]] :
+        colors.length === 2 ? colorMap["black"] :
+        colors.length > 2 ? colorMap["gold"] : colorMap["artifact"];
+
+    const borderWidth = colors.length === 2 ? '2px' : '3px';
+
+    return {
+        borderColor,
+        borderWidth,
+        borderStyle: 'solid',
+        boxShadow,
+    };
 };

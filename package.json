@@ -17,7 +17,7 @@
     "facebook-sdk": "^0.3.3",
     "fb": "^2.0.0",
     "google-auth-library": "^9.0.0",
-    "jsonwebtoken": "^9.0.1",
+    "jsonwebtoken": "^9.0.2",
     "jspdf": "^2.5.1",
     "mkcert": "^3.0.0",
     "mysql2": "^3.6.1",
