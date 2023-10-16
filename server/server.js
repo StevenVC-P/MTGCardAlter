@@ -8,6 +8,7 @@ const express = require("express");
 const cardRoutes = require("../routes/cards");
 const cors = require("cors");
 const authRoutes = require("../routes/auth-routes");
+const patreonRoutes = require("../routes/patreon-routes");
 const app = express();
 
 const privateKey = fs.readFileSync("./new_server.cert", "utf8");
@@ -24,7 +25,7 @@ app.use((req, res, next) => {
 });
 app.use("/api/auth", authRoutes); // Added this line
 app.use("/api/cards", cardRoutes);
-
+app.use("/patreon", patreonRoutes);
 
 app.use((req, res, next) => {
   const authHeader = req.headers.authorization;
