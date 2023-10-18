@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import axios from "../../utils/axiosSetup";
 import generateImageForCard from '../../helpers/imgGenerator';
 
-const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, decrementCounter }) => {
+const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, decrementCounter, counter,setErrorMessage }) => {
   const [cardNames, setCardNames] = useState([]);
   const [cardCounts, setCardCounts] = useState({});
 
+  let currentCounter = counter;
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const sanitizeInput = (input) => {
@@ -36,6 +37,11 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, dec
   const handleSubmit = async (event) => {
       event.preventDefault();
       
+      if (counter === 0) {
+        console.warn("Counter is at 0, not making a request.");
+        setErrorMessage("Counter is at 0, not making a request.");
+        return;
+      }
       // Splitting user input into an array of card names
       const cardNamesArr = cardNames.split('\n').filter(name => name !== '');
       let newImages = {};
@@ -44,11 +50,27 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, dec
       let tempCardData = [];
 
       for (const cardName of cardNamesArr) {
+        console.log(cardName, " ", currentCounter)
+        if (currentCounter === 0) {
+          console.warn("Counter is at 0, not making a request.");
+          setErrorMessage("Counter is at 0, not making a request.");
+          break;
+        }
         try {
           let {quantity, sanitizedCardName} = sanitizeInput(cardName);
 
           const response = await axios.get(`http://localhost:5000/api/cards/name/${sanitizedCardName}`);
-          let imageData = await generateImageForCard(response, sidebarText, sidebarWeight);
+          let imageData = await generateImageForCard(response, sidebarText, sidebarWeight, counter);
+
+          if (imageData.error) {
+              console.error(imageData.error);
+              // You can use some kind of state management to display the error message under the counter
+              setErrorMessage(imageData.error); 
+              continue; // Skip this loop iteration to avoid decrementing the counter and other operations.
+          }
+          console.log(cardName, " 1 ", currentCounter)
+          currentCounter --
+          console.log(cardName, " 2 ", currentCounter)
           decrementCounter();
           // Creating new card objects based on the quantity
           for(let i = 0; i < quantity; i++) {
