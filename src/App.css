@@ -219,3 +219,18 @@ button:hover {
     color: #aaa; 
     margin-bottom: 5px;
 }
+
+.logout-button {
+  background-color: #f44336; /* Red background */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-left: 20px;
+  transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+  background-color: #da190b; /* Darker red on hover */
+}

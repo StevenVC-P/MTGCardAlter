@@ -8,9 +8,7 @@ import Battle from "../Templates/Battles";
 import Saga from "../Templates/Saga";
 import CardInputForm from "../Inputs/CardInputForms"; 
 
-import { FixedSizeGrid as Grid } from 'react-window';
-
-const CardComponent = ({ card, imageData }) => {
+const CardComponent = ({ card, imageData, }) => {
   if (card.keywords.includes('Aftermath')) {
     return <Aftermath card={card} imageData={imageData}/>;
   } else {
@@ -48,42 +46,24 @@ const CardComponent = ({ card, imageData }) => {
 };
 
 // Main function component for the form
-const CardForm = ({ sidebarText, sidebarWeight }) => {
+const CardForm = ({ sidebarText, sidebarWeight, decrementCounter }) => {
   const [cardData, setCardData] = useState([]); // Assuming your card data
   const [images, setImages] = useState({}); // Assuming your image data
 
-  const CARD_WIDTH = 250;
-  const CARD_HEIGHT = 350;
-  const NUM_COLUMNS = 3;
-
-  const renderCell = ({ columnIndex, rowIndex, style }) => {
-    const index = rowIndex * NUM_COLUMNS + columnIndex;
-    if (index >= cardData.length) return null; // Return empty if index is outside the range of data
-
-    const card = cardData[index];
-    const imageData = images[card.imageKey];
-
-    return (
-      <div style={style} key={card.imageKey}>
-        <CardComponent card={card} imageData={imageData} />
-      </div>
-    );
-  };
-
   return (
     <div className="card-form-container">
-      <CardInputForm setCardData={setCardData} setImages={setImages} sidebarText={sidebarText} sidebarWeight={sidebarWeight}/>
+      <CardInputForm setCardData={setCardData} setImages={setImages} sidebarText={sidebarText} sidebarWeight={sidebarWeight} decrementCounter={decrementCounter}/>
       <div id="card-results">
-        <Grid
-          columnCount={NUM_COLUMNS}
-          columnWidth={CARD_WIDTH}
-          rowCount={Math.ceil(cardData.length / NUM_COLUMNS)}
-          rowHeight={CARD_HEIGHT}
-          width={CARD_WIDTH * NUM_COLUMNS} // Container width
-          height={600} // Adjust based on how many rows you want to display
-        >
-          {renderCell}
-        </Grid>
+        {
+          cardData.map(card => {
+            const imageData = images[card.imageKey];
+            return (
+              <div key={card.imageKey}>
+                <CardComponent card={card} imageData={imageData} />
+              </div>
+            );
+          })
+        }
       </div>
     </div>
   );

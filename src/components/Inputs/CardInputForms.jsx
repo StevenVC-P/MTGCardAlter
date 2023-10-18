@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from "../../utils/axiosSetup";
 import generateImageForCard from '../../helpers/imgGenerator';
 
-const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight }) => {
+const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, decrementCounter }) => {
   const [cardNames, setCardNames] = useState([]);
   const [cardCounts, setCardCounts] = useState({});
 
@@ -49,7 +49,7 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight }) =
 
           const response = await axios.get(`http://localhost:5000/api/cards/name/${sanitizedCardName}`);
           let imageData = await generateImageForCard(response, sidebarText, sidebarWeight);
-
+          decrementCounter();
           // Creating new card objects based on the quantity
           for(let i = 0; i < quantity; i++) {
             // Get the current count for the card name, and increment it
