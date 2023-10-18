@@ -32,6 +32,10 @@ User.init(
     google_id: DataTypes.STRING(50),
     facebook_id: DataTypes.STRING(50),
     patreon_id: DataTypes.STRING(50),
+    remaining_images: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -42,6 +46,10 @@ User.init(
       allowNull: false,
       defaultValue: Sequelize.NOW,
     },
+    refresh_token: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    }
   },
   {
     sequelize,

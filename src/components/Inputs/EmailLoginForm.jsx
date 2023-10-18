@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import ValidatedInput from './ValidatedInput'; 
 
-const EmailLoginForm = ({ onSuccessfulLogin }) => {
+const EmailLoginForm = ( { onSuccessfulLogin } ) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-
     const emailValidator = (email) => {
     const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return regex.test(email);
@@ -27,7 +26,8 @@ const EmailLoginForm = ({ onSuccessfulLogin }) => {
 
       const data = await response.json();
       if (data.success) {
-        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
         onSuccessfulLogin();
       } else {
         setMessage(data.message);

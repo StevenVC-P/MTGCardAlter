@@ -12,6 +12,7 @@ const colorCodeToName = {
 };
 
 function getColorNames(colorIdentity) {
+  console.log(colorIdentity);
   return colorIdentity
     .map((colorCode) => colorCodeToName[colorCode])
     .join(", ");
@@ -25,13 +26,10 @@ function getTokenPrompts(all_parts) {
 function getThemes(setName, colorNamesEach, keywords) {
   let themes = setThemes[setName] || [];
 
-  if (!(colorNamesEach instanceof Map)) {
-    console.error("colorNamesEach is not a Map. Its value is:", colorNamesEach);
-    return;
-  }
+  const colorsArray = colorNamesEach.split(", ");
 
-  colorNamesEach.forEach((value, color) => {
-    const coreSetThemes = setThemes["Core sets"][color];
+  colorsArray.forEach((colorName) => {
+    const coreSetThemes = setThemes["Core sets"][colorName];
     if (coreSetThemes) {
       themes.push(...coreSetThemes);
     }
