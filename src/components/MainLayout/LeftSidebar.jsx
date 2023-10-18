@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Sidebar = ({text, weight, setText, setWeight}) => {
+const LeftSidebar = ({text, weight, setText, setWeight}) => {
 
     const handleTextInputChange = (event) => {
         // Only allow characters used in normal writing
@@ -42,4 +42,4 @@ const Sidebar = ({text, weight, setText, setWeight}) => {
   );
 };
 
-export default Sidebar;
+export default LeftSidebar;

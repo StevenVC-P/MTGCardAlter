@@ -1,4 +1,4 @@
-const { pool } = require("../db.js");
+const { pool } = require("../../db");
 class Card {
   static async getById(cardId) {
     const [rows] = await pool.execute("SELECT * FROM Cards WHERE card_id = ?", [cardId]);
