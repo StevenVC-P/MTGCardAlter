@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from "../utils/axiosSetup";
 
 const generateImage = async (textPromptsWithWeights, height, width) => {
   try {
-    const authToken = localStorage.getItem('authToken');
+    const authToken = localStorage.getItem('accessToken');
     const url = 'http://localhost:5000/api/generate-image';
 
     const config = {

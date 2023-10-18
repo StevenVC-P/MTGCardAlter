@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const { PATREON_CLIENT_ID, PATREON_CLIENT_SECRET } = require("../env/config").env;
+const { PATREON_CLIENT_ID, PATREON_CLIENT_SECRET } = require("../../env/config").env;
 const patreon = require("patreon");
 const patreonAPI = patreon.patreon;
 const patreonOAuth = patreon.oauth;
@@ -61,38 +61,45 @@ router.get('/oauth/redirect', async (req, res) => {
 });
 
 router.post("/validate-patreon-token", async (req, res) => {
-    const { token } = req.body;
+  const { token } = req.body;
 
+  try {
+    // Decode the JWT to get the user ID
+    let decoded;
     try {
-        // Decode the JWT to get the user ID
-        let decoded;
-        try {
-            decoded = jwt.verify(token, process.env.JWT_SECRET);
-        } catch (err) {
-            return res.status(401).json({ message: "Invalid JWT token" });
-        }
-
-        const userID = decoded.id;
-
-        // Fetch the user from the database
-        const user = await User.findOne({ where: { id: userID } });
-
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // Check if the Patreon ID exists for this user
-        if (user.patreon_id) {
-        // The user has a Patreon ID, so the token is valid
-            res.json({ valid: true });
-        } else {
-        // The user does not have a Patreon ID, so the token is invalid
-            res.json({ valid: false });
-        }
-    } catch (error) {
-        console.error('Error validating Patreon token:', error);
-        res.status(500).json({ message: 'Error validating Patreon token' });
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(401).json({ message: "Invalid JWT token" });
     }
+
+    const userID = decoded.id;
+
+    // Fetch the user from the database
+    const user = await User.findOne({ where: { id: userID } });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the Patreon ID exists for this user
+    if (user.patreon_id) {
+      // The user has a Patreon ID, so the token is valid
+      // Generate a new access and refresh token
+      const accessToken = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "15m" });
+
+      const refreshToken = jwt.sign({ id: user.id, email: user.email }, process.env.REFRESH_TOKEN_SECRET);
+
+      await User.update({ refresh_token: refreshToken }, { where: { id: user.id } });
+      res.status(200).json({ valid: true, accessToken, refreshToken });
+    } else {
+      // The user does not have a Patreon ID, so the token is invalid
+      res.json({ valid: false });
+    }
+  } catch (error) {
+    console.error("Error validating Patreon token:", error);
+    res.status(500).json({ message: "Error validating Patreon token" });
+  }
 });
+
 
 module.exports = router;

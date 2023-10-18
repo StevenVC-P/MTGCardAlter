@@ -1,4 +1,7 @@
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
+
+console.log("Directly in config.js:", process.env.JWT_SECRET);
 
 module.exports = {
   env: {
@@ -7,6 +10,8 @@ module.exports = {
     FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
     FACEBOOK_APP_SECRET: process.env.FACEBOOK_APP_SECRET,
     PATREON_CLIENT_ID: process.env.PATREON_CLIENT_ID,
-    PATREON_CLIENT_SECRET: process.env.PATREON_CLIENT_SECRET
+    PATREON_CLIENT_SECRET: process.env.PATREON_CLIENT_SECRET,
+    JWT_SECRET: process.env.JWT_SECRET,
+    REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET
   },
 };
