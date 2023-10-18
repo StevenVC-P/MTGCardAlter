@@ -13,7 +13,8 @@ import "./App.css";
 const MainPage = ({ isPatreonConnected }) => {
   const [sidebarText, setSidebarText] = useState("");
   const [sidebarWeight, setSidebarWeight] = useState(5);
-  const [counter, setCounter] = useState(5);
+  const [counter, setCounter] = useState(1);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const decrementCounter = () => {
     setCounter((prevCounter) => Math.max(0, prevCounter - 1));
@@ -23,18 +24,9 @@ const MainPage = ({ isPatreonConnected }) => {
     <div className="container">
       <Header isConnected={isPatreonConnected} />
       <div className="content">
-        <LeftSidebar
-          text={sidebarText}
-          weight={sidebarWeight}
-          setText={setSidebarText}
-          setWeight={setSidebarWeight}
-        />
-        <CardForm
-          sidebarText={sidebarText}
-          sidebarWeight={sidebarWeight}
-          decrementCounter={decrementCounter}
-        />
-        <RightSidebar counter={counter} /> 
+        <LeftSidebar text={sidebarText} weight={sidebarWeight} setText={setSidebarText} setWeight={setSidebarWeight} />
+        <CardForm sidebarText={sidebarText} sidebarWeight={sidebarWeight} decrementCounter={decrementCounter} counter={counter} setErrorMessage={setErrorMessage} />
+        <RightSidebar counter={counter} errorMessage={errorMessage} />
       </div>
     </div>
   );
