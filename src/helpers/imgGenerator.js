@@ -78,19 +78,26 @@ async function generateImageFromPrompts(prompts, width, height) {
   return await generateImage(combinePromptsByWeight(prompts), width, height);
 }
 
-export default async function generateImageForCard(cardData, sidebarText, sidebarWeight) {
+export default async function generateImageForCard(cardData, sidebarText, sidebarWeight, counter) {
   const { name, color_identity, type_line, layout, card_faces, keywords, all_parts, set_name } = cardData.data;
 
   const colorNamesEach = getColorNames(color_identity);
   const tokenPrompts = getTokenPrompts(all_parts);
   const themes = getThemes(set_name, colorNamesEach, keywords);
-  console.log(themes)
   sidebarWeight /= 10;
 
   if (keywords.includes("Aftermath") || (layout === "split" && card_faces)) {
+    if (counter < 2) {
+      console.warn("Counter less than 2, not generating image for multiple-faced card.");
+      return { error: "Counter insufficient for multi-faced cards." };
+    }
     const [firstImage, secondImage] = await Promise.all(card_faces.map((face, index) => generateImageForFace(face, colorNamesEach, themes, sidebarText, sidebarWeight, index === 0 ? 576 : 512, index === 0 ? 1600 : 832)));
     return { firstImage, secondImage };
   } else if (layout === "transform" && card_faces) {
+    if (counter < 2) {
+      console.warn("Counter less than 2, not generating image for multiple-faced card.");
+      return { error: "Counter insufficient for multi-faced cards." };
+    }
     const images = await Promise.all(
       card_faces.map((face) => {
         let width = 512;
