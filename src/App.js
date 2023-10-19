@@ -34,16 +34,37 @@ const MainPage = ({ isPatreonConnected }) => {
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [isPatreonConnected, setIsPatreonConnected] = useState(false);
 
   const location = useLocation();
   useEffect(( ) => {
-    const token = localStorage.getItem("jwt");
-    if (token) {
-      setIsLoggedIn(true);
-    }
+    setIsLoading(true); // Start loading
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
 
+    if (accessToken && refreshToken) {
+      // Validate tokens and fetch user data here, then setIsLoggedIn and setUser
+      axios
+        .post("http://localhost:5000/api/auth/validate-access-token", { accessToken, refreshToken })
+        .then((response) => {
+          if (response.data.success) {
+            setIsLoggedIn(true);
+            setUser(response.data.user);
+          }
+        })
+        .catch((error) => {
+          console.error("Token validation error:", error);
+          setIsLoggedIn(false);
+          setUser(null);
+        })
+        .finally(() => {
+          setIsLoading(false); // End loading after server responds
+        });
+    } else {
+      setIsLoading(false); // End loading if no tokens
+    }
     const queryParams = new URLSearchParams(location.search);
     const patreonConnected = queryParams.get("patreonConnected");
     const patreonToken = queryParams.get("token");
