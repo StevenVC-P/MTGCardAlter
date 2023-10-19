@@ -2,13 +2,13 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const { PATREON_CLIENT_ID, PATREON_CLIENT_SECRET } = require("../../env/config").env;
+const { updateDatabaseWithPatreonInfo } = require("../helpers/patreonHelper");
 const patreon = require("patreon");
 const patreonAPI = patreon.patreon;
 const patreonOAuth = patreon.oauth;
-const User = require("../models/User");
+const { User, Patreon } = require("../models");
 
 const oauthClient = patreonOAuth(PATREON_CLIENT_ID, PATREON_CLIENT_SECRET);
-console.log("steve", Object.keys(oauthClient));
 
 // Redirect to Patreon login
 router.get("/auth/patreon", (req, res) => {
@@ -16,17 +16,15 @@ router.get("/auth/patreon", (req, res) => {
   const redirectURI = encodeURIComponent("http://localhost:5000/patreon/oauth/redirect");
   const scopes = encodeURIComponent("identity identity.memberships");
   const token = req.headers.authorization.split(" ")[1]; // Extract token from Authorization header
-  console.log("Received Token:", token); // Debugging line
   const redirectURL = `https://www.patreon.com/oauth2/authorize?response_type=code&client_id=${clientID}&redirect_uri=${redirectURI}&scope=${scopes}&state=${token}`;
 
   res.json({ redirectURL });
 });
 
 // Handle OAuth redirect
-router.get('/oauth/redirect', async (req, res) => {
+router.get("/oauth/redirect", async (req, res) => {
   const code = req.query.code;
   const token = req.query.state;
-  console.log("Received Token:", token); // Debugging line
   try {
     const tokensResponse = await oauthClient.getTokens(code, "http://localhost:5000/patreon/oauth/redirect");
     const patreonAPIClient = patreonAPI(tokensResponse.access_token);
@@ -34,9 +32,8 @@ router.get('/oauth/redirect', async (req, res) => {
     // Fetch Patreon user data
     const userResponse = await patreonAPIClient("/current_user");
     const patreonID = userResponse.rawJson.data.id;
-    console.log("Received Token:", token);
     let decoded;
-    
+
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
       console.log("Decoded Token:", decoded);
@@ -45,9 +42,17 @@ router.get('/oauth/redirect', async (req, res) => {
     }
 
     const userID = decoded.id;
-    console.log(userID);
-    // Update the user's patreon_id in your users table
-    await User.update({ patreon_id: patreonID }, { where: { id: userID } });
+
+    // Check if Patreon entry exists for this user
+    const existingPatreon = await Patreon.findOne({ where: { userId: userID } });
+
+    if (existingPatreon) {
+      // If Patreon entry exists, update it
+      await Patreon.update({ patreon_id: patreonID }, { where: { userId: userID } });
+    } else {
+      // Otherwise, create a new Patreon entry and associate it with the user
+      await Patreon.create({ patreon_id: patreonID, userId: userID });
+    }
 
     // Redirect back to frontend with a query parameter
     res.redirect(`http://localhost:3000/?patreonConnected=true&token=${token}`);
@@ -62,7 +67,6 @@ router.get('/oauth/redirect', async (req, res) => {
 
 router.post("/validate-patreon-token", async (req, res) => {
   const { token } = req.body;
-
   try {
     // Decode the JWT to get the user ID
     let decoded;
@@ -73,26 +77,27 @@ router.post("/validate-patreon-token", async (req, res) => {
     }
 
     const userID = decoded.id;
-
-    // Fetch the user from the database
-    const user = await User.findOne({ where: { id: userID } });
+    // Fetch the user from the database along with its related Patreon account
+    const user = await User.findOne({
+      where: { id: userID },
+      include: {
+        model: Patreon,
+        as: "patreonAccount",
+      },
+    });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if the Patreon ID exists for this user
-    if (user.patreon_id) {
-      // The user has a Patreon ID, so the token is valid
-      // Generate a new access and refresh token
+    // Now, check if the user has a related Patreon account
+    if (user.patreonAccount && user.patreonAccount.patreon_id) {
       const accessToken = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "15m" });
-
       const refreshToken = jwt.sign({ id: user.id, email: user.email }, process.env.REFRESH_TOKEN_SECRET);
 
       await User.update({ refresh_token: refreshToken }, { where: { id: user.id } });
       res.status(200).json({ valid: true, accessToken, refreshToken });
     } else {
-      // The user does not have a Patreon ID, so the token is invalid
       res.json({ valid: false });
     }
   } catch (error) {
@@ -101,5 +106,28 @@ router.post("/validate-patreon-token", async (req, res) => {
   }
 });
 
+router.post("/webhook", async (req, res) => {
+  try {
+    // Extract necessary data from the webhook payload
+    const patreonId = req.body.data.relationships.patron.data.id;
+    const pledgeAmountCents = req.body.data.attributes.amount_cents;
+
+    // Find the Patreon record by patreonId
+    const patreonRecord = await Patreon.findOne({ where: { patreon_id: patreonId } });
+
+    if (!patreonRecord) {
+      console.log(`Patreon record with Patreon ID ${patreonId} not found`);
+      return res.status(404).send("Patreon record not found");
+    }
+
+    // Update the user's remaining_images based on the pledgeAmount
+    await updateDatabaseWithPatreonInfo(patreonRecord.id, pledgeAmountCents);
+
+    res.sendStatus(200);
+  } catch (error) {
+    console.error("Error processing Patreon webhook:", error);
+    res.status(500).json({ message: "Error processing Patreon webhook" });
+  }
+});
 
 module.exports = router;
