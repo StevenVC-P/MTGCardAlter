@@ -87,6 +87,34 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/validate-access-token", (req, res) => {
+  const accessToken = req.body.accessToken;
+  if (!accessToken) {
+    return res.status(400).json({ success: false, message: "Access token not provided." });
+  }
+
+  try {
+    const decoded = jwt.verify(accessToken, JWT_SECRET);
+
+    User.findOne({ where: { id: decoded.id } })
+      .then((user) => {
+        if (!user) {
+          return res.status(403).json({ success: false, message: "User not found." });
+        }
+
+        return res.status(200).json({ success: true, user });
+      })
+      .catch((err) => {
+        console.error("Error finding user:", err);
+        res.status(500).json({ success: false, message: "Error finding user." });
+      });
+  } catch (error) {
+    console.error("Error validating access token:", error);
+    res.status(403).json({ success: false, message: "Invalid access token." });
+  }
+});
+
+
 router.post("/token", async (req, res) => {
   const refreshToken = req.body.refreshToken;
 
