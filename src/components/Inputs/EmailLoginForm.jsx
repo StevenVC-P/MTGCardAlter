@@ -38,27 +38,29 @@ const EmailLoginForm = ( { onSuccessfulLogin } ) => {
   };
 
   return (
-    <div>
-      <h2>Login with Email</h2>
-      <ValidatedInput
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        validator={emailValidator}
-        errorMessage="Please enter a valid email."
-      />
-      <ValidatedInput
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        validator={passwordValidator}
-        errorMessage="Password should be at least 8 characters long."
-      />
-      <button onClick={emailLogin}>Login</button>
-      {message && <p>{message}</p>}
-    </div>
+  <div className="login-container">
+    <h2 className="login-header">Login with Email</h2>
+    <ValidatedInput
+      type="email"
+      placeholder="Email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      validator={emailValidator}
+      errorMessage="Please enter a valid email."
+      className="login-input"
+    />
+    <ValidatedInput
+      type="password"
+      placeholder="Password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      validator={passwordValidator}
+      errorMessage="Password should be at least 8 characters long."
+      className="login-input"
+    />
+    <button className="login-btn" onClick={emailLogin}>Login</button>
+    {message && <p className="login-error-message">{message}</p>}
+  </div>
   );
 };
 
