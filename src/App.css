@@ -3,8 +3,8 @@ body {
   color: #fff;
   font-family: 'Times New Roman', serif;
   text-align: center;
-  padding-top: 50px;
-  margin: 0; /* To remove default margins */
+  padding-top: 10px;
+  margin: 0;
     height: 100%;
 }
 
@@ -13,7 +13,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
- /* To stack Header and content vertically */
+
 }
 
 .auth-container {
@@ -25,22 +25,48 @@ body {
 }
 
 .content {
-  flex-grow: 1; /* Allow content to grow and take up remaining space */
+  flex-grow: 1; 
   display: flex;
   height: 100%;
 }
 
 .header {
   font-size: 24px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 20px; 
+  position: relative;
 }
 
 .header-text {
   flex-grow: 1;
   text-align: center;
+}
+
+.left-header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-right: 10px;
+  justify-content: center;
+  margin-left: 35px;
+}
+
+.left-header-content p {
+  font-size: 0.5em;      
+  line-height: 1.2;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.app-name {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 
@@ -54,17 +80,38 @@ body {
   font-size: 16px;
 }
 
-.submit-button {
+.form-button {
   background-color: #555;
   color: #fff;
   padding: 10px 20px;
   border: none;
   font-size: 16px;
   cursor: pointer;
+  margin: 10px;
 }
 
-.submit-button:hover {
+.form-button:hover {
   background-color: #777;
+}
+
+.submit {
+    background-color: blue;
+    color: white;
+    border: none;
+}
+
+.clear {
+    background-color: red;
+    color: white;
+    border: none;
+}
+
+.submit:hover {
+    background-color: darkblue;
+}
+
+.clear:hover {
+    background-color: darkred;
 }
 
 .card-result {
@@ -93,8 +140,8 @@ body {
 #card-results {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;  /* Align items to the left */
-  gap: 10px;  /* Adjust as needed */
+  justify-content: flex-start; 
+  gap: 10px; 
 }
 
 .sidebar {
@@ -104,12 +151,11 @@ body {
   padding: 10px;
   flex-shrink: 0;
   height: 100%;
-  position: fixed; /* Prevent shrinking */
+  position: fixed;
 }
 
-.card-form-container { /* Apply this class to the CardForm component */
-  flex-grow: 1; /* Allow it to take up the remaining available width */
-  margin-left: 250px;
+.card-form-container { 
+  margin-left: 50px;
   margin-right: 50px;
   width: 100%;
   display: flex;
@@ -123,7 +169,7 @@ body {
   background-color: #333;
   border: none;
   color: #fff;
-  resize: none; /* Prevent resizing */
+  resize: none;
 }
 
 .sidebar label {
@@ -131,47 +177,33 @@ body {
   margin-bottom: 10px;
 }
 
-.form {
+.main-form {
   display: flex;
-  flex-direction: column; /* Stack the children (textarea and buttons) vertically */
-  align-items: center; /* Center the children horizontally */
+  flex-direction: column; 
+  align-items: center;
+  margin-left: 220px; 
+  margin-right: 220px;
+  margin-top: -30px;
 }
 
 .form-buttons {
   display: flex;
-  flex-direction: row; /* Stack the children (textarea and buttons) vertically */
-  align-items: center; /* Center the children horizontally */
+  flex-direction: row; 
+  align-items: center;
 }
 
-.submit-button,
-.clear-button {
-  margin: 10px;
-}
-
-.patreon-button {
+.patreon-img {
+  opacity: 100;
   width: 100px;
   height: 50px;
-  margin-left: 50px;
 }
 
 .card {
-    background: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+    background: rgba(0, 0, 0, 0.7);
     padding: 40px;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); /* Cyan glow for the futuristic AI theme */
-    border: 2px solid #00ffff; /* Neon cyan border */
-}
-
-input, button {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #00ffff;
-    transition: all 0.3s;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    border: 2px solid #00ffff;
 }
 
 input:focus, button:focus {
@@ -179,21 +211,27 @@ input:focus, button:focus {
     box-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
 }
 
-button {
-    cursor: pointer;
-    background-color: #1b263b; /* A shade from the MTG theme */
+.patreon-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.patreon-button:hover {
+    background-color: transparent;
+    box-shadow: none;
 }
 
 button:hover {
-    background-color: #0d1b2a; /* A darker shade */
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.7); /* Increase the glow on hover */
+    background-color: #0d1b2a;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
 }
 
 .auth-container .card input[type="email"], 
 .auth-container .card input[type="password"],
 .auth-container .card input[type="text"] {
     width: 100%;
-    box-sizing: border-box;  /* This ensures padding and border are included in the total width */
+    box-sizing: border-box;
 }
 
 .requirements-container {
@@ -221,16 +259,22 @@ button:hover {
 }
 
 .logout-button {
-  background-color: #f44336; /* Red background */
+  background-color: #f44336;
   color: white;
   padding: 10px 20px;
   border: none;
   cursor: pointer;
   border-radius: 4px;
   margin-left: 20px;
-  transition: background-color 0.3s;
+  margin-right: -10px;
+  width: 240px;
 }
 
 .logout-button:hover {
-  background-color: #da190b; /* Darker red on hover */
+  background-color: #da190b;
+}
+
+.right-bar {
+  position: fixed;
+  right: 0; 
 }
