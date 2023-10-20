@@ -14,7 +14,7 @@ const LoginPage = ({ setIsLoggedIn }) => {
         <h1>Arcane Proxy</h1>
       
         <EmailLoginForm onSuccessfulLogin={handleSuccessfulEmailLogin} />
-        {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error messages */}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <p>Don't have an account? <Link to="/register">Register here</Link></p>
       </div>
     </div>

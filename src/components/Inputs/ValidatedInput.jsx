@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ValidatedInput = ({ type, placeholder, value, onChange, validator, errorMessage, shouldValidate }) => {
+const ValidatedInput = ({ type, placeholder, value, onChange, validator, errorMessage, shouldValidate, className }) => {
   const [validationMessage, setValidationMessage] = useState('');
 
   const handleInputChange = (e) => {
@@ -12,14 +12,15 @@ const ValidatedInput = ({ type, placeholder, value, onChange, validator, errorMe
   };
 
   return (
-    <div>
+    <div className="validated-input-container">
       <input
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={handleInputChange}
+        className={className}
       />
-      {validationMessage && <small>{validationMessage}</small>}
+      {validationMessage && <small className="validation-error">{validationMessage}</small>}
     </div>
   );
 };

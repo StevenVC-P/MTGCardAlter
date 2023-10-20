@@ -32,7 +32,7 @@ return (
       {isConnected ? (
         <>
           <p>
-            Connect with Patreon <br />
+            Donate on Patreon <br />
             to create new images.
           </p>
         <a
@@ -50,7 +50,7 @@ return (
       ) : (
         <>
           <p>
-            Connect with Patreon <br />
+            Connect and donate on Patreon <br />
             to create new images.
           </p>
           <button
