@@ -20,10 +20,12 @@ class Card {
     LIMIT 1;
   `;
     const [cardRows] = await pool.query(query, [`%${properCaseCardName}%`, properCaseCardName]);
+
     if (cardRows.length === 0) {
       return null;
     }
     const exactMatch = cardRows.find((card) => card.name === properCaseCardName);
+
     if (exactMatch) {
       return await this.getAdditionalData(exactMatch);
     }

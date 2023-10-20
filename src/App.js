@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
-import axios from "./utils/axiosSetup"
 import Header from "./components/MainLayout/Header.jsx";
 import CardForm from "./components/MainLayout/CardForm.jsx";
 import LeftSidebar from "./components/MainLayout/LeftSidebar.jsx";
@@ -8,6 +7,7 @@ import RightSidebar from "./components/MainLayout/RightSidebar.jsx";
 import LoginPage from "./pages/LoginPage"; // Import your Login component
 import RegisterPage from "./pages/RegistrationPage.jsx";
 import UserContext from "./contexts/UserContext";
+import { tryLocalTokenValidation, tryPatreonTokenValidation } from "./utils/auth/tokenValidation.js";
 import "./App.css";
 
 const MainPage = ({ isPatreonConnected }) => {
@@ -37,54 +37,34 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [isPatreonConnected, setIsPatreonConnected] = useState(false);
-
   const location = useLocation();
-  useEffect(( ) => {
+
+  useEffect(() => {
     setIsLoading(true); // Start loading
-    const accessToken = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
 
-    if (accessToken && refreshToken) {
-      // Validate tokens and fetch user data here, then setIsLoggedIn and setUser
-      axios
-        .post("http://localhost:5000/api/auth/validate-access-token", { accessToken, refreshToken })
-        .then((response) => {
-          if (response.data.success) {
-            setIsLoggedIn(true);
-            setUser(response.data.user);
-          }
-        })
-        .catch((error) => {
-          console.error("Token validation error:", error);
-          setIsLoggedIn(false);
-          setUser(null);
-        })
-        .finally(() => {
-          setIsLoading(false); // End loading after server responds
+    tryLocalTokenValidation().then((localValidationResult) => {
+      if (localValidationResult.success) {
+        setIsLoggedIn(true);
+        setUser(localValidationResult.user);
+      } else {
+        // If local validation fails, try logging the user in with a valid Patreon token
+        tryPatreonTokenValidation(location).then((patreonValidationResult) => {
+          setIsLoggedIn(patreonValidationResult.success);
         });
-    } else {
-      setIsLoading(false); // End loading if no tokens
-    }
-    const queryParams = new URLSearchParams(location.search);
-    const patreonConnected = queryParams.get("patreonConnected");
-    const patreonToken = queryParams.get("token");
+      }
 
-    if (patreonConnected === "true" && patreonToken) {
-      axios
-        .post("http://localhost:5000/patreon/validate-patreon-token", { token: patreonToken })
-        .then((response) => {
-          if (response.data.valid) {
-            localStorage.setItem("accessToken", response.data.accessToken);
-            localStorage.setItem("refreshToken", response.data.refreshToken);
-            setIsLoggedIn(true);
-            setIsPatreonConnected(true);
-          }
-        })
-        .catch((error) => {
-          console.error("Error validating Patreon token:", error.response ? error.response.data : error.message);
-        });
-    }
+      // Separate check for Patreon connection, independent of login status
+      tryPatreonTokenValidation(location).then((patreonValidationResult) => {
+        setIsPatreonConnected(patreonValidationResult.success);
+        setIsLoading(false);
+      });
+    });
   }, [location]);
+
+  if (isLoading) {
+    return <div>Loading...</div>; 
+  }
+
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
