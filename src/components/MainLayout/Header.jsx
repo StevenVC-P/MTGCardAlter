@@ -26,39 +26,52 @@ const Header = ({ isConnected }) => {
     }
   };
 
-  return (
-    <div className="header">
+return (
+  <div className="header">
+    <div className="left-header-content">
       {isConnected ? (
         <>
-          <a
-            href="https://www.patreon.com/ArcaneProxies"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src={patreonLogo}
-              alt="Donate on Patreon"
-              className="patreon-button"
-            />
-          </a>
+          <p>
+            Connect with Patreon <br />
+            to create new images.
+          </p>
+        <a
+          href="https://www.patreon.com/ArcaneProxies"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src={patreonLogo}
+            alt="Donate on Patreon"
+            className="patreon-img"
+          />
+        </a>
         </>
       ) : (
         <>
-          <p>Please connect with Patreon to unlock exclusive features.</p>
+          <p>
+            Connect with Patreon <br />
+            to create new images.
+          </p>
           <button
             onClick={connectWithPatreon}
-            className="connect-patreon-button"
+            className ="patreon-button"
           >
-            Connect with Patreon
+          <img
+            src={patreonLogo}
+            alt="Donate on Patreon"
+            className="patreon-img"
+          />
           </button>
         </>
       )}
-      ArcaneProxy
-      <button onClick={handleLogout} className="logout-button">
-        Logout
-      </button>
     </div>
-  );
+    <span className="app-name">ArcaneProxy</span>
+    <button onClick={handleLogout} className="logout-button">
+      Logout
+    </button>
+  </div>
+);
 };
 
 export default Header;

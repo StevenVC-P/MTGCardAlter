@@ -27,7 +27,7 @@ const LeftSidebar = ({text, weight, setText, setWeight}) => {
         cols="30"
         placeholder="Type here..."
       />
-      <label htmlFor="weight">Weight:</label>
+      <label htmlFor="weight">Weight: {weight}</label>
       <input
         type="range"
         id="weight"
@@ -37,7 +37,6 @@ const LeftSidebar = ({text, weight, setText, setWeight}) => {
         value={weight} // using the prop value
         onChange={handleWeightChange}
       />
-      <div>Selected Weight: {weight}</div>
     </div>
   );
 };
