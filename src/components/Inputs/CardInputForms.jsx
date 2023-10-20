@@ -102,16 +102,17 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, dec
   };
 
   return (
-    <form className={"form"} onSubmit={handleSubmit}>
-      <textarea onChange={e => setCardNames(e.target.value)} value={cardNames} className="input-box" placeholder="Copy/Paste Magic card names and quantities" />
+    <form className={"main-form"} onSubmit={handleSubmit}>
       <div className={"form-buttons"}>
-        <button type="submit" className="submit-button">
+        <button type="submit" className="submit form-button">
           Submit
         </button>
-        <button type="button" className="clear-button" onClick={handleClear}>
+        <button type="button" className="clear form-button" onClick={handleClear}>
           Clear
         </button>
       </div>
+      <textarea onChange={e => setCardNames(e.target.value)} value={cardNames} className="input-box" placeholder="Copy/Paste Magic card names and quantities" />
+
     </form>
   );
 };
