@@ -12,8 +12,10 @@ body {
 .container {
   display: flex;
   flex-direction: column;
-  height: 100%;
-
+  justify-content: flex-start;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
 }
 
 .auth-container {
@@ -24,9 +26,10 @@ body {
 }
 
 .content {
-  flex-grow: 1; 
   display: flex;
+  justify-content: space-between;
   height: 100%;
+  width: 100%
 }
 
 .header {
@@ -37,6 +40,7 @@ body {
   align-items: center;
   padding: 0 20px; 
   position: relative;
+  width: 100%;
 }
 
 .header-text {
@@ -117,6 +121,24 @@ body {
   margin-bottom: 20px;
 }
 
+#card-results {
+    width: 80%;
+    max-width: 800px;
+    min-width: 300px;
+    overflow: hidden;
+}
+
+#card-results img {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    #card-results {
+        width: 95%;
+    }
+}
+
 .card-name {
   font-size: 18px;
   font-weight: bold;
@@ -150,12 +172,12 @@ body {
   padding: 10px;
   flex-shrink: 0;
   height: 100%;
-  position: fixed;
+  position: absolute;
 }
 
 .card-form-container { 
-  margin-left: 50px;
-  margin-right: 50px;
+  margin-left: 15%;
+  margin-right: 15%;
   width: 100%;
   display: flex;
   align-items: space-between;
@@ -322,8 +344,7 @@ button:hover {
   border: none;
   cursor: pointer;
   border-radius: 4px;
-  margin-left: 20px;
-  margin-right: -10px;
+  margin-right: 1%;
   width: 240px;
 }
 
@@ -332,7 +353,6 @@ button:hover {
 }
 
 .right-bar {
-  position: fixed;
   right: 0; 
 }
 
