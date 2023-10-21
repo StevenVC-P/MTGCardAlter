@@ -14,8 +14,16 @@ async function refreshTokenAndRetry(failedRequest) {
     failedRequest.response.config.headers["Authorization"] = "Bearer " + data.accessToken;
     return axios(failedRequest.response.config);
   } catch (error) {
-    // Handle error appropriately, perhaps redirect to login
     console.error("Failed to refresh token", error);
+
+    // Remove tokens from local storage.
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+
+    // Redirect to login
+    window.location.href = "/login";
+
+    return Promise.reject(error);
   }
 }
 
