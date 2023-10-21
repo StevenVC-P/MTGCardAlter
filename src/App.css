@@ -17,11 +17,10 @@ body {
 }
 
 .auth-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .content {
@@ -199,11 +198,12 @@ body {
 }
 
 .card {
-    background: rgba(0, 0, 0, 0.7);
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-    border: 2px solid #00ffff;
+  width: 320px;
+  padding: 20px;
+  background-color: #282c36;
+  border-radius: 5px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  color: #fff;
 }
 
 input:focus, button:focus {
@@ -232,6 +232,63 @@ button:hover {
 .auth-container .card input[type="text"] {
     width: 100%;
     box-sizing: border-box;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  background-color: #383e49;
+  border: none;
+  border-radius: 3px;
+  color: #fff;
+  outline: none;
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 10px 15px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.auth-btn:hover {
+  background-color: #45a049;
+}
+
+.auth-error-message {
+  color: #ff6b6b;
+  text-align: center;
+}
+
+.requirements-container {
+  margin-top: 20px;
+  background-color: #383e49;
+  padding: 10px;
+  border-radius: 3px;
+}
+
+.requirements-header {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.requirements-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.requirements-list li {
+  margin-bottom: 5px;
 }
 
 .requirements-container {
@@ -277,4 +334,62 @@ button:hover {
 .right-bar {
   position: fixed;
   right: 0; 
+}
+
+.login-container {
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #282c36;
+  border-radius: 5px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  color: #fff;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-input {
+  width: 100%;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  background-color: #383e49;
+  border: none;
+  border-radius: 3px;
+  color: #fff;
+  outline: none;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 10px 15px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.login-btn:hover {
+  background-color: #45a049;
+}
+
+.login-error-message {
+  color: #ff6b6b;
+  text-align: center;
+}
+
+.validated-input-container {
+  position: relative;
+}
+
+.validation-error {
+  position: absolute;
+  bottom: -18px;
+  left: 0;
+  color: #ff6b6b;
+  font-size: 12px;
 }

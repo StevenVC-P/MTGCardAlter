@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import UserContext from '../contexts/UserContext';
 import ValidatedInput from '../components/Inputs/ValidatedInput';
 
@@ -51,7 +51,8 @@ const RegisterPage = ({setIsLoggedIn}) => {
   return (
     <div className="auth-container">
         <div className="card">
-            <h2>Register</h2>
+            <h1>Arcane Proxy</h1>
+            <h2 className="auth-header">Register</h2>
             <ValidatedInput
               type="email"
               placeholder="Email"
@@ -60,6 +61,7 @@ const RegisterPage = ({setIsLoggedIn}) => {
               validator={emailValidator}
               errorMessage="Please enter a valid email."
               shouldValidate={shouldValidate}
+              className="auth-input"
             />
             <ValidatedInput
               type="text"
@@ -69,6 +71,7 @@ const RegisterPage = ({setIsLoggedIn}) => {
               validator={usernameValidator}
               errorMessage="Username should be at least 3 characters long."
               shouldValidate={shouldValidate}
+              className="auth-input"
             />
             <ValidatedInput
               type="password"
@@ -78,16 +81,19 @@ const RegisterPage = ({setIsLoggedIn}) => {
               validator={passwordValidator}
               errorMessage="Password should be at least 8 characters long."
               shouldValidate={shouldValidate}
+              className="auth-input"
             />
-            <button onClick={register}>Register</button>
-            {message && <p>{message}</p>}
+            <button className="auth-btn" onClick={register}>Register</button>
+            {message && <p className="auth-error-message">{message}</p>}
           <div className="requirements-container">
-              <h4>Requirements:</h4>
-              <ul>
+              <h4 className="requirements-header">Requirements:</h4>
+              <ul className="requirements-list">
                   <li>Email: Valid email format</li>
                   <li>Username: At least 3 characters long</li>
                   <li>Password: At least 8 characters long</li>
               </ul>
+            <p>Have an account?</p>
+            <Link to="/login"> Login</Link>
           </div>
         </div>
     </div>
