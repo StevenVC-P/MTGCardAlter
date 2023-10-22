@@ -34,72 +34,72 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, dec
     setImages({});
   };
 
-  const handleSubmit = async (event) => {
-      event.preventDefault();
-      
-      if (counter === 0) {
+const handleSubmit = async (event) => {
+  event.preventDefault();
+
+  if (counter === 0) {
+    console.warn("Counter is at 0, not making a request.");
+    setErrorMessage("Counter is at 0, not making a request.");
+    return;
+  }
+
+  const cardNamesArr = cardNames.split('\n').filter(name => name.trim() !== '');
+  let newImages = {};
+  let newCardCounts = { ...cardCounts };
+
+  let tempCardData = [];
+
+  try {
+    for (const cardName of cardNamesArr) {
+      if (currentCounter === 0) {
         console.warn("Counter is at 0, not making a request.");
         setErrorMessage("Counter is at 0, not making a request.");
-        return;
-      }
-      // Splitting user input into an array of card names
-      const cardNamesArr = cardNames.split('\n').filter(name => name !== '');
-      let newImages = {};
-      let newCardCounts = { ...cardCounts }; // Make a copy of the current counts
-
-      let tempCardData = [];
-
-      for (const cardName of cardNamesArr) {
-        console.log(cardName, " ", currentCounter)
-        if (currentCounter === 0) {
-          console.warn("Counter is at 0, not making a request.");
-          setErrorMessage("Counter is at 0, not making a request.");
-          break;
-        }
-        try {
-          let {quantity, sanitizedCardName} = sanitizeInput(cardName);
-
-          const response = await axios.get(`http://localhost:5000/api/cards/name/${sanitizedCardName}`);
-          let imageData = await generateImageForCard(response, sidebarText, sidebarWeight, counter);
-
-          if (imageData.error) {
-              console.error(imageData.error);
-              // You can use some kind of state management to display the error message under the counter
-              setErrorMessage(imageData.error); 
-              continue; // Skip this loop iteration to avoid decrementing the counter and other operations.
-          }
-          console.log(cardName, " 1 ", currentCounter)
-          currentCounter --
-          console.log(cardName, " 2 ", currentCounter)
-          decrementCounter();
-          // Creating new card objects based on the quantity
-          for(let i = 0; i < quantity; i++) {
-            // Get the current count for the card name, and increment it
-            const count = (newCardCounts[sanitizedCardName] || 0) + 1;
-            newCardCounts[sanitizedCardName] = count;
-
-            // Creating a unique key for each card object
-            const key = `${sanitizedCardName}-${count}`;
-
-            // Saving the image to the newImages object
-            newImages[key] = imageData;
-            tempCardData.push({...response.data, imageKey: key});
-            await delay(100);
-          }
-        } catch (error) {
-          console.error("Error fetching card data:", error);
-        }
+        break;
       }
 
-      // Update the cardData state with the temporary array
-      setCardData(prevCardData => [...prevCardData, ...tempCardData]);
-      // Update the cardCounts state
-      setCardCounts(newCardCounts);
+      const { quantity, sanitizedCardName } = sanitizeInput(cardName);
+      const response = await axios.get(`http://localhost:5000/api/cards/name/${sanitizedCardName}`);
 
-      // Clearing the input and saving the new images to the images state
-      setCardNames("");
-      setImages(prevImages => ({...prevImages, ...newImages}));
-  };
+      if (response.status === 200) {
+        const imageData = await generateImageForCard(response, sidebarText, sidebarWeight, counter);
+
+        if (imageData.error) {
+          console.error(imageData.error);
+          setErrorMessage(imageData.error);
+          continue;
+        }
+
+        currentCounter--;
+        decrementCounter();
+
+        const cardDataPromises = Array.from({ length: quantity }, async () => {
+          const count = (newCardCounts[sanitizedCardName] || 0) + 1;
+          newCardCounts[sanitizedCardName] = count;
+          const key = `${sanitizedCardName}-${count}`;
+          newImages[key] = imageData;
+          await delay(100);
+          return { ...response.data, imageKey: key };
+        });
+
+        tempCardData.push(...await Promise.all(cardDataPromises));
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching card data:", error);
+    let errorMessage = "An error occurred. Please try again.";
+
+    if (error.response && error.response.data.message) {
+      errorMessage = error.response.data.message;
+    }
+
+    setErrorMessage(errorMessage);
+  }
+
+  setCardData(prevCardData => [...prevCardData, ...tempCardData]);
+  setCardCounts(newCardCounts);
+  setCardNames("");
+  setImages(prevImages => ({ ...prevImages, ...newImages }));
+};
 
   return (
     <form className={"main-form"} onSubmit={handleSubmit}>
