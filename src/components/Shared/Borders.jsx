@@ -9,6 +9,17 @@ const colorMap = {
     "artifact": "#808080"
 };
 
+const backgroundColorMap = {
+    "W": "#f3f0e7",
+    "U": "#c6dce8",
+    "B": "#d7cfcc",
+    "R": "#f2cfbc",
+    "G": "#c2cdc5",
+    "gold": "#d3bf84",
+    "colorless": "#d8dde1",
+    "artifact": "#d8dde1"
+};
+
 const extractColorsFromManaCost = (manaCost) => {
     const colors = new Set();
     const manaString = manaCost.join(",");
@@ -22,17 +33,22 @@ const extractColorsFromManaCost = (manaCost) => {
 
 export const getBorderStyle = (colors, manaCost, color_identity) => {
     const boxShadow = "4px 4px 3px rgba(0, 0, 0, 0.5)";
-
+    console.log(colors)
     if (!colors || colors.length === 0) {
         if (!color_identity || color_identity.length === 0) {
             colors = extractColorsFromManaCost(manaCost);
         } else {
-            return {
+            const styleObject = {
                 borderColor: colorMap[color_identity[0]],
                 borderWidth: '3px',
                 borderStyle: 'solid',
+                backgroundColor: backgroundColorMap[color_identity[0]],
                 boxShadow,
             };
+
+            console.log(styleObject);
+
+            return styleObject;
         }
     }
 
@@ -42,10 +58,15 @@ export const getBorderStyle = (colors, manaCost, color_identity) => {
 
     const borderWidth = colors.length === 2 ? '2px' : '3px';
 
+    const backgroundColor = colors.length === 1 ? backgroundColorMap[colors[0]] :
+        colors.length === 2 ? backgroundColorMap["black"] :
+        colors.length > 2 ? backgroundColorMap["gold"] : backgroundColorMap["artifact"];
+
     return {
         borderColor,
         borderWidth,
         borderStyle: 'solid',
         boxShadow,
+        backgroundColor
     };
 };
