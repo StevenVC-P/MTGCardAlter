@@ -17,13 +17,17 @@ router.get("/name/:name", async (req, res) => {
     const card = await Card.getByName(cardName);
 
     if (!card) {
-      return res.status(404).json({ message: "Card not found" });
+      return res.status(404).json({ message: `Card with the name "${cardName}" could not be found.` });
     }
 
     res.json(card);
   } catch (error) {
     console.error("Error fetching card data:", error);
-    res.status(500).json({ message: "Error fetching card data" });
+    if (error.message.startsWith("No card matches")) {
+      res.status(404).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "An unexpected error occurred while retrieving card data. Please try again later." });
+    }
   }
 });
 
