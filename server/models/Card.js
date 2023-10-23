@@ -6,7 +6,7 @@ class Card {
   }
 
   static async getByName(cardName) {
-    const properCaseCardName = cardName.replace(/\b\w/g, (char) => char.toUpperCase());
+  const lowerCaseCardName = cardName.toLowerCase();
 
     const query = `
     SELECT * FROM Cards 
@@ -19,18 +19,19 @@ class Card {
         name ASC 
     LIMIT 1;
   `;
-    const [cardRows] = await pool.query(query, [`%${properCaseCardName}%`, properCaseCardName]);
+
+    const [cardRows] = await pool.query(query, [`%${lowerCaseCardName}%`, lowerCaseCardName]);
 
     if (cardRows.length === 0) {
       throw new Error(`No card matches found for these names:`);
     }
 
-    const exactMatch = cardRows.find((card) => card.name === properCaseCardName);
-
+    const exactMatch = cardRows.find((card) => card.name.toLowerCase() === lowerCaseCardName);
+    console.log(exactMatch);
     if (exactMatch) {
       return await this.getAdditionalData(exactMatch);
     }
-    const splitMatch = cardRows.filter((card) => card.name.split(" // ").includes(properCaseCardName));
+    const splitMatch = cardRows.filter((card) => card.name.split(" // ").includes(lowerCaseCardName));
     if (splitMatch.length > 0) {
       return await this.getAdditionalData(splitMatch[0]);
     }
