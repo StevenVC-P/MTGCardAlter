@@ -122,16 +122,7 @@ body {
 }
 
 #card-results {
-    width: 80%;
-    max-width: 800px;
-    min-width: 300px;
     overflow: hidden;
-}
-
-@media (max-width: 768px) {
-    #card-results {
-        width: 95%;
-    }
 }
 
 .card-name {
@@ -156,8 +147,8 @@ body {
 #card-results {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start; 
-  gap: 10px; 
+  justify-content: space-between; 
+  gap: 5px; 
 }
 
 .sidebar {
