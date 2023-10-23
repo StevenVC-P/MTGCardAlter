@@ -22,7 +22,7 @@ class Card {
     const [cardRows] = await pool.query(query, [`%${properCaseCardName}%`, properCaseCardName]);
 
     if (cardRows.length === 0) {
-      throw new Error(`No card matches found for the name: ${properCaseCardName}`);
+      throw new Error(`No card matches found for these names:`);
     }
 
     const exactMatch = cardRows.find((card) => card.name === properCaseCardName);
