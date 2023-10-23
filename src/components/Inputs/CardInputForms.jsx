@@ -5,6 +5,7 @@ import generateImageForCard from '../../helpers/imgGenerator';
 const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, decrementCounter, counter,setErrorMessage }) => {
   const [cardNames, setCardNames] = useState([]);
   const [cardCounts, setCardCounts] = useState({});
+  const [categorizedErrors, setCategorizedErrors] = useState({});
 
   let currentCounter = counter;
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -48,16 +49,18 @@ const handleSubmit = async (event) => {
   let newCardCounts = { ...cardCounts };
 
   let tempCardData = [];
+  let localCategorizedErrors = {};
 
-  try {
-    for (const cardName of cardNamesArr) {
-      if (currentCounter === 0) {
-        console.warn("Counter is at 0, not making a request.");
-        setErrorMessage("Counter is at 0, not making a request.");
-        break;
-      }
+  for (const cardName of cardNamesArr) {
+    if (currentCounter === 0) {
+      console.warn("Counter is at 0, not making a request.");
+      setErrorMessage("Counter is at 0, not making a request.");
+      break;
+    }
 
-      const { quantity, sanitizedCardName } = sanitizeInput(cardName);
+    const { quantity, sanitizedCardName } = sanitizeInput(cardName);
+
+    try {
       const response = await axios.get(`http://localhost:5000/api/cards/name/${sanitizedCardName}`);
 
       if (response.status === 200) {
@@ -65,7 +68,10 @@ const handleSubmit = async (event) => {
 
         if (imageData.error) {
           console.error(imageData.error);
-          setErrorMessage(imageData.error);
+          if (!localCategorizedErrors[imageData.error]) {
+            localCategorizedErrors[imageData.error] = [];
+          }
+          localCategorizedErrors[imageData.error].push(cardName);
           continue;
         }
 
@@ -83,18 +89,23 @@ const handleSubmit = async (event) => {
 
         tempCardData.push(...await Promise.all(cardDataPromises));
       }
+    } catch (error) {
+      let errorMessage = "An error occurred. Please try again.";
+      if (error.response && error.response.data.message) {
+        errorMessage = error.response.data.message;
+      }
+      if (!localCategorizedErrors[errorMessage]) {
+        localCategorizedErrors[errorMessage] = [];
+      }
+      localCategorizedErrors[errorMessage].push(cardName);
     }
-  } catch (error) {
-    console.error("Error fetching card data:", error);
-    let errorMessage = "An error occurred. Please try again.";
-
-    if (error.response && error.response.data.message) {
-      errorMessage = error.response.data.message;
-    }
-
-    setErrorMessage(errorMessage);
   }
 
+  if (Object.keys(localCategorizedErrors).length) {
+    setErrorMessage(localCategorizedErrors);
+  } else {
+    setErrorMessage(""); // Clear any previous error messages
+  }
   setCardData(prevCardData => [...prevCardData, ...tempCardData]);
   setCardCounts(newCardCounts);
   setCardNames("");
