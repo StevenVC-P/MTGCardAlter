@@ -30,7 +30,6 @@ const PORT = process.env.PORT || 5000;
 app.post("/api/generate-image", authenticateToken, async (req, res) => {
   try {
     const { height, width, cfg_scale, clip_guidance_preset, sampler, samples, steps, style_preset, text_prompts } = req.body;
-    console.log(req);
     // Perform the image generation using Stability.AI API
     const response = await axios.post(
       `${apiHost}/v1/generation/${engineId}/text-to-image`,

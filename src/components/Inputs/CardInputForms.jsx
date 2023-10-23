@@ -61,8 +61,9 @@ const handleSubmit = async (event) => {
     const { quantity, sanitizedCardName } = sanitizeInput(cardName);
 
     try {
-      const response = await axios.get(`http://localhost:5000/api/cards/name/${sanitizedCardName}`);
-
+     const response = await axios.get(`http://localhost:5000/api/cards/name/${sanitizedCardName}`);
+      // const response = await axios.get(`https://api.scryfall.com/cards/named?fuzzy=${sanitizedCardName}`);
+      console.log(response)
       if (response.status === 200) {
         const imageData = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, counter);
 

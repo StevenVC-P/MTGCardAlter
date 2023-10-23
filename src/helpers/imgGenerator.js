@@ -20,7 +20,7 @@ function getColorNames(colorIdentity) {
 
 function getTokenPrompts(all_parts) {
   const tokenParts = all_parts?.filter((part) => part.component === "token") || [];
-  return tokenParts.map((part) => `${part.name}, ${part.type_line}`).join(", ");
+  return tokenParts.map((part) => `${part.name}`);
 }
 
 // function getThemes(setName, colorNamesEach, keywords) {
@@ -81,10 +81,12 @@ async function generateImageFromPrompts(prompts, width, height) {
 }
 
 export default async function generateImageForCard(cardData, sidebarText, sidebarWeight, otherValues, counter) {
-  const { name, color_identity, type_line, layout, card_faces, keywords, all_parts, set_name } = cardData.data;
+  const { name, color_identity, type_line, layout, card_faces, keywords, relatedCards, set_name } = cardData.data;
 
   const colorNamesEach = getColorNames(color_identity);
-  const tokenPrompts = getTokenPrompts(all_parts);
+  console.log(relatedCards);
+  const tokenPrompts = getTokenPrompts(relatedCards);
+  console.log(tokenPrompts);
   // const themes = getThemes(set_name, colorNamesEach, keywords);
   sidebarWeight /= 10;
 
