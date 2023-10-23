@@ -33,7 +33,6 @@ const extractColorsFromManaCost = (manaCost) => {
 
 export const getBorderStyle = (colors, manaCost, color_identity) => {
     const boxShadow = "4px 4px 3px rgba(0, 0, 0, 0.5)";
-    console.log(colors)
     if (!colors || colors.length === 0) {
         if (!color_identity || color_identity.length === 0) {
             colors = extractColorsFromManaCost(manaCost);
@@ -45,8 +44,6 @@ export const getBorderStyle = (colors, manaCost, color_identity) => {
                 backgroundColor: backgroundColorMap[color_identity[0]],
                 boxShadow,
             };
-
-            console.log(styleObject);
 
             return styleObject;
         }
