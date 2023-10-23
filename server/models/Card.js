@@ -27,7 +27,6 @@ class Card {
     }
 
     const exactMatch = cardRows.find((card) => card.name.toLowerCase() === lowerCaseCardName);
-    console.log(exactMatch);
     if (exactMatch) {
       return await this.getAdditionalData(exactMatch);
     }
@@ -43,7 +42,7 @@ class Card {
     const fetchKeywordQuery = "SELECT keyword FROM Keywords WHERE card_id = ?";
     const fetchColorIdentityQuery = "SELECT color_identity FROM CardColorIdentities WHERE card_id = ? ORDER BY id ASC";
     const fetchCardFacesQuery = "SELECT id, name, type_line, mana_cost, oracle_text, watermark, power, toughness FROM CardFaces WHERE card_id = ? ORDER BY id ASC";
-    const fetchRelatedCardsQuery = "SELECT related_card_id, component FROM RelatedCards WHERE card_id = ?";
+    const fetchRelatedCardsQuery = "SELECT related_card_id, component, name FROM RelatedCards WHERE parent_card_name = ?";
     const fetchLegalitiesQuery = "SELECT format_name, legality FROM Legalities WHERE card_id = ?";
     const fetchGamesQuery = "SELECT game FROM Games WHERE card_id = ?";
 
@@ -68,11 +67,24 @@ class Card {
       toughness: row.toughness,
     }));
 
-    const [relatedCards] = await pool.execute(fetchRelatedCardsQuery, [card.card_id]);
-    card.relatedCards = relatedCards.map((row) => ({
-      related_card_id: row.related_card_id,
-      component: row.component,
-    }));
+    const [relatedCards] = await pool.execute(fetchRelatedCardsQuery, [card.name]);
+
+    // Post-process the SQL results to remove duplicates.
+    const uniqueRelatedCards = relatedCards
+      .filter((row) => row.component === "token")
+      .reduce((acc, row) => {
+        if (!acc.some((item) => item.name === row.name)) {
+          acc.push({
+            related_card_id: row.related_card_id,
+            name: row.name,
+            component: row.component,
+          });
+        }
+        return acc;
+      }, []);
+
+    // Assign the unique related cards to your card object.
+    card.relatedCards = uniqueRelatedCards;
 
     const [legalities] = await pool.execute(fetchLegalitiesQuery, [card.card_id]);
     card.legalities = legalities.map((row) => ({
