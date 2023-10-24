@@ -22,7 +22,18 @@ const backgroundColorMap = {
 
 const extractColorsFromManaCost = (manaCost) => {
     const colors = new Set();
-    const manaString = manaCost.join(",");
+    console.log(manaCost)
+    let manaString;
+    
+    if (Array.isArray(manaCost)) {
+        manaString = manaCost.join(",");
+    } else if (typeof manaCost === 'string') {
+        manaString = manaCost;
+    } else {
+        console.error("Invalid type for manaCost");
+        return [];
+    }
+
     const pattern = /([WUBRG])/g;
     let match;
     while ((match = pattern.exec(manaString)) !== null) {
@@ -33,10 +44,10 @@ const extractColorsFromManaCost = (manaCost) => {
 
 export const getBorderStyle = (colors, manaCost, color_identity) => {
     const boxShadow = "4px 4px 3px rgba(0, 0, 0, 0.5)";
-    console.log(colors)
+
     if (!colors || colors.length === 0) {
         if (!color_identity || color_identity.length === 0) {
-            colors = extractColorsFromManaCost(manaCost);
+           colors = extractColorsFromManaCost(manaCost);
         } else {
             const styleObject = {
                 borderColor: colorMap[color_identity[0]],
@@ -46,12 +57,10 @@ export const getBorderStyle = (colors, manaCost, color_identity) => {
                 boxShadow,
             };
 
-            console.log(styleObject);
-
             return styleObject;
         }
     }
-
+    console.log(colors)
     const borderColor = colors.length === 1 ? colorMap[colors[0]] :
         colors.length === 2 ? colorMap["black"] :
         colors.length > 2 ? colorMap["gold"] : colorMap["artifact"];
