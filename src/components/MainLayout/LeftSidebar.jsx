@@ -35,9 +35,9 @@ const LeftSidebar = ({
         type="range"
         id={key}
         name={key}
-        min="1"
+        min="0"
         max="10"
-        value={otherValues[key] || 1}
+        value={otherValues[key] || 5}
         onChange={(e) => handleSliderChange(e, key)}
       />
     </div>
@@ -59,7 +59,7 @@ const LeftSidebar = ({
         type="range"
         id="weight"
         name="weight"
-        min="1"
+        min="0"
         max="10"
         value={weight}
         onChange={handleWeightChange}
@@ -69,7 +69,6 @@ const LeftSidebar = ({
       {renderSlider('Type Line', 'typeLine')}
       {renderSlider('Keywords', 'keywords')}
       {renderSlider('Tokens', 'tokens')}
-      {renderSlider('Favor Text', 'favorText')}
     </div>
   );
 };
