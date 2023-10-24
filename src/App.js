@@ -18,6 +18,15 @@ const MainPage = ({ isPatreonConnected }) => {
   const [counter, setCounter] = useState(500);
   const [errorMessage, setErrorMessage] = useState(null);
 
+  const [otherValues, setOtherValues] = useState({
+    cardName: 1,
+    color: 1,
+    typeLine: 1,
+    keywords: 1,
+    tokens: 1,
+    favorText: 1,
+  });
+
   const handleClearError = () => {
     setErrorMessage("");
   };
@@ -30,8 +39,8 @@ const MainPage = ({ isPatreonConnected }) => {
       <Header isConnected={isPatreonConnected} />
       <ErrorComponent errorMessage={errorMessage} onClearError={handleClearError} />
       <div className="content">
-        <LeftSidebar text={sidebarText} weight={sidebarWeight} setText={setSidebarText} setWeight={setSidebarWeight} />
-        <CardForm sidebarText={sidebarText} sidebarWeight={sidebarWeight} decrementCounter={decrementCounter} counter={counter} setErrorMessage={setErrorMessage} />
+        <LeftSidebar text={sidebarText} weight={sidebarWeight} setText={setSidebarText} setWeight={setSidebarWeight} otherValues={otherValues} setOtherValues={setOtherValues} />
+        <CardForm sidebarText={sidebarText} sidebarWeight={sidebarWeight} otherValues={otherValues} decrementCounter={decrementCounter} counter={counter} setErrorMessage={setErrorMessage} />
         <RightSidebar counter={counter} errorMessage={errorMessage} />
       </div>
     </div>

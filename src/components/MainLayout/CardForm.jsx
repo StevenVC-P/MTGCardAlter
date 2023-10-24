@@ -46,13 +46,13 @@ const CardComponent = ({ card, imageData, }) => {
 };
 
 // Main function component for the form
-const CardForm = ({ sidebarText, sidebarWeight, decrementCounter, counter, setErrorMessage }) => {
+const CardForm = ({ sidebarText, sidebarWeight, otherValues, decrementCounter, counter, setErrorMessage }) => {
   const [cardData, setCardData] = useState([]); 
   const [images, setImages] = useState({});
 
   return (
     <div className="card-form-container">
-      <CardInputForm setCardData={setCardData} setImages={setImages} sidebarText={sidebarText} sidebarWeight={sidebarWeight} decrementCounter={decrementCounter} counter={counter} setErrorMessage={setErrorMessage}/>
+      <CardInputForm setCardData={setCardData} setImages={setImages} sidebarText={sidebarText} sidebarWeight={sidebarWeight} otherValues={otherValues} decrementCounter={decrementCounter} counter={counter} setErrorMessage={setErrorMessage}/>
       <div id="card-results">
         {
           cardData.map(card => {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from "../../utils/axiosSetup";
 import generateImageForCard from '../../helpers/imgGenerator';
 
-const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, decrementCounter, counter,setErrorMessage }) => {
+const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, otherValues, decrementCounter, counter, setErrorMessage }) => {
   const [cardNames, setCardNames] = useState([]);
   const [cardCounts, setCardCounts] = useState({});
   const [categorizedErrors, setCategorizedErrors] = useState({});
@@ -61,10 +61,11 @@ const handleSubmit = async (event) => {
     const { quantity, sanitizedCardName } = sanitizeInput(cardName);
 
     try {
-      const response = await axios.get(`http://localhost:5000/api/cards/name/${sanitizedCardName}`);
-
+     const response = await axios.get(`http://localhost:5000/api/cards/name/${sanitizedCardName}`);
+      // const response = await axios.get(`https://api.scryfall.com/cards/named?fuzzy=${sanitizedCardName}`);
+      console.log(response)
       if (response.status === 200) {
-        const imageData = await generateImageForCard(response, sidebarText, sidebarWeight, counter);
+        const imageData = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, counter);
 
         if (imageData.error) {
           console.error(imageData.error);
