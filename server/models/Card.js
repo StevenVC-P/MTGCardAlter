@@ -14,8 +14,8 @@ class Card {
 
     const caseStatement = `
         CASE 
-            WHEN name = '${exactLowerCaseCardName}' THEN 1
-            WHEN name LIKE '${likeLowerCaseCardNameWithDelimiterStart}' THEN 2
+            WHEN name = ? THEN 1
+            WHEN name LIKE ? THEN 2
             ELSE 3
         END
     `;
@@ -28,7 +28,9 @@ class Card {
         LIMIT 1;
     `;
 
-    const [cardRows] = await pool.query(query, [likeLowerCaseCardName, likeLowerCaseCardNameWithDelimiterStart, likeLowerCaseCardNameWithDelimiterEnd, exactLowerCaseCardName]);
+    const parameters = [likeLowerCaseCardName, likeLowerCaseCardNameWithDelimiterStart, likeLowerCaseCardNameWithDelimiterEnd, exactLowerCaseCardName, exactLowerCaseCardName, likeLowerCaseCardNameWithDelimiterStart];
+    const [cardRows] = await pool.query(query, parameters);
+
     if (cardRows.length === 0) {
       throw new Error(`No card matches found for these names:`);
     }

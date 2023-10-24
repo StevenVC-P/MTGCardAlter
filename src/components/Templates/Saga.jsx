@@ -57,7 +57,7 @@ const Saga = React.memo((props) => {
                         {
                             splitNumerals.map((numeral, numIndex) => (
                                 <div className="numeral-container" key={numIndex}>
-                                    <FontAwesomeIcon icon={faSquare} />
+                                    <div className="hexagon"></div>
                                     <span>{numeral}</span>
                                 </div>
                             ))

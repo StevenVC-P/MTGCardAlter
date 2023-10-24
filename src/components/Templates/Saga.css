@@ -32,7 +32,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: white; 
+    color: black; 
     font-weight: bold;
     width: 25px;
 }
@@ -44,9 +44,9 @@
 .roman-numeral span {
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 45%;
     transform: translate(-50%, -50%); 
-    font-size: 0.7em; 
+    font-size: 0.6em; 
     z-index: 2;
 }
 
@@ -73,7 +73,7 @@
   align-items: center; /* this is now horizontal alignment due to row direction */
   justify-content: flex-start;
   position: relative;
-  margin-right: .5em; /* add some space between the numeral and the text */
+  margin-right: .7em;
 }
 
 .numeral-icon {
@@ -119,28 +119,44 @@
 /* text-align: center; */
 
 .hexagon {
-  position: relative;
-  width: 100px; 
-  height: 58px; 
-  background-color: #D9D9D9;
-  margin-top: 29px;
+    width: 23px;
+    padding-bottom: 14.43px; /* Adjusted proportionally */
+    position: relative;
+    background-color: #FFD700;
+    margin: 8px 0 8px 0px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex; /* Adding flex properties to center numeral */
+    align-items: center; /* Vertically centering */
+    justify-content: center; /* Horizontally centering */
+    border-left: 2px solid #B8860B; /* Darker border color */
+    border-right: 2px solid #B8860B;
+    z-index: 2;
 }
 
 .hexagon::before,
 .hexagon::after {
-  content: "";
-  position: absolute;
-  width: 0;
-  border-left: 50px solid transparent;
-  border-right: 50px solid transparent;
+    content: "";
+    width: 25px;
+    padding-bottom: 14.43px; /* Adjusted proportionally */
+    position: absolute;
+    background-color: #FFD700;
+    box-sizing: border-box;
 }
 
 .hexagon::before {
-  top: -29px;
-  border-bottom: 29px solid #D9D9D9;
+    /* background-color: brown; */
+    left: 10.5px; /* Adjusted from 20px */
+    transform: rotate(-60deg);
+    transform-origin: 48% 150%;
+        border-left: 2px solid #B8860B; 
+    border-right: 2px solid #B8860B;
 }
 
 .hexagon::after {
-  bottom: -29px;
-  border-top: 29px solid #D9D9D9;
+    /* background-color: blue; */
+    left: -2.5px;
+    transform: rotate(60deg);
+    transform-origin: 27% 77%;
+        border-left: 2px solid #B8860B; 
+    border-right: 2px solid #B8860B;
 }
