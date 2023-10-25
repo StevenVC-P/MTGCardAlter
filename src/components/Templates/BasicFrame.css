@@ -1,0 +1,93 @@
+.planeswalker-cost {
+    font-size: .7em;  
+    color: white;  
+    position: absolute;
+    z-index: 4;
+}
+
+.planeswalker-borders {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1; 
+}
+
+.planeswalker_loyalty {
+    position: absolute;
+    bottom: -8px; 
+    right: -5px; 
+    width: 35px; 
+    height: 17px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    font-size: clamp(0.5em, .8em, 2em);
+}
+
+.planeswalker_loyalty img {
+    position: absolute;
+    top: -2px;
+    left: 5;
+    width: 120%;
+    height: auto;
+}
+
+.loyalty-text {
+    z-index: 3;
+    height: 7px; 
+    color: white; /* or any other contrasting color */
+    font-size: .95em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.planeswalker-image-container img {
+    width: 120%;
+    height: auto;
+}
+
+.planeswalker {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 100%;
+}
+
+.planeswalker-cost-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-right: em;
+    position: relative;
+    width: 20%;
+}
+
+.planeswalker.highlight {
+    background-color: rgba(186, 0, 0, 0.1);
+}
+
+.loyalty-icon{
+    position: absolute; 
+    left: -10px;
+    top:-15px;
+}
+
+.planeswalker_text p{
+    width: auto;
+    height: auto;
+    margin: auto;
+}
+
+
+.planeswalker_textcontainer {
+  display: flex;
+  flex-direction: column; /* Align children vertically */
+  justify-content: flex-start; /* Spread children evenly with space around them */
+  align-items: flex-start; /* Center children horizontally */
+  height: 100%;
+  width: 100%;
+}
