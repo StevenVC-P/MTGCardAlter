@@ -13,7 +13,7 @@ const OracleTextCleaner = ({ text, className, type_line }) => {
   
   // Split the text into lines first
   const lines = text.split('\n');
-const finalParts = lines.map((line, lineIndex) => {
+  const finalParts = lines.map((line, lineIndex) => {
   const parts = [];
   let lastIndex = 0;
   let iconSequence = [];
@@ -62,9 +62,10 @@ const finalParts = lines.map((line, lineIndex) => {
   });
 
   const containerStyle = className === 'saga_text' ? { height: 'auto' } : {};
-
+  console.log(type_line)
+  const containerClass = type_line && type_line.includes("Planeswalker") ? 'planeswalker_textcontainer' : 'textcontainer';
   return (
-    <div className={`textcontainer`} style={containerStyle}>
+    <div className={containerClass} style={containerStyle}>
       <p className={`oracle_text ${className || ''}`} style={{ fontSize, textAlign, alignItems, display, flexDirection, justifyContent, width }}>
         <span style={{ display, flexDirection, justifyContent, alignItems, width, height }}>
           {finalParts}
