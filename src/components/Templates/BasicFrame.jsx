@@ -5,6 +5,10 @@ import CardBackground from '../Shared/CardBackground';
 import { getBorderStyle } from '../Shared/Borders';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
+import Loyalty_start from'../../assets/WalkerSymbols/Loyalty_start.webp';
+import Loyalty_up from'../../assets/WalkerSymbols/Loyalty_up.webp';
+import Loyalty_down from'../../assets/WalkerSymbols/Loyalty_down.webp';
+import Loyalty_neutral from'../../assets/WalkerSymbols/Loyalty_neutral.webp';
 import domtoimage from 'dom-to-image';
 import "./Universal.css";
 import "./BasicFrame.css";
@@ -21,27 +25,27 @@ const BasicFrame = React.memo((props) => {
     let planeswalker_text = "";
     let abilities = [];
 
-    useEffect(() => {
-    let isCancelled = false;
+    // useEffect(() => {
+    // let isCancelled = false;
 
-    if (imageData && cardRef.current) {
-        domtoimage.toPng(cardRef.current)
-            .then((imgData) => {
-                if (!isCancelled) {
-                    setImageURL(imgData);
-                }
-            })
-            .catch((error) => {
-                if (!isCancelled) {
-                    console.error('Error generating image:', error);
-                }
-            });
-    }
+    // if (imageData && cardRef.current) {
+    //     domtoimage.toPng(cardRef.current)
+    //         .then((imgData) => {
+    //             if (!isCancelled) {
+    //                 setImageURL(imgData);
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             if (!isCancelled) {
+    //                 console.error('Error generating image:', error);
+    //             }
+    //         });
+    // }
 
-    return () => {
-        isCancelled = true;
-    };
-    }, [imageData]);
+    // return () => {
+    //     isCancelled = true;
+    // };
+    // }, [imageData]);
 
     function escapeRegex(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -79,32 +83,47 @@ const BasicFrame = React.memo((props) => {
         }
     }
 
-    if (type_line.includes("Planeswalker")) {
-        const oracle_parts = oracle_text.split('\n');
-        oracle_parts.forEach((part, index) => {
-            // console.log("steve ", part)
-            const abilityRegex = /((\+|−|-|0)[0-9]*:)/;
-
-            if (abilityRegex.test(part)) {
-                const cost = part.match(abilityRegex)[0];
-                const text = part.replace(new RegExp(escapeRegex(cost)), '').trim();
-                abilities.push(
-                    <div className="ability" key={index}>
-                        <div className={`planeswalker ${index % 2 !== 0 ? "highlight" : ""}`}>
-                            <div className="planeswalker-cost-container">
-                                <FontAwesomeIcon icon={faSquare} color="black" />
-                                <span className="planeswalker-cost">{cost}</span>
-                            </div>
-                            <OracleTextCleaner className="planeswalker_text"  text={text}/>
-                        </div>
-                    </div>
-                );
-            } else if(index === 0){
-                planeswalker_text = part;
+if (type_line.includes("Planeswalker")) {
+    const oracle_parts = oracle_text.split('\n');
+    oracle_parts.forEach((part, index) => {
+        const abilityRegex = /((\+|−|-|0)[0-9]*)/;
+        
+        if (abilityRegex.test(part)) {
+            const cost = part.match(abilityRegex)[0];
+            const text = part.replace(new RegExp(escapeRegex(cost)), '').trim();
+            // Determine the loyalty icon outside the JSX for clarity
+            let loyaltyIcon;
+            let costStyle = {};
+            if (cost.charAt(0) === '+') {
+                loyaltyIcon = <img className="loyalty-icon" src={Loyalty_up} alt="Loyalty Up Icon" />;
+                costStyle = { left: 4, top: -4 };
+            } else if (cost.charAt(0) === '−') { // added '−' character check for minus
+                loyaltyIcon = <img className="loyalty-icon" src={Loyalty_down} alt="Loyalty Down Icon" />;
+                costStyle = { left: 2, top: -8 };
+            } else {
+                loyaltyIcon = <img className="loyalty-icon" src={Loyalty_neutral} alt="Loyalty Neutral Icon" />;
+                costStyle = { left: 7, top: -6 };
             }
-        });
-    }
 
+            abilities.push(
+                <div className="ability" key={index}>
+                    <div className={`planeswalker ${index % 2 !== 0 ? "highlight" : ""}`}>
+                        <div className="planeswalker-cost-container">
+                            <div className="planeswalker-image-container">
+                                {loyaltyIcon}
+                            </div>
+                            <span className="planeswalker-cost" style={costStyle}>{cost}</span>
+                        </div>
+                        <OracleTextCleaner className="planeswalker_text" text={text} type_line={type_line}/>
+                    </div>
+                </div>
+            );
+        } else if(index === 0){
+            planeswalker_text = part;
+        }
+    });
+}
+    console.log(loyalty)
     return imageURL ? (
         <img src={imageURL} alt="Generated Card" />
     ) : (
@@ -129,7 +148,13 @@ const BasicFrame = React.memo((props) => {
                                     <div className="planeswalker_abilities">
                                         {abilities}
                                     </div>
+                                    <div className="planeswalker_loyalty">
+                                        <img src={Loyalty_start} alt="Loyalty Icon" />
+                                        <span className="loyalty-text">{loyalty}</span>
+                                    </div>
+
                                 </React.Fragment>
+                                
                             ) : type_line.includes("Creature") && oracle_text.includes("Level up") ? (
                                 <div className="levels">
                                     {levels}
@@ -142,11 +167,12 @@ const BasicFrame = React.memo((props) => {
                                             <OracleTextCleaner text={flavor_text} />
                                         </div>
                                     )}
-                                    {(type_line.includes("Creature") || type_line.includes("Vehicle")) && !oracle_text.includes("Level up") ? (
-                                        <div className="power-toughness">{power}/{toughness}</div>
-                                    ) : type_line.includes("Planeswalker") ? (
-                                        <div className="power-toughness">{loyalty}</div>
-                                    ) : null}
+
+                                    {
+                                    (type_line.includes("Creature") || type_line.includes("Vehicle")) && !oracle_text.includes("Level up") &&
+                                    (<div className="power-toughness">{power}/{toughness}</div>)
+                                    }
+
                                 </React.Fragment>
                             )}
                     </div>

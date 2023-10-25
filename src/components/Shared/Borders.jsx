@@ -22,7 +22,6 @@ const backgroundColorMap = {
 
 const extractColorsFromManaCost = (manaCost) => {
     const colors = new Set();
-    console.log(manaCost)
     let manaString;
     
     if (Array.isArray(manaCost)) {
@@ -60,7 +59,6 @@ export const getBorderStyle = (colors, manaCost, color_identity) => {
             return styleObject;
         }
     }
-    console.log(colors)
     const borderColor = colors.length === 1 ? colorMap[colors[0]] :
         colors.length === 2 ? colorMap["black"] :
         colors.length > 2 ? colorMap["gold"] : colorMap["artifact"];

@@ -7,7 +7,7 @@ export const stylingFormatter = (type_line, className, text) => {
     flexDirection: 'row',
     iconSize: '15px',
     justifyContent: 'space-around',
-    width: '100%' ,
+
     height: '100%'
   };
 // styles.alignItems = 'center';    
@@ -20,15 +20,23 @@ export const stylingFormatter = (type_line, className, text) => {
     styles.display = 'flex';
     styles.flexDirection = text.length <= 50 ? 'row' : 'column';
     styles.iconSize = text.length <= 50 ? '10px' : '8px';
+    styles.width = '100%';
   } else if (className && className.includes('split')) {
     styles.fontSize = text.length <= 50 ? '.6em' : '0.5em';
     styles.textAlign = 'left';
     styles.flexDirection = 'column';
+    styles.width = '100%';
     styles.iconSize = text.length <= 50 ? '10px' : '8px';
   } else if (className && className.includes('planeswalker')) {
-    styles.fontSize = '.6em';
+    styles.fontSize = '.5em';
     styles.textAlign = 'left';
-    styles.iconSize = '8px';
+    styles.iconSize = '18px';
+    styles.alighnItems = 'center';  
+    if (text.length <= 50) {
+      styles.fontSize = '.6em';
+    }else if (text.length > 50 && text.length <= 100) {
+      styles.fontSize = '0.55em';
+    }
   } else {
     if (text.length <= 50) {
         styles.fontSize = '1em'; 
@@ -36,19 +44,23 @@ export const stylingFormatter = (type_line, className, text) => {
         styles.justifyContent = 'center'; 
         styles.alignItems = 'center';
         styles.flexDirection = 'column';
+        styles.width = '100%';
   } else if (text.length > 50 && text.length <= 100) {
       styles.fontSize = '0.6em';
       styles.flexDirection = 'column';
       styles.iconSize = '8px';
+      styles.width = '100%';
     } else if (text.length > 100 && text.length <= 200) {
       styles.fontSize = '0.6em';
       styles.flexDirection = 'column';
       styles.iconSize = '8px';
+      styles.width = '100%';
     } else if (text.length > 200) {
       styles.fontSize = '0.55em';
       styles.flexDirection = 'column';
       styles.alignItems = 'space-around';
       styles.iconSize = '8px';
+      styles.width = '100%';
     }
   }
 
