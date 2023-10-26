@@ -36,14 +36,11 @@ class Card {
     }
 
     const exactMatch = cardRows.find((card) => card.name.toLowerCase() === lowerCaseCardName);
-    console.log(exactMatch);
     if (exactMatch) {
       return await this.getAdditionalData(exactMatch);
     }
     const splitMatch = cardRows.find((card) => card.name.toLowerCase().split(" // ").includes(lowerCaseCardName));
-    console.log(splitMatch);
     if (splitMatch) {
-      console.log("steve0");
       return await this.getAdditionalData(splitMatch);
     }
     return null;
@@ -54,7 +51,7 @@ class Card {
     const fetchColorQuery = "SELECT color FROM CardColors WHERE card_id = ?";
     const fetchKeywordQuery = "SELECT keyword FROM Keywords WHERE card_id = ?";
     const fetchColorIdentityQuery = "SELECT color_identity FROM CardColorIdentities WHERE card_id = ? ORDER BY id ASC";
-    const fetchCardFacesQuery = "SELECT id, name, type_line, mana_cost, oracle_text, watermark, power, toughness FROM CardFaces WHERE card_id = ? ORDER BY id ASC";
+    const fetchCardFacesQuery = "SELECT id, name, type_line, mana_cost, oracle_text, watermark, power, toughness, defense FROM CardFaces WHERE card_id = ? ORDER BY id ASC";
     const fetchRelatedCardsQuery = "SELECT related_card_id, component, name FROM RelatedCards WHERE parent_card_name = ?";
     const fetchLegalitiesQuery = "SELECT format_name, legality FROM Legalities WHERE card_id = ?";
     const fetchGamesQuery = "SELECT game FROM Games WHERE card_id = ?";
@@ -69,6 +66,7 @@ class Card {
     card.color_identity = cardColorIdentities.map((row) => row.color_identity);
 
     const [cardFaces] = await pool.execute(fetchCardFacesQuery, [card.card_id]);
+    console.log(cardFaces)
     card.card_faces = cardFaces.map((row) => ({
       id: row.id,
       name: row.name,
@@ -78,6 +76,7 @@ class Card {
       watermark: row.watermark,
       power: row.power,
       toughness: row.toughness,
+      defense: row.defense,
     }));
 
     const [relatedCards] = await pool.execute(fetchRelatedCardsQuery, [card.name]);
@@ -107,7 +106,6 @@ class Card {
 
     const [games] = await pool.execute(fetchGamesQuery, [card.card_id]);
     card.games = games.map((row) => row.game);
-    console.log(card);
     return card;
   }
 
