@@ -1,10 +1,9 @@
 .battle-card-background {
     width: 130%;
     height: 70%;
-    position: absolute; /* Change from relative to absolute */
-    overflow: hidden;
+    position: absolute;
     transform: rotate(270deg);
-    top: -10; /* Add these lines to position as desired */
+    top: -10;
     left: -10; 
 }
 
@@ -22,9 +21,8 @@
 .battle-frame-type-line {
     display: flex;
     justify-content: space-between;
-    width: 90%; /* Adjust as needed */
-    height: 10%; /* Adjust as needed */
-    /* padding: 5px 0; */
+    width: 90%;
+    height: 10%;
     font-size: clamp(0.4em, .3em, .8em);
     background: linear-gradient( 0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3) ); 
     border-radius: 18px/40px;
@@ -48,9 +46,12 @@
 }
 
 .battle-frame-text-box {
-    width: 88%; /* Adjust as needed */
-    height: 35%; /* Adjust as needed */
+    margin:  0 10px;
+    width: 88%;
+    height: 35%;
+    display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     justify-content: space-between; 
     box-sizing: border-box;
     align-items: start;
@@ -58,3 +59,19 @@
     font-size: clamp(0.5em, 1.1em, 3.5em);
 }
 
+.defense {
+    position: absolute;
+    bottom: -1px; 
+    right: 5px; 
+    width: 20px; 
+    height: 25px; 
+    background-color: #ccc; 
+    border: 1px solid black;
+    border-radius: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    font-size: clamp(0.5em, .8em, 2em);
+    z-index: 4;
+}
