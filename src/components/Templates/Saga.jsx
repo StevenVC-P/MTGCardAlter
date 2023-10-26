@@ -5,6 +5,7 @@ import CardBackground from '../Shared/CardBackground';
 import { getBorderStyle } from '../Shared/Borders';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
+import sage_icon from '../../assets/Misc/Saga.webp';
 import domtoimage from 'dom-to-image';
 import "./Universal.css";
 import "./Saga.css";
@@ -57,8 +58,8 @@ const Saga = React.memo((props) => {
                         {
                             splitNumerals.map((numeral, numIndex) => (
                                 <div className="numeral-container" key={numIndex}>
-                                    <div className="hexagon"></div>
-                                    <span>{numeral}</span>
+                                     <img className="saga-icon" src={sage_icon} alt="Saga Icon" />
+                                    <span className="saga-numeral">{numeral}</span>
                                 </div>
                             ))
                         }
