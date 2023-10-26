@@ -54,7 +54,7 @@ const LeftSidebar = ({
         cols="30"
         placeholder="Type here..."
       />
-      <label htmlFor="weight">Weight: {weight}</label>
+      <label htmlFor="weight">Prompt: {weight}</label>
       <input
         type="range"
         id="weight"
