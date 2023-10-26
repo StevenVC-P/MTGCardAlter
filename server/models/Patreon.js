@@ -23,10 +23,6 @@ Patreon.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
-    remaining_images: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
   },
   {
     sequelize,
