@@ -52,36 +52,48 @@ const BasicFrame = React.memo((props) => {
     }
 
     let levels = [];
+console.log(oracle_text);
+if (type_line.includes("Creature") && oracle_text.includes("Level up")) {
+    
+    const oracle_parts = oracle_text.split('\n');
 
-    if (type_line.includes("Creature") && oracle_text.includes("Level up")) {
-        const oracle_parts = oracle_text.split('\n');
+    // Handle the initial "Level up" description
+    const level_up_description = oracle_parts[0];
+        levels.push(
+        <div className="level-up-description" key="level-up">
+            <OracleTextCleaner text={level_up_description} className={""}/>
+        </div>
+    );
 
-        // Handle levels, which should be the remaining items grouped in threes
-        for (let i = 0; i < oracle_parts.length; i += 1) {
-            let level_number = "";
-            let power_toughness = "";
-
-            let level_text = ""
-            if(i===0){
-                level_text = oracle_parts[i]
-                power_toughness = `${power}/${toughness}`;
-            } else {
-                level_number = oracle_parts[i];
-                power_toughness = oracle_parts[i+1];
-                level_text = oracle_parts[i+2];
-            }
-            levels.push(
-                <div className="level" key={i}>
-                    <div className={`level-info ${i % 2 === 0 ? "highlight" : ""}`} style={{display: 'flex', justifyContent: 'space-between'}}>
-                        <OracleTextCleaner text={level_number} className={"level-range"}/>
-                        <OracleTextCleaner text={level_text} className={"level-text"}/>
-                        <div className="level-stats">{power_toughness}</div>
-                    </div>
-                </div>
-            );
-            if(i!==0) {i+=2}
+    // Handle levels
+    for (let i = 1; i < oracle_parts.length; ) {
+        const level_number = oracle_parts[i];
+        const power_toughness = oracle_parts[i + 1];
+        
+        // Check if the next item is another level or an ability text
+        const next_is_level = oracle_parts[i + 2] && oracle_parts[i + 2].startsWith("LEVEL");
+        
+        let level_text;
+        if (!next_is_level && oracle_parts[i + 2]) {
+            level_text = oracle_parts[i + 2];
+            i += 3; // Move to the next set of three lines
+        } else {
+            level_text = ""; // No ability text for this level
+            i += 2; // Move to the next set of two lines
         }
+
+        levels.push(
+            <div className="level" key={i}>
+                <div className={`level-info ${i % 6 === 1 ? "highlight" : ""}`} style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <OracleTextCleaner text={level_number} className={"level-range"}/>
+                    <OracleTextCleaner text={level_text} className={"level-text"}/>
+                    <div className="level-stats">{power_toughness}</div>
+                </div>
+            </div>
+        );
     }
+}
+
 
 if (type_line.includes("Planeswalker")) {
     const oracle_parts = oracle_text.split('\n');
