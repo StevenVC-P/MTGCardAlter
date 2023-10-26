@@ -37,6 +37,16 @@ export const stylingFormatter = (type_line, className, text) => {
     }else if (text.length > 50 && text.length <= 100) {
       styles.fontSize = '0.55em';
     }
+  } else if (className && className.includes('level')) {
+    styles.fontSize = '.5em';
+    styles.textAlign = 'left';
+    styles.iconSize = '18px';
+    styles.alighnItems = 'center';  
+    if (text.length <= 50) {
+      styles.fontSize = '.8em';
+    }else if (text.length > 50 && text.length <= 100) {
+      styles.fontSize = '0.55em';
+    }
   } else {
     if (text.length <= 50) {
         styles.fontSize = '1em'; 

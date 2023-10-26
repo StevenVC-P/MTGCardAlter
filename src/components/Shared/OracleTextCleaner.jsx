@@ -10,59 +10,41 @@ const OracleTextCleaner = ({ text, className, type_line }) => {
 
   // Extract styling rules based on text content and type
   let { fontSize, textAlign, alignItems, display, justifyContent, flexDirection, iconSize, width, height } = stylingFormatter(type_line, className, text);
-  
   // Split the text into lines first
   const lines = text.split('\n');
   const finalParts = lines.map((line, lineIndex) => {
-  const parts = [];
-  let lastIndex = 0;
-  let iconSequence = [];
+    const parts = [];
+    let lastIndex = 0;
 
-  // Find mana symbols in the current line
-  line.replace(regex, (match, iconName, offset) => {
-    if (offset > lastIndex) {
-      parts.push(line.slice(lastIndex, offset));
-    }
-
-    iconName = iconName.replace(/\//g, "").toUpperCase();
-    const iconPath = manaSymbols[`${iconName}.jpg`];
-
-// Check if followed by a colon and if that colon is followed by a space or if it's a comma, or end of line
-    if ((line[offset + match.length] === ':' && (line[offset + match.length + 1] === ' ' || offset + match.length + 1 === line.length))
-        || line[offset + match.length] === ',' || offset + match.length === line.length) {
-      if (iconSequence.length > 0) {
-        parts.push(<span key={`icon-sequence-${offset}`} style={{ display: 'inline-block', flexDirection: 'row' }}>{iconSequence}</span>);
-        iconSequence = [];
+    // Find mana symbols in the current line
+    line.replace(regex, (match, iconName, offset) => {
+      if (offset > lastIndex) {
+        parts.push(line.slice(lastIndex, offset));
       }
+
+      iconName = iconName.replace(/\//g, "").toUpperCase();
+      const iconPath = manaSymbols[`${iconName}.jpg`];
+
       parts.push(
         <img key={offset} src={`${iconPath}`} alt={iconName} className="mana-icon" style={{ height: iconSize, width: iconSize }} />,
       );
-    } else {
-      iconSequence.push(
-        <img key={offset} src={`${iconPath}`} alt={iconName} className="mana-icon" style={{ height: iconSize, width: iconSize }} />,
-      );
-    }
-    lastIndex = offset + match.length;
-  });
 
-    if (iconSequence.length > 0) {
-      parts.push(<span key={`icon-sequence-${line.length}`} style={{ display: 'inline-block' }}>{iconSequence}</span>);
-    }
+      lastIndex = offset + match.length;
+    });
 
     if (lastIndex < line.length) {
       parts.push(line.slice(lastIndex));
     }
 
-  return (
-    <span key={`line-${lineIndex}`}>
-      {parts}
-      {lineIndex < lines.length - 1 && <br key={`br-${lineIndex}`} />}
-    </span>
-  );
+    return (
+      <span key={`line-${lineIndex}`}>
+        {parts}
+        {lineIndex < lines.length - 1 && <br key={`br-${lineIndex}`} />}
+      </span>
+    );
   });
 
   const containerStyle = className === 'saga_text' ? { height: 'auto' } : {};
-  console.log(type_line)
   const containerClass = type_line && type_line.includes("Planeswalker") ? 'planeswalker_textcontainer' : 'textcontainer';
   return (
     <div className={containerClass} style={containerStyle}>
