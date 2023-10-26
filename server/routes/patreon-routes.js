@@ -36,39 +36,30 @@ router.get("/oauth/redirect", async (req, res) => {
 
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("Decoded Token:", decoded);
     } catch (err) {
       return res.status(401).json({ message: "Invalid JWT token" });
     }
 
     const userID = decoded.id;
 
-    // Check if Patreon ID exists
-    let patreonAccount = await Patreon.findOne({ where: { patreon_id: patreonID } });
+    // Check if Patreon entry exists for this user
+    const existingPatreon = await Patreon.findOne({ where: { userId: userID } });
 
-  if (patreonAccount) {
-    // Check if a user is already associated with this Patreon ID
-    if (patreonAccount.userId && patreonAccount.userId !== userID) {
-      return res.status(400).json({ message: "This Patreon account is already associated with another user." });
+    if (existingPatreon) {
+      // If Patreon entry exists, update it
+      await Patreon.update({ patreon_id: patreonID }, { where: { userId: userID } });
     } else {
-      // Update user's Patreon ID
-      await Patreon.update({ userId: userID }, { where: { patreon_id: patreonID } });
-
-      // Update User model with Patreon account ID
-      await User.update({ patreon_account_id: patreonAccount.id }, { where: { id: userID } });
+      // Otherwise, create a new Patreon entry and associate it with the user
+      await Patreon.create({ patreon_id: patreonID, userId: userID });
     }
-  } else {
-    // Create a new Patreon record and associate it with the user
-    const newPatreonAccount = await Patreon.create({ patreon_id: patreonID, userId: userID });
 
-    // Update User model with the newly created Patreon account ID
-    await User.update({ patreon_account_id: newPatreonAccount.id }, { where: { id: userID } });
-  }
-
+    // Redirect back to frontend with a query parameter
     res.redirect(`http://localhost:3000/?patreonConnected=true&token=${token}`);
   } catch (error) {
     console.log("Error details:", error);
     if (error.name === "JsonWebTokenError") {
-      console.log("JWT Error details:", error.message);
+      console.log("JWT Error details:", error.message); // Debugging line
     }
     res.status(500).json({ message: "Error processing Patreon token" });
   }
@@ -129,7 +120,7 @@ router.post("/webhook", async (req, res) => {
       return res.status(404).send("Patreon record not found");
     }
 
-    // Update the user's remaining_images based on the pledgeAmount
+    // Update the total pledged amount based on the pledgeAmount
     await updateDatabaseWithPatreonInfo(patreonRecord.id, pledgeAmountCents);
 
     res.sendStatus(200);

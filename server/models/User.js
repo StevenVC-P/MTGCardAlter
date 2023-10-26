@@ -48,6 +48,10 @@ User.init(
       allowNull: false,
       defaultValue: Sequelize.NOW,
     },
+    tokens: {
+      type: DataTypes.INTEGER,
+      defaultValue: 10, // initial tokens
+    },
     refresh_token: {
       type: DataTypes.STRING(255),
       allowNull: true,
