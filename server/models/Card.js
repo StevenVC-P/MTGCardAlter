@@ -47,7 +47,6 @@ class Card {
   }
 
   static async getAdditionalData(card) {
-    console.log("inside getAdditionalData");
     const fetchColorQuery = "SELECT color FROM CardColors WHERE card_id = ?";
     const fetchKeywordQuery = "SELECT keyword FROM Keywords WHERE card_id = ?";
     const fetchColorIdentityQuery = "SELECT color_identity FROM CardColorIdentities WHERE card_id = ? ORDER BY id ASC";
@@ -66,7 +65,6 @@ class Card {
     card.color_identity = cardColorIdentities.map((row) => row.color_identity);
 
     const [cardFaces] = await pool.execute(fetchCardFacesQuery, [card.card_id]);
-    console.log(cardFaces)
     card.card_faces = cardFaces.map((row) => ({
       id: row.id,
       name: row.name,
