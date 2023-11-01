@@ -6,7 +6,17 @@ const sequelize = new Sequelize("arcane_proxies", "username", "root", {
   dialect: "mysql",
 });
 
-class User extends Model {}
+class User extends Model {
+
+  static async getUserById(id) {
+    try {
+      return await this.findByPk(id);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+}
 
 User.init(
   {
@@ -50,11 +60,21 @@ User.init(
     },
     tokens: {
       type: DataTypes.INTEGER,
-      defaultValue: 10, // initial tokens
+      defaultValue: 10,
     },
     refresh_token: {
       type: DataTypes.STRING(255),
       allowNull: true,
+    },
+    isEmailVerified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    emailVerificationToken: {
+      type: DataTypes.STRING,
+    },
+    emailVerificationExpires: {
+      type: DataTypes.DATE,
     },
   },
   {

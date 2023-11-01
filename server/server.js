@@ -12,6 +12,7 @@ const jwtMiddleware = require("./jwtMiddleware");
 const cardRoutes = require("./routes/cards");
 const authRoutes = require("./routes/auth-routes");
 const patreonRoutes = require("./routes/patreon-routes");
+const userRoutes = require("./routes/user-routes");
 
 const app = express();
 setupMiddleware(app);
@@ -19,8 +20,9 @@ setupMiddleware(app);
 app.use("/api/auth", authRoutes);
 app.use("/api/cards", cardRoutes);
 app.use("/patreon", patreonRoutes);
+app.use("/api/user", userRoutes);
 
-app.use(jwtMiddleware);
+// app.use(jwtMiddleware);
 
 const engineId = "stable-diffusion-v1-5";
 const apiHost = process.env.API_HOST;

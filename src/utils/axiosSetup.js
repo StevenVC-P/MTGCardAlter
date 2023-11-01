@@ -4,7 +4,7 @@ async function refreshTokenAndRetry(failedRequest) {
   try {
     // Call your refresh token endpoint
     const { data } = await axios.post("http://localhost:5000/api/auth/token", {
-      token: localStorage.getItem("refreshToken"), // Assuming refresh token is stored in local storage
+      refreshToken: localStorage.getItem("refreshToken"), // Assuming refresh token is stored in local storage
     });
 
     // Update access token
