@@ -32,13 +32,7 @@ const RegisterPage = ({setIsLoggedIn}) => {
         const data = await response.json();
         console.log(data)
         if (data.success) {
-          localStorage.setItem('accessToken', data.accessToken);
-          localStorage.setItem('refreshToken', data.refreshToken);
-          setUser(data.user);
-          console.log(data.user)
-          setIsLoggedIn(true);
-          console.log(navigate("/"))
-          navigate("/");
+          navigate("/login");
         } else {
           setMessage(data.message);
         }

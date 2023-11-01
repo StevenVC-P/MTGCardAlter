@@ -1,14 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const User = require('../models/User');
-const config = require("../../env/config");
-const JWT_SECRET = config.env.JWT_SECRET;
-const REFRESH_TOKEN_SECRET = config.env.REFRESH_TOKEN_SECRET;
-    console.log(JWT_SECRET)
-    console.log("                ");
-    console.log(REFRESH_TOKEN_SECRET);
+const { env } = require("../../env/config");
+
+const { JWT_SECRET, REFRESH_TOKEN_SECRET, EMAIL_USER, EMAIL_PASS } = env;
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: EMAIL_USER,
+    pass: EMAIL_PASS,
+  },
+});
 
 router.post("/register", async (req, res) => {
   try {
@@ -25,39 +32,66 @@ router.post("/register", async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const refreshToken = jwt.sign({ id: -1, email: email }, REFRESH_TOKEN_SECRET); // Dummy ID for now
+    // Generate email verification token
+    const emailToken = crypto.randomBytes(64).toString("hex");
+    // const refreshToken = jwt.sign({ id: -1, email: email }, REFRESH_TOKEN_SECRET); 
 
     // Create a new user with the refresh token
     const newUser = await User.create({
       email,
       username,
       password_hash: hashedPassword,
-      refresh_token: refreshToken,
+      isEmailVerified: false,
+      emailVerificationToken: emailToken,
+      // refresh_token: refreshToken,
     });
 
-    // Replace dummy ID with real one
-    const realAccessToken = jwt.sign(
-      { id: newUser.id, email: newUser.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "15m" } // Standard expiration time
-    );
+    const verificationLink = `http://arcane-proxies.com/verify-email?token=${emailToken}`;
+
+    const mailOptions = {
+      from: "your-email@gmail.com",
+      to: email,
+      subject: "Verify your email address",
+      text: `Please click the following link to verify your email address: ${verificationLink}`,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
 
     res.status(200).json({
       success: true,
-      message: "User registered successfully",
-      user: {
-        id: newUser.id,
-        email: newUser.email,
-        username: newUser.username,
-      },
-      accessToken: realAccessToken,
-      refreshToken,
+      message: "User registered successfully. Please check your email to complete registration.",
     });
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ success: false, message: "Error registering user" });
   }
 });
+
+    // Replace dummy ID with real one
+    // const realAccessToken = jwt.sign(
+    //   { id: newUser.id, email: newUser.email },
+    //   process.env.JWT_SECRET,
+    //   { expiresIn: "15m" } // Standard expiration time
+    // );
+
+    // res.status(200).json({
+    //   success: true,
+    //   message: "User registered successfully",
+    //   user: {
+    //     id: newUser.id,
+    //     email: newUser.email,
+    //     username: newUser.username,
+    //   },
+    //   accessToken: realAccessToken,
+    //   refreshToken,
+    // });
+
 
 router.post("/login", async (req, res) => {
   try {
@@ -76,7 +110,7 @@ router.post("/login", async (req, res) => {
 
     const accessToken = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: "15m" });
 
-    const refreshToken = jwt.sign({ id: user.id, email: user.email }, REFRESH_TOKEN_SECRET, { expiresIn: "60m" });
+    const refreshToken = jwt.sign({ id: user.id, email: user.email }, REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
 
     await User.update({ refresh_token: refreshToken }, { where: { id: user.id } });
 
@@ -84,6 +118,32 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     console.error("Error logging in user:", error);
     res.status(500).json({ success: false, message: "Error logging in user" });
+  }
+});
+
+router.post("/verify-email", async (req, res) => {
+  try {
+    const { token } = req.body;
+    const user = await User.findOne({ where: { emailVerificationToken: token } });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Invalid or expired token." });
+    }
+
+    // Mark email as verified
+    await User.update({ isEmailVerified: true }, { where: { id: user.id } });
+
+    // Generate tokens
+    const accessToken = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: "15m" });
+    const refreshToken = jwt.sign({ id: user.id, email: user.email }, REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+
+    // Update refresh token in database
+    await User.update({ refresh_token: refreshToken }, { where: { id: user.id } });
+
+    res.status(200).json({ success: true, accessToken, refreshToken });
+  } catch (error) {
+    console.error("Error verifying email:", error);
+    res.status(500).json({ success: false, message: "Error verifying email" });
   }
 });
 
@@ -117,22 +177,22 @@ router.post("/validate-access-token", (req, res) => {
 
 router.post("/token", async (req, res) => {
   const refreshToken = req.body.refreshToken;
-
+  console.log("Received this refresh token:", req.body);
   if (!refreshToken) {
     return res.status(400).json({ success: false, message: "Refresh token not provided." });
   }
 
   try {
     const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
-
+    console.log("decoped:", decoded);
     const user = await User.findOne({ where: { id: decoded.id } });
-
+    console.log("user:", user);
     if (!user || user.refresh_token !== refreshToken) {
       return res.status(403).json({ success: false, message: "Token is invalid or expired." });
     }
 
     const accessToken = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: "15m" });
-
+    console.log("accessToken:", accessToken);
     res.status(200).json({ success: true, accessToken });
   } catch (error) {
     console.error("Error generating new access token:", error);
@@ -140,5 +200,19 @@ router.post("/token", async (req, res) => {
   }
 });
 
+router.get("/verify-email", async (req, res) => {
+  const { token } = req.query;
+
+  const user = await User.findOne({ where: { emailVerificationToken: token } });
+  if (!user) {
+    return res.status(400).json({ success: false, message: "Invalid token" });
+  }
+
+  user.isEmailVerified = true;
+  user.emailVerificationToken = null; // Clear the token as it is no longer needed
+  await user.save();
+
+  res.status(200).json({ success: true, message: "Email verified successfully" });
+});
 
 module.exports = router;

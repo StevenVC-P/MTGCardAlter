@@ -12,6 +12,8 @@ module.exports = {
     PATREON_CLIENT_ID: process.env.PATREON_CLIENT_ID,
     PATREON_CLIENT_SECRET: process.env.PATREON_CLIENT_SECRET,
     JWT_SECRET: process.env.JWT_SECRET,
-    REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET
+    REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
+    EMAIL_USER: process.env.EMAIL_USER,
+    EMAIL_PASS: process.env.EMAIL_PASS
   },
 };
