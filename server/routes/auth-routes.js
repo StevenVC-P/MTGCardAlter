@@ -184,15 +184,12 @@ router.post("/token", async (req, res) => {
 
   try {
     const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
-    console.log("decoped:", decoded);
     const user = await User.findOne({ where: { id: decoded.id } });
-    console.log("user:", user);
     if (!user || user.refresh_token !== refreshToken) {
       return res.status(403).json({ success: false, message: "Token is invalid or expired." });
     }
 
     const accessToken = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: "15m" });
-    console.log("accessToken:", accessToken);
     res.status(200).json({ success: true, accessToken });
   } catch (error) {
     console.error("Error generating new access token:", error);
