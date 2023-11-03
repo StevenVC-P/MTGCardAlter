@@ -9,10 +9,14 @@ async function refreshTokenAndRetry(failedRequest) {
 
     // Update access token
     localStorage.setItem("accessToken", data.accessToken);
+    // Update the Authorization header with the new access token
+    failedRequest.config.headers["Authorization"] = "Bearer " + data.accessToken;
+
+    // Update the accessToken in the request body
+    failedRequest.config.data = JSON.stringify({ accessToken: data.accessToken });
 
     // Retry the original failed request with the new access token
-    failedRequest.response.config.headers["Authorization"] = "Bearer " + data.accessToken;
-    return axios(failedRequest.response.config);
+    return axios(failedRequest.config);
   } catch (error) {
     console.error("Failed to refresh token", error);
 
@@ -33,9 +37,23 @@ axios.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log("Intercepted an error", error);
-    if (error && error.response && error.response.status === 403) {
-      return refreshTokenAndRetry(error);
+    const originalRequest = error.config;
+
+    // Avoid infinite loops
+    if (error.response.status === 403 && !originalRequest._retry) {
+      // Check for a specific error indicating the token is expired
+      if (error.response.data.message === "Invalid access token.") {
+        originalRequest._retry = true;
+        return refreshTokenAndRetry(error);
+      }
+
+      // If the refresh token is also expired, handle the logout
+      if (error.response.data.message === "Token is invalid or expired.") {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        window.location.href = "/login"; // Redirect to login
+        return Promise.reject(error);
+      }
     }
     return Promise.reject(error);
   }

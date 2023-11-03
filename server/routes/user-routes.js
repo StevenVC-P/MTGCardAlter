@@ -6,9 +6,7 @@ router.get("/tokens/:userId", async (req, res) => {
   const userId = req.params.userId;
 
   try {
-
     const user = await User.getUserById(userId);
-    console.log(user);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
