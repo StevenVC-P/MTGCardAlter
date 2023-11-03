@@ -3,8 +3,6 @@ import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
 import { getBorderStyle } from '../Shared/Borders';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import Loyalty_start from'../../assets/WalkerSymbols/Loyalty_start.webp';
 import Loyalty_up from'../../assets/WalkerSymbols/Loyalty_up.webp';
 import Loyalty_down from'../../assets/WalkerSymbols/Loyalty_down.webp';
@@ -25,34 +23,41 @@ const BasicFrame = React.memo((props) => {
     let planeswalker_text = "";
     let abilities = [];
 
+    const [isPlaneswalker, setIsPlaneswalker] = useState(false);
+
     useEffect(() => {
-    let isCancelled = false;
+        let isCancelled = false;
+        if (type_line.includes("Planeswalker")) {
+            setIsPlaneswalker(true);
+        } else {
+            setIsPlaneswalker(false);
+        }
+        
+        if (imageData && cardRef.current) {
+            domtoimage.toPng(cardRef.current)
+                .then((imgData) => {
+                    if (!isCancelled) {
+                        setImageURL(imgData);
+                    }
+                })
+                .catch((error) => {
+                    if (!isCancelled) {
+                        console.error('Error generating image:', error);
+                    }
+                });
+        }
 
-    if (imageData && cardRef.current) {
-        domtoimage.toPng(cardRef.current)
-            .then((imgData) => {
-                if (!isCancelled) {
-                    setImageURL(imgData);
-                }
-            })
-            .catch((error) => {
-                if (!isCancelled) {
-                    console.error('Error generating image:', error);
-                }
-            });
-    }
-
-    return () => {
-        isCancelled = true;
-    };
-    }, [imageData]);
+        return () => {
+            isCancelled = true;
+        };
+    }, [imageData, isPlaneswalker]);
 
     function escapeRegex(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
     }
 
     let levels = [];
-console.log(oracle_text);
+
 if (type_line.includes("Creature") && oracle_text.includes("Level up")) {
     
     const oracle_parts = oracle_text.split('\n');
@@ -70,16 +75,15 @@ if (type_line.includes("Creature") && oracle_text.includes("Level up")) {
         const level_number = oracle_parts[i];
         const power_toughness = oracle_parts[i + 1];
         
-        // Check if the next item is another level or an ability text
         const next_is_level = oracle_parts[i + 2] && oracle_parts[i + 2].startsWith("LEVEL");
         
         let level_text;
         if (!next_is_level && oracle_parts[i + 2]) {
             level_text = oracle_parts[i + 2];
-            i += 3; // Move to the next set of three lines
+            i += 3;
         } else {
-            level_text = ""; // No ability text for this level
-            i += 2; // Move to the next set of two lines
+            level_text = "";
+            i += 2;
         }
 
         levels.push(
@@ -93,7 +97,6 @@ if (type_line.includes("Creature") && oracle_text.includes("Level up")) {
         );
     }
 }
-
 
 if (type_line.includes("Planeswalker")) {
     const oracle_parts = oracle_text.split('\n');
@@ -134,8 +137,7 @@ if (type_line.includes("Planeswalker")) {
             planeswalker_text = part;
         }
     });
-}
-    console.log(loyalty)
+}   console.log(loyalty)
     return imageURL ? (
         <img src={imageURL} alt="Generated Card" />
     ) : (
@@ -161,10 +163,14 @@ if (type_line.includes("Planeswalker")) {
                                         {abilities}
                                     </div>
                                     <div className="planeswalker_loyalty">
-                                        <img src={Loyalty_start} alt="Loyalty Icon" />
-                                        <span className="loyalty-text">{loyalty}</span>
+                                        {
+                                            (loyalty !== null && loyalty !== undefined && loyalty !== "") && 
+                                            <React.Fragment>
+                                                <img src={Loyalty_start} alt="Loyalty Icon" />
+                                                <span className="loyalty-text">{loyalty}</span>
+                                            </React.Fragment>
+                                        }
                                     </div>
-
                                 </React.Fragment>
                                 
                             ) : type_line.includes("Creature") && oracle_text.includes("Level up") ? (
