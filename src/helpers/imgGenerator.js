@@ -12,7 +12,6 @@ const colorCodeToName = {
 };
 
 function getColorNames(colorIdentity) {
-  console.log(colorIdentity);
   return colorIdentity
     .map((colorCode) => colorCodeToName[colorCode])
     .join(", ");
@@ -67,7 +66,6 @@ function combinePromptsByWeight(prompts) {
 }
 
 function createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarWeight) {
-  console.log(normalizedValues);
   const defaultPrompts = Object.entries(normalizedValues)
     .map(([key, value]) => {
       // Check for emptiness based on the type of `value`
@@ -96,7 +94,6 @@ function createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarW
       weight: normalizedSidebarWeight,
     });
   }
-  console.log(defaultPrompts);
   return defaultPrompts;
 }
 
@@ -113,7 +110,6 @@ async function generateImageForFace(face, colorNames, keywords, tokenPrompts, ot
 }
 
 async function generateImageFromPrompts(prompts, width, height) {
-  console.log(prompts);
   return await generateImage(combinePromptsByWeight(prompts), width, height);
 }
 
@@ -142,7 +138,6 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
           width = 512;
           height = 640;
         }
-        console.log(colorNames)
         return generateImageForFace(face, colorNames[index], keywords, tokenPrompts, otherValues, sidebarText, sidebarWeight, width, height);
       })
     );

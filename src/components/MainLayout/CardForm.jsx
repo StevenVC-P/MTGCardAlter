@@ -8,62 +8,71 @@ import Battle from "../Templates/Battles";
 import Saga from "../Templates/Saga";
 import CardInputForm from "../Inputs/CardInputForms"; 
 
-const CardComponent = ({ card, imageData, }) => {
-  if (card.keywords.includes('Aftermath')) {
-    return <Aftermath card={card} imageData={imageData}/>;
-  } else {
-    switch (card.layout) {
-      case 'normal':
-        return <BasicFrame card={card} imageData={imageData}/>;
-      case 'split':
-        return <SplitFrame card={card} imageData={imageData}/>;
-      case 'adventure':
-        return <Adventure card={card} imageData={imageData}/>;
-      case 'saga':
-        return <Saga card={card} imageData={imageData}/>;
-      case 'flip':
-        return <FlipFrame card={card} imageData={imageData}/>;
-      case 'transform':
-        return card.card_faces.map((face, faceIndex) => {
-          let faceKey = `${card.imageKey}-${faceIndex}`;
-          let safeImageData = imageData || {};
-          let faceImageData = {
-            image: faceIndex === 0 ? safeImageData.firstImage : safeImageData.secondImage
-          };
-          if (face.type_line.includes('Saga')) {
-            return <Saga key={faceKey} card={card} face={face} imageData={faceImageData}/>;
-          } else if (face.type_line.includes('Battle')) {
-            return <Battle key={faceKey} card={card} face={face} imageData={faceImageData}/>;
-          }
-          else {
-            return <BasicFrame key={faceKey} card={card} face={face} imageData={faceImageData}/>;
-          }
-        });
-      default:
-        return <BasicFrame card={card} imageData={imageData}/>;
-    }
-  }
-};
-
 // Main function component for the form
 const CardForm = ({ sidebarText, sidebarWeight, otherValues, decrementCounter, counter, setErrorMessage }) => {
-  const [cardData, setCardData] = useState([]); 
+  // Using React's useState hook for managing state
+  const [cardData, setCardData] = useState([]);
   const [images, setImages] = useState({});
-
+  
+   // This function helps to create delay or pause execution for certain milliseconds
   return (
     <div className="card-form-container">
-      <CardInputForm setCardData={setCardData} setImages={setImages} sidebarText={sidebarText} sidebarWeight={sidebarWeight} otherValues={otherValues} decrementCounter={decrementCounter} counter={counter} setErrorMessage={setErrorMessage}/>
+      <CardInputForm 
+        setCardData={setCardData} 
+        setImages={setImages} 
+        sidebarText={sidebarText} 
+        sidebarWeight={sidebarWeight} 
+        otherValues={otherValues} 
+        decrementCounter={decrementCounter} 
+        counter={counter} 
+        setErrorMessage={setErrorMessage}
+      />
       <div id="card-results">
-        {
-          cardData.map(card => {
-            const imageData = images[card.imageKey];
-            return (
-              <div key={card.imageKey}>
-                <CardComponent card={card} imageData={imageData} />
-              </div>
-            );
-          })
-        }
+        {cardData.map((card) => {
+          const imageData = images[card.imageKey];
+
+          const Component = () => {
+            if (card.keywords.includes('Aftermath')) {
+              return <Aftermath card={card} imageData={imageData}/>;
+            } else {
+              switch (card.layout) {
+                case 'normal':
+                  return <BasicFrame card={card} imageData={imageData}/>;
+                case 'split':
+                  return <SplitFrame card={card} imageData={imageData}/>;
+                case 'adventure':
+                  return <Adventure card={card} imageData={imageData}/>;
+                case 'saga':
+                  return <Saga card={card} imageData={imageData}/>;
+                case 'flip':
+                  return <FlipFrame card={card} imageData={imageData}/>;
+                case 'transform':
+                  return card.card_faces.map((face, faceIndex) => {
+                    let faceKey = `${card.imageKey}-${faceIndex}`;
+                    let safeImageData = imageData || {};
+                    let faceImageData = {
+                      image: faceIndex === 0 ? safeImageData.firstImage : safeImageData.secondImage
+                    };
+                    if (face.type_line.includes('Saga')) {
+                      return <Saga key={faceKey} card={card} face={face} imageData={faceImageData}/>;
+                    } else if (face.type_line.includes('Battle')) {
+                      return <Battle key={faceKey} card={card} face={face} imageData={faceImageData}/>;
+                    }
+                    else {
+                      return <BasicFrame key={faceKey} card={card} face={face} imageData={faceImageData}/>;
+                    }
+                  });
+                default:
+                  return <BasicFrame card={card} imageData={imageData}/>;
+              }
+            }
+          };
+          return (
+            <React.Fragment key={card.imageKey}>
+              <Component />
+            </React.Fragment>
+          );
+          })}
       </div>
     </div>
   );
