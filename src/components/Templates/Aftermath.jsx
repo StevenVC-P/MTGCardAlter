@@ -2,17 +2,29 @@ import React, { useRef, useState, useEffect } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
+import { APC, APUC, APR, APMR } from '../../assets/Misc';
 import { getBorderStyle } from '../Shared/Borders';
 import domtoimage from 'dom-to-image';
 import "./Aftermath.css";
 
 //Compenent is a starting point for split card, currently works for cards such as Fire/Ice
 const Aftermath = React.memo((props) => {
-    const {set, card_faces} = props.card;
+    const {set, card_faces, rarity} = props.card;
     const imageData = props.imageData;
 
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
+
+    const rarityImageMap = {
+        common: APC,
+        uncommon: APUC,
+        rare: APR,
+        mythic: APMR,
+        special: APMR,
+        bonus: APMR
+    };
+
+    const imageBasedOnRarity = rarityImageMap[rarity.toLowerCase()] || APMR;
 
     useEffect(() => {
     let isCancelled = false;
@@ -52,7 +64,7 @@ const Aftermath = React.memo((props) => {
                         </div>
                         <div className="frame-type-line card-color-border" style={getBorderStyle(card_faces[0].colors, card_faces[0].mana_cost)}>
                             <h1 className="type">{card_faces[0].type_line}</h1>
-                            {set}
+                            <img className="set-symbol" src={imageBasedOnRarity} alt="Rarity Symbol" />
                         </div>
                         <div className="aftermath-text-box card-color-border-square"  style={getBorderStyle(card_faces[0].colors, card_faces[0].mana_cost)}>
                             <OracleTextCleaner text={card_faces[0].oracle_text} className={"split"}/>
@@ -72,7 +84,6 @@ const Aftermath = React.memo((props) => {
                         </div>
                         <div className="frame-type-line card-color-border" style={getBorderStyle(card_faces[1].colors, card_faces[1].mana_cost)}>
                             <h1 className="type">{card_faces[1].type_line}</h1>
-                            {set}
                         </div>
                         <div className="aftermath-bottom-text-box card-color-border-square" style={{ ...getBorderStyle(card_faces[1].colors, card_faces[1].mana_cost), borderWidth: '2px' }}>
                             <OracleTextCleaner text={card_faces[1].oracle_text} className={"split"}/>
@@ -80,6 +91,7 @@ const Aftermath = React.memo((props) => {
                     </div>
                 </CardBackground>
             </div>
+            <span className="arcane-proxies-text">Arcane Proxy</span>
         </div>
     )
 })
