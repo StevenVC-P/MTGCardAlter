@@ -33,6 +33,17 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
   try {
     const { height, width, cfg_scale, clip_guidance_preset, sampler, samples, steps, style_preset, text_prompts } = req.body;
     // Perform the image generation using Stability.AI API
+
+    // Add a timeout configuration to the axios request
+    const axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      timeout: 300000, // Timeout after 300 seconds (5 minutes)
+    };
+
     const response = await axios.post(
       `${apiHost}/v1/generation/${engineId}/text-to-image`,
       {
@@ -46,13 +57,7 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
         style_preset,
         text_prompts,
       },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-      }
+      axiosConfig
     );
 
     // Access data
@@ -67,7 +72,22 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
     return res.json({ image: data.artifacts[0].base64 });
   } catch (error) {
     console.error("Error generating image:", error);
-    res.status(500).json({ message: "Error generating image" });
+
+    let errorMessage = "Error generating image";
+    let errorDetails = {};
+
+    if (error.code === "ECONNABORTED" && error.message.includes("timeout")) {
+      errorMessage = "The request to DreamStudio API timed out. They might be experiencing issues";
+      errorDetails = {
+        checkStatus: "https://dreamstudio.com/api/status/",
+      };
+    }
+
+    res.status(500).json({
+      message: errorMessage,
+      ...errorDetails,
+      error: true,
+    });
   }
 });
 
