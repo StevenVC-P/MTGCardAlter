@@ -1,19 +1,45 @@
+.split-card-container {
+  color: black;
+  border: 1px solid black;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center; /* Center them vertically */
+  justify-content: center; /* Center them horizontally */
+  width: 250px;
+  height: 350px;
+  padding: 3px;
+  border-radius: 6px;
+  box-sizing: border-box;
+  background: #171314;
+  margin: 0; /* To center the whole container if needed */
+}
+
+.card-half-top,
+.card-half-bottom {
+  transform-origin: center center; /* Change to center for a pivot point */
+  position: absolute; /* Position absolute to overlap within the parent */
+}
+
 /* These two styles rotate the card and postion them */
 .card-half-top {
-    transform: rotate(-90deg)  translate(0, 158px); 
-    transform-origin: center left;
-    order: 1;
+  transform: rotate(-90deg) translateX(-55%); /* Adjust translation as needed */
 }
 
 .card-half-bottom {
-    transform: rotate(-90deg)  translate(-30px, 138px); 
-    order: 2;
-    transform-origin: bottom left;
+  transform: rotate(-90deg) translateX(55%); /* Adjust translation as needed */
 }
 
 .split-card-background {
  height: 230px;
  width: 155px;
+ margin: -3% 2% 0% 2%;
+ background-color: #bbb;
+ position: relative;
+ background-position: center;
+ background-repeat: no-repeat; /* Do not repeat the image */
+ background-size: cover; /* Resize the background image to cover the entire container */
+
 }
 
 .split-card-frame {
@@ -43,4 +69,28 @@
     object-fit:fill;
     object-position: center;
     vertical-align: bottom;
+}
+
+.split-frame-text-box {
+ margin: 0px 8px;
+ background: #d3ded6;
+ display: flex;
+ flex-direction: column;
+ box-sizing: border-box;
+ position: relative;
+ height: 55px; 
+ justify-content: space-around;
+ align-items: space-around;
+}
+
+.split-divider{
+    
+    background-color: #333; /* Dark gray color */
+    height: 231px;
+    width: 15px; /* Width of the divider, adjust as needed */
+    position: absolute;
+    top: 55px;
+    left: 114px;
+    transform: rotate(-90deg) translateX(0);
+    z-index: 2; /* Ensure it's above the card halves */
 }

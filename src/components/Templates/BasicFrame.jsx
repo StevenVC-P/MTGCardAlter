@@ -7,6 +7,8 @@ import Loyalty_start from'../../assets/WalkerSymbols/Loyalty_start.webp';
 import Loyalty_up from'../../assets/WalkerSymbols/Loyalty_up.webp';
 import Loyalty_down from'../../assets/WalkerSymbols/Loyalty_down.webp';
 import Loyalty_neutral from'../../assets/WalkerSymbols/Loyalty_neutral.webp';
+import { APC, APUC, APR, APMR } from '../../assets/Misc';
+
 import domtoimage from 'dom-to-image';
 import "./Universal.css";
 import "./BasicFrame.css";
@@ -14,7 +16,7 @@ import "./BasicFrame.css";
 const BasicFrame = React.memo((props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
-    const {name, mana_cost, oracle_text, type_line, set, power, toughness, loyalty, colors, flavor_text } = source;
+    const {name, mana_cost, oracle_text, type_line, power, toughness, loyalty, colors, flavor_text, rarity } = source;
     const {color_identity} = props.card;
     
     const cardRef = useRef(null);
@@ -24,6 +26,17 @@ const BasicFrame = React.memo((props) => {
     let abilities = [];
 
     const [isPlaneswalker, setIsPlaneswalker] = useState(false);
+
+    const rarityImageMap = {
+        common: APC,
+        uncommon: APUC,
+        rare: APR,
+        mythic: APMR,
+        special: APMR,
+        bonus: APMR
+    };
+
+    const imageBasedOnRarity = rarity ? rarityImageMap[rarity.toLowerCase()] || APMR : null;
 
     useEffect(() => {
         let isCancelled = false;
@@ -58,86 +71,86 @@ const BasicFrame = React.memo((props) => {
 
     let levels = [];
 
-if (type_line.includes("Creature") && oracle_text.includes("Level up")) {
-    
-    const oracle_parts = oracle_text.split('\n');
-
-    // Handle the initial "Level up" description
-    const level_up_description = oracle_parts[0];
-        levels.push(
-        <div className="level-up-description" key="level-up">
-            <OracleTextCleaner text={level_up_description} className={""}/>
-        </div>
-    );
-
-    // Handle levels
-    for (let i = 1; i < oracle_parts.length; ) {
-        const level_number = oracle_parts[i];
-        const power_toughness = oracle_parts[i + 1];
+    if (type_line.includes("Creature") && oracle_text.includes("Level up")) {
         
-        const next_is_level = oracle_parts[i + 2] && oracle_parts[i + 2].startsWith("LEVEL");
-        
-        let level_text;
-        if (!next_is_level && oracle_parts[i + 2]) {
-            level_text = oracle_parts[i + 2];
-            i += 3;
-        } else {
-            level_text = "";
-            i += 2;
-        }
+        const oracle_parts = oracle_text.split('\n');
 
-        levels.push(
-            <div className="level" key={i}>
-                <div className={`level-info ${i % 6 === 1 ? "highlight" : ""}`} style={{display: 'flex', justifyContent: 'space-between'}}>
-                    <OracleTextCleaner text={level_number} className={"level-range"}/>
-                    <OracleTextCleaner text={level_text} className={"level-text"}/>
-                    <div className="level-stats">{power_toughness}</div>
-                </div>
+        // Handle the initial "Level up" description
+        const level_up_description = oracle_parts[0];
+            levels.push(
+            <div className="level-up-description" key="level-up">
+                <OracleTextCleaner text={level_up_description} className={""}/>
             </div>
         );
-    }
-}
 
-if (type_line.includes("Planeswalker")) {
-    const oracle_parts = oracle_text.split('\n');
-    oracle_parts.forEach((part, index) => {
-        const abilityRegex = /((\+|−|-|0)[0-9]*)/;
-        
-        if (abilityRegex.test(part)) {
-            const cost = part.match(abilityRegex)[0];
-            const text = part.replace(new RegExp(escapeRegex(cost)), '').trim();
-            // Determine the loyalty icon outside the JSX for clarity
-            let loyaltyIcon;
-            let costStyle = {};
-            if (cost.charAt(0) === '+') {
-                loyaltyIcon = <img className="loyalty-icon" src={Loyalty_up} alt="Loyalty Up Icon" />;
-                costStyle = { left: 4, top: -4 };
-            } else if (cost.charAt(0) === '−') { // added '−' character check for minus
-                loyaltyIcon = <img className="loyalty-icon" src={Loyalty_down} alt="Loyalty Down Icon" />;
-                costStyle = { left: 2, top: -8 };
+        // Handle levels
+        for (let i = 1; i < oracle_parts.length; ) {
+            const level_number = oracle_parts[i];
+            const power_toughness = oracle_parts[i + 1];
+            
+            const next_is_level = oracle_parts[i + 2] && oracle_parts[i + 2].startsWith("LEVEL");
+            
+            let level_text;
+            if (!next_is_level && oracle_parts[i + 2]) {
+                level_text = oracle_parts[i + 2];
+                i += 3;
             } else {
-                loyaltyIcon = <img className="loyalty-icon" src={Loyalty_neutral} alt="Loyalty Neutral Icon" />;
-                costStyle = { left: 7, top: -6 };
+                level_text = "";
+                i += 2;
             }
 
-            abilities.push(
-                <div className="ability" key={index}>
-                    <div className={`planeswalker ${index % 2 !== 0 ? "highlight" : ""}`}>
-                        <div className="planeswalker-cost-container">
-                            <div className="planeswalker-image-container">
-                                {loyaltyIcon}
-                            </div>
-                            <span className="planeswalker-cost" style={costStyle}>{cost}</span>
-                        </div>
-                        <OracleTextCleaner className="planeswalker_text" text={text} type_line={type_line}/>
+            levels.push(
+                <div className="level" key={i}>
+                    <div className={`level-info ${i % 6 === 1 ? "highlight" : ""}`} style={{display: 'flex', justifyContent: 'space-between'}}>
+                        <OracleTextCleaner text={level_number} className={"level-range"}/>
+                        <OracleTextCleaner text={level_text} className={"level-text"}/>
+                        <div className="level-stats">{power_toughness}</div>
                     </div>
                 </div>
             );
-        } else if(index === 0){
-            planeswalker_text = part;
         }
-    });
-}   console.log(loyalty)
+    }
+
+    if (type_line.includes("Planeswalker")) {
+        const oracle_parts = oracle_text.split('\n');
+        oracle_parts.forEach((part, index) => {
+            const abilityRegex = /((\+|−|-|0)[0-9]*)/;
+            
+            if (abilityRegex.test(part)) {
+                const cost = part.match(abilityRegex)[0];
+                const text = part.replace(new RegExp(escapeRegex(cost)), '').trim();
+                // Determine the loyalty icon outside the JSX for clarity
+                let loyaltyIcon;
+                let costStyle = {};
+                if (cost.charAt(0) === '+') {
+                    loyaltyIcon = <img className="loyalty-icon" src={Loyalty_up} alt="Loyalty Up Icon" />;
+                    costStyle = { left: 4, top: -4 };
+                } else if (cost.charAt(0) === '−') { // added '−' character check for minus
+                    loyaltyIcon = <img className="loyalty-icon" src={Loyalty_down} alt="Loyalty Down Icon" />;
+                    costStyle = { left: 2, top: -8 };
+                } else {
+                    loyaltyIcon = <img className="loyalty-icon" src={Loyalty_neutral} alt="Loyalty Neutral Icon" />;
+                    costStyle = { left: 7, top: -6 };
+                }
+
+                abilities.push(
+                    <div className="ability" key={index}>
+                        <div className={`planeswalker ${index % 2 !== 0 ? "highlight" : ""}`}>
+                            <div className="planeswalker-cost-container">
+                                <div className="planeswalker-image-container">
+                                    {loyaltyIcon}
+                                </div>
+                                <span className="planeswalker-cost" style={costStyle}>{cost}</span>
+                            </div>
+                            <OracleTextCleaner className="planeswalker_text" text={text} type_line={type_line}/>
+                        </div>
+                    </div>
+                );
+            } else if(index === 0){
+                planeswalker_text = part;
+            }
+        });
+    }  
     return imageURL ? (
         <img src={imageURL} alt="Generated Card" />
     ) : (
@@ -153,7 +166,7 @@ if (type_line.includes("Planeswalker")) {
                     </div>
                     <div className="frame-type-line card-color-border" style={getBorderStyle(colors, mana_cost, color_identity)}>
                         <h1 className="type">{type_line}</h1>
-                        {set}
+                        {imageBasedOnRarity && <img className="set-symbol" src={imageBasedOnRarity} alt="Rarity Symbol" />}
                     </div>
                     <div className="frame-text-box card-color-border-square" style={getBorderStyle(colors, mana_cost,color_identity)}>
                         {type_line.includes("Planeswalker") ? (
@@ -196,6 +209,7 @@ if (type_line.includes("Planeswalker")) {
                     </div>
                 </div>
             </CardBackground>
+            <span className="arcane-proxies-text">Arcane Proxy</span>
         </div>
     )
 })

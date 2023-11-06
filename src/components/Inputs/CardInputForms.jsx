@@ -65,15 +65,22 @@ const handleSubmit = async (event) => {
       // const response = await axios.get(`https://api.scryfall.com/cards/named?fuzzy=${sanitizedCardName}`);
       if (response.status === 200) {
         const imageData = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, counter);
-
-        if (imageData.error) {
-          console.error(imageData.error);
-          if (!localCategorizedErrors[imageData.error]) {
-            localCategorizedErrors[imageData.error] = [];
-          }
-          localCategorizedErrors[imageData.error].push(cardName);
-          continue;
+      console.error(imageData);
+      if (imageData.error) {
+        // Detect specific DreamStudio API timeout error
+        if (imageData.error === 'DreamStudio API timeout') {
+          setErrorMessage(`The DreamStudio API is currently experiencing issues. Please check their status at https://dreamstudio.com/api/status/`);
+        } else {
+          setErrorMessage(imageData.error); // Set a generic error message
         }
+        console.low(imageData.error);
+        if (!localCategorizedErrors[imageData.error]) {
+          localCategorizedErrors[imageData.error] = [];
+        }
+        localCategorizedErrors[imageData.error].push(cardName);
+        continue; // Skip the current iteration as an error has occurred
+      }
+
 
         currentCounter--;
         decrementCounter();
@@ -90,15 +97,23 @@ const handleSubmit = async (event) => {
         tempCardData.push(...await Promise.all(cardDataPromises));
       }
     } catch (error) {
-      let errorMessage = "An error occurred. Please try again.";
-      if (error.response && error.response.data.message) {
-        errorMessage = error.response.data.message;
-      }
-      if (!localCategorizedErrors[errorMessage]) {
-        localCategorizedErrors[errorMessage] = [];
-      }
-      localCategorizedErrors[errorMessage].push(cardName);
+    let errorMessage = "An error occurred. Please try again.";
+    if (error.response && error.response.data && error.response.data.message) {
+      errorMessage = error.response.data.message;
     }
+
+    // Provide a link to check DreamStudio API status if it's a timeout error
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      errorMessage += " The DreamStudio API may be down. Check the API status here: https://dreamstudio.com/api/status/";
+    }
+
+    setErrorMessage(errorMessage); // Update the user-facing error message
+
+    if (!localCategorizedErrors[errorMessage]) {
+      localCategorizedErrors[errorMessage] = [];
+    }
+    localCategorizedErrors[errorMessage].push(cardName);
+  }
   }
 
   if (Object.keys(localCategorizedErrors).length) {

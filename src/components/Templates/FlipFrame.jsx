@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
+import { APC, APUC, APR, APMR } from '../../assets/Misc';
 import { getBorderStyle } from '../Shared/Borders';
 import domtoimage from 'dom-to-image';
 import "./Universal.css";
@@ -10,10 +11,21 @@ import "./FlipFrame.css";
 const FlipFrame = React.memo((props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
-    const {mana_cost, card_faces, colors} = source;
+    const {mana_cost, card_faces, colors, rarity} = source;
     
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
+
+    const rarityImageMap = {
+        common: APC,
+        uncommon: APUC,
+        rare: APR,
+        mythic: APMR,
+        special: APMR,
+        bonus: APMR
+    };
+
+    const imageBasedOnRarity = rarityImageMap[rarity.toLowerCase()] || APMR;
 
     useEffect(() => {
     let isCancelled = false;
@@ -41,7 +53,7 @@ const FlipFrame = React.memo((props) => {
         <img src={imageURL} alt="Generated Card" />
     ) : (
         <div className="card-container" ref={cardRef}>
-            <CardBackground type_line={card_faces[0].type_line} colors={source.colors} mana_cost={card_faces[0].mana_cost}>
+            <CardBackground type_line={card_faces[0].type_line} colors={source.colors} mana_cost={card_faces[0].mana_cost} className={"flip-card-background"}>
                 <div className="card-frame">
                     <div className="frame-header card-color-border" style={getBorderStyle(colors)}>
                         <h1 className="name">{card_faces[0].name}</h1>
@@ -73,7 +85,12 @@ const FlipFrame = React.memo((props) => {
                         {mana_cost}
                     </div>
                 </div>
+            <div className="frame-footer" style={{ color: source.colors.includes('B') ? 'white' : 'black' }}>
+                <span className="arcane-proxies-flip">Arcane Proxies</span>
+                <img className="set-symbol" src={imageBasedOnRarity} alt="Rarity Symbol" />
+            </div>
             </CardBackground>
+
         </div>
     )
 })
