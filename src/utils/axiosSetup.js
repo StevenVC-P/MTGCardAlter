@@ -37,12 +37,13 @@ axios.interceptors.response.use(
     return response;
   },
   async (error) => {
+    console.log("error", error);
     const originalRequest = error.config;
-
+    
     // Avoid infinite loops
     if (error.response.status === 403 && !originalRequest._retry) {
       // Check for a specific error indicating the token is expired
-      if (error.response.data.message === "Invalid access token.") {
+      if (error.response.data.message === "Invalid access token." || "Token is invalid or expired") {
         originalRequest._retry = true;
         return refreshTokenAndRetry(error);
       }

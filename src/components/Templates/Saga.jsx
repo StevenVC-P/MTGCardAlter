@@ -3,8 +3,7 @@ import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
 import { getBorderStyle } from '../Shared/Borders';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSquare } from '@fortawesome/free-solid-svg-icons';
+import { APC, APUC, APR, APMR } from '../../assets/Misc';
 import sage_icon from '../../assets/Misc/Saga.webp';
 import domtoimage from 'dom-to-image';
 import "./Universal.css";
@@ -13,7 +12,7 @@ import "./Saga.css";
 const Saga = React.memo((props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
-    const {name, mana_cost, oracle_text, type_line, set, colors } = source;
+    const {name, mana_cost, oracle_text, type_line, set, colors, rarity } = source;
     const {color_identity} = props.card;
 
     const oracle_parts = oracle_text.split('\n');
@@ -22,6 +21,17 @@ const Saga = React.memo((props) => {
 
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
+
+    const rarityImageMap = {
+        common: APC,
+        uncommon: APUC,
+        rare: APR,
+        mythic: APMR,
+        special: APMR,
+        bonus: APMR
+    };
+
+    const imageBasedOnRarity = rarityImageMap[rarity.toLowerCase()] || APMR;
 
     useEffect(() => {
     let isCancelled = false;
@@ -96,10 +106,11 @@ const Saga = React.memo((props) => {
                     </div>
                     <div className="frame-type-line card-color-border" style={getBorderStyle(colors, color_identity)}>
                         <h1 className="type">{type_line}</h1>
-                        {set}
+                        <img className="set-symbol" src={imageBasedOnRarity} alt="Rarity Symbol" />
                     </div>
                 </div>
             </CardBackground>
+            <span className="arcane-proxies-text">Arcane Proxy</span>
         </div>
     )
 })

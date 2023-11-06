@@ -78,11 +78,15 @@ const CardBackground = ({ children, type_line, colors, mana_cost, className, col
             }
         }
     }, [type_line, colors, mana_cost, color_identity]);
+  
+    const isSplitCard = className.toLowerCase().includes("split");
+
+    const backgroundClass = isSplitCard ? 'split-card-background' : `card-background ${className || ''}`;
     
     return (
-        <div className={`card-background ${className || ''}`} style={{ backgroundImage: `url(${backgroundImage})`, zIndex: 0}}>
-            {children}
-        </div>
+    <div className={backgroundClass} style={{ backgroundImage: `url(${backgroundImage})`, zIndex: 0}}>
+      {children}
+    </div>
     );
 }
 

@@ -3,11 +3,10 @@
     order: 1;
     height: 390px;
     transform: translateX(-5px);
-    /* margin-left: 20px; */
 }
 
 .aftermath-card-half-bottom {
-    transform: rotate(90deg)  translate(35px, 0px); 
+    transform: rotate(90deg) translate(-135px, -120px);
     order: 2;
     transform-origin: bottom left;
 }
@@ -15,7 +14,7 @@
 .aftermath-card-background {
  height: 180px;
  width: 235px;
- margin-top: 30px;
+ margin-top: 6px;
  transform-origin: top;
 }
 
@@ -39,7 +38,7 @@
 
 
 .aftermath-text-box {
- position: absolute; /* Allows the box to be positioned relative to the nearest positioned ancestor */
+ position: absolute;
  bottom: -55px;
  margin: 0px 8px;
  height: 55px;
@@ -53,7 +52,7 @@
 }
 
 .aftermath-bottom-text-box {
- position: absolute; /* Allows the box to be positioned relative to the nearest positioned ancestor */
+ position: absolute;
  bottom: -80px;
  margin: 0px 6px;
  height: 80px;
