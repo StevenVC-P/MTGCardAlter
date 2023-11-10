@@ -20,16 +20,17 @@ const LeftSidebar = ({
   };
 
   const handleSliderChange = (event, key) => {
-    setOtherValues({
+    const value = Number(event.target.value);
+    setOtherValues(prevValues => ({
       ...otherValues,
-      [key]: Number(event.target.value),
-    });
+      [key]: value
+    }));
   };
 
   const renderSlider = (label, key) => (
     <div className="slider-container">
       <label htmlFor={key}>
-        {label}: {otherValues[key]}
+        {label}: {otherValues[key] !== undefined ? otherValues[key] : 5}
       </label>
       <input
         type="range"
@@ -37,7 +38,7 @@ const LeftSidebar = ({
         name={key}
         min="0"
         max="10"
-        value={otherValues[key] || 5}
+        value={otherValues[key] !== undefined ? otherValues[key] : 5}
         onChange={(e) => handleSliderChange(e, key)}
       />
     </div>

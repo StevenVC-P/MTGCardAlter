@@ -17,7 +17,8 @@ const backgroundColorMap = {
     "G": "#c2cdc5",
     "gold": "#d3bf84",
     "colorless": "#d8dde1",
-    "artifact": "#d8dde1"
+    "artifact": "#d8dde1",
+    "dual": "#d2cbc1"
 };
 
 const extractColorsFromManaCost = (manaCost) => {
@@ -63,13 +64,13 @@ export const getBorderStyle = (colors, manaCost, color_identity) => {
     }
 
     const borderColor = colors.length === 1 ? colorMap[colors[0]] :
-        colors.length === 2 ? colorMap["black"] :
-        colors.length > 2 ? colorMap["gold"] : colorMap["artifact"];
+        colors.length >= 2 ? colorMap["gold"] : 
+        colorMap["artifact"];
 
     const borderWidth = colors.length === 2 ? '2px' : '3px';
 
     const backgroundColor = colors.length === 1 ? backgroundColorMap[colors[0]] :
-        colors.length === 2 ? backgroundColorMap["black"] :
+        colors.length >= 2 ? backgroundColorMap["dual"] :
         colors.length > 2 ? backgroundColorMap["gold"] : backgroundColorMap["artifact"];
 
     return {

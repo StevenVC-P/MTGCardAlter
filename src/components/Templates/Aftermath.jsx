@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
-import { APC, APUC, APR, APMR } from '../../assets/Misc';
+import { APC } from '../../assets/Misc';
 import { getBorderStyle } from '../Shared/Borders';
 import domtoimage from 'dom-to-image';
 import "./Aftermath.css";
@@ -14,17 +14,6 @@ const Aftermath = React.memo((props) => {
 
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
-
-    const rarityImageMap = {
-        common: APC,
-        uncommon: APUC,
-        rare: APR,
-        mythic: APMR,
-        special: APMR,
-        bonus: APMR
-    };
-
-    const imageBasedOnRarity = rarityImageMap[rarity.toLowerCase()] || APMR;
 
     useEffect(() => {
     let isCancelled = false;
@@ -64,7 +53,7 @@ const Aftermath = React.memo((props) => {
                         </div>
                         <div className="frame-type-line card-color-border" style={getBorderStyle(card_faces[0].colors, card_faces[0].mana_cost)}>
                             <h1 className="type">{card_faces[0].type_line}</h1>
-                            <img className="set-symbol" src={imageBasedOnRarity} alt="Rarity Symbol" />
+                            <img className="set-symbol" src={APC} alt="Rarity Symbol" />
                         </div>
                         <div className="aftermath-text-box card-color-border-square"  style={getBorderStyle(card_faces[0].colors, card_faces[0].mana_cost)}>
                             <OracleTextCleaner text={card_faces[0].oracle_text} className={"split"}/>
@@ -91,7 +80,7 @@ const Aftermath = React.memo((props) => {
                     </div>
                 </CardBackground>
             </div>
-            <span className="arcane-proxies-text">Arcane Proxy</span>
+            <span className="arcane-proxies-text">Arcane-Proxies</span>
         </div>
     )
 })
