@@ -27,17 +27,6 @@ const BasicFrame = React.memo((props) => {
 
     const [isPlaneswalker, setIsPlaneswalker] = useState(false);
 
-    const rarityImageMap = {
-        common: APC,
-        uncommon: APUC,
-        rare: APR,
-        mythic: APMR,
-        special: APMR,
-        bonus: APMR
-    };
-
-    const imageBasedOnRarity = rarity ? rarityImageMap[rarity.toLowerCase()] || APMR : null;
-
     useEffect(() => {
         let isCancelled = false;
         if (type_line.includes("Planeswalker")) {
@@ -166,7 +155,7 @@ const BasicFrame = React.memo((props) => {
                     </div>
                     <div className="frame-type-line card-color-border" style={getBorderStyle(colors, mana_cost, color_identity)}>
                         <h1 className="type">{type_line}</h1>
-                        {imageBasedOnRarity && <img className="set-symbol" src={imageBasedOnRarity} alt="Rarity Symbol" />}
+                        {rarity && <img className="set-symbol" src={APC} alt="Rarity Symbol" />}
                     </div>
                     <div className="frame-text-box card-color-border-square" style={getBorderStyle(colors, mana_cost,color_identity)}>
                         {type_line.includes("Planeswalker") ? (
@@ -209,7 +198,7 @@ const BasicFrame = React.memo((props) => {
                     </div>
                 </div>
             </CardBackground>
-            <span className="arcane-proxies-text">Arcane Proxy</span>
+            <span className="arcane-proxies-text">Arcane-Proxies</span>
         </div>
     )
 })

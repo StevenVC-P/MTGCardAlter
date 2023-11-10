@@ -7,7 +7,8 @@ import LeftSidebar from "./components/MainLayout/LeftSidebar.jsx";
 import RightSidebar from "./components/MainLayout/RightSidebar.jsx";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegistrationPage.jsx";
-import EmailVerification from "./pages/EmailVerification";
+import EmailVerificationNotice from "./pages/EmailVerificationNotice.jsx";
+import EmailVerificationConfirm from "./pages/EmailVerificationConfirm.jsx";
 import UserContext from "./contexts/UserContext";
 import ErrorComponent from "./components/Shared/ErrorMessage";
 
@@ -163,19 +164,11 @@ useEffect(() => {
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <Routes>
-        <Route
-          path="/login"
-          element={isLoggedIn ? <Navigate to="/" /> : <LoginPage setIsLoggedIn={setIsLoggedIn} />}
-        />
-        <Route
-          path="/"
-          element={isLoggedIn ? <MainPage isPatreonConnected={isPatreonConnected} /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/register"
-          element={!isLoggedIn ? <RegisterPage setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/" />}
-        />
-        <Route path="/verify-email" component={EmailVerification} />
+        <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <LoginPage setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/" element={isLoggedIn ? <MainPage isPatreonConnected={isPatreonConnected} /> : <Navigate to="/login" />} />
+        <Route path="/register" element={!isLoggedIn ? <RegisterPage setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/" />} />
+        <Route path="/verify-email-notice" element={<EmailVerificationNotice />} />
+        <Route path="/verify-email" element={<EmailVerificationConfirm />} />
         {/* <Route 
           path="/login/email" 
           element={!isLoggedIn ? <EmailLoginPage setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/" />} 

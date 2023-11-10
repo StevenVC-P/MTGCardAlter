@@ -17,7 +17,7 @@ const generateImage = async (textPromptsWithWeights, height, width) => {
       cfg_scale: 25,
       clip_guidance_preset: 'NONE',
       samples: 1,
-      steps: 75,
+      steps: 50,
       style_preset: 'digital-art',
       text_prompts: textPromptsWithWeights.map(prompt => ({
         text: prompt.text,

@@ -32,7 +32,7 @@ const RegisterPage = ({setIsLoggedIn}) => {
         const data = await response.json();
         console.log(data)
         if (data.success) {
-          navigate("/login");
+          navigate('/verify-email-notice', { state: { email } }); 
         } else {
           setMessage(data.message);
         }
@@ -45,7 +45,7 @@ const RegisterPage = ({setIsLoggedIn}) => {
   return (
     <div className="auth-container">
         <div className="card">
-            <h1>Arcane Proxy</h1>
+            <h1>Arcane-Proxies</h1>
             <h2 className="auth-header">Register</h2>
             <ValidatedInput
               type="email"
