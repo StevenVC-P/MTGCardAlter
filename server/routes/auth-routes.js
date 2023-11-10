@@ -40,7 +40,7 @@ router.post("/register", async (req, res) => {
     // const refreshToken = jwt.sign({ id: -1, email: email }, REFRESH_TOKEN_SECRET); 
 
     // Create a new user with the refresh token
-    const newUser = await User.create({
+    await User.create({
       email,
       username,
       password_hash: hashedPassword,
@@ -75,26 +75,6 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ success: false, message: "Error registering user" });
   }
 });
-
-    // Replace dummy ID with real one
-    // const realAccessToken = jwt.sign(
-    //   { id: newUser.id, email: newUser.email },
-    //   process.env.JWT_SECRET,
-    //   { expiresIn: "15m" } // Standard expiration time
-    // );
-
-    // res.status(200).json({
-    //   success: true,
-    //   message: "User registered successfully",
-    //   user: {
-    //     id: newUser.id,
-    //     email: newUser.email,
-    //     username: newUser.username,
-    //   },
-    //   accessToken: realAccessToken,
-    //   refreshToken,
-    // });
-
 
 router.post("/login", async (req, res) => {
   try {

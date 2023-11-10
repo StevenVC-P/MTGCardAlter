@@ -25,6 +25,7 @@ router.get("/auth/patreon", (req, res) => {
 router.get("/oauth/redirect", async (req, res) => {
   const code = req.query.code;
   const token = req.query.state;
+
   try {
     const tokensResponse = await oauthClient.getTokens(code, "http://localhost:5000/patreon/oauth/redirect");
     const patreonAPIClient = patreonAPI(tokensResponse.access_token);
@@ -36,22 +37,25 @@ router.get("/oauth/redirect", async (req, res) => {
 
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("Decoded Token:", decoded);
     } catch (err) {
       return res.status(401).json({ message: "Invalid JWT token" });
     }
 
     const userID = decoded.id;
 
-    // Check if Patreon entry exists for this user
-    const existingPatreon = await Patreon.findOne({ where: { userId: userID } });
+    // Find the user by ID
+    const user = await User.findOne({ where: { id: userID } });
+    if (user) {
+      // Find or create the Patreon account
+      let patreonAccount = await Patreon.findOne({ where: { patreon_id: patreonID } });
+      if (!patreonAccount) {
+        // If no existing Patreon account, create one
+        patreonAccount = await Patreon.create({ patreon_id: patreonID });
+      }
 
-    if (existingPatreon) {
-      // If Patreon entry exists, update it
-      await Patreon.update({ patreon_id: patreonID }, { where: { userId: userID } });
-    } else {
-      // Otherwise, create a new Patreon entry and associate it with the user
-      await Patreon.create({ patreon_id: patreonID, userId: userID });
+      // Update the user's patreon_account_id with the Patreon account's id
+      user.patreon_account_id = patreonAccount.id;
+      await user.save();
     }
 
     // Redirect back to frontend with a query parameter
@@ -59,7 +63,7 @@ router.get("/oauth/redirect", async (req, res) => {
   } catch (error) {
     console.log("Error details:", error);
     if (error.name === "JsonWebTokenError") {
-      console.log("JWT Error details:", error.message); // Debugging line
+      console.log("JWT Error details:", error.message);
     }
     res.status(500).json({ message: "Error processing Patreon token" });
   }
