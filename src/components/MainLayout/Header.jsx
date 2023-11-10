@@ -66,7 +66,7 @@ return (
         </>
       )}
     </div>
-    <span className="app-name">ArcaneProxy</span>
+    <span className="app-name">Arcane-Proxies</span>
     <button onClick={handleLogout} className="logout-button">
       Logout
     </button>

@@ -11,7 +11,7 @@ const LoginPage = ({ setIsLoggedIn }) => {
   return (
     <div className="auth-container">
       <div className="card">
-        <h1>Arcane Proxy</h1>
+        <h1>Arcane-Proxies</h1>
       
         <EmailLoginForm onSuccessfulLogin={handleSuccessfulEmailLogin} />
         {error && <p style={{ color: 'red' }}>{error}</p>}

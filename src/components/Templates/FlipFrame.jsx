@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
-import { APC, APUC, APR, APMR } from '../../assets/Misc';
+import { APC } from '../../assets/Misc';
 import { getBorderStyle } from '../Shared/Borders';
 import domtoimage from 'dom-to-image';
 import "./Universal.css";
@@ -11,21 +11,10 @@ import "./FlipFrame.css";
 const FlipFrame = React.memo((props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
-    const {mana_cost, card_faces, colors, rarity} = source;
+    const {mana_cost, card_faces, colors} = source;
     
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
-
-    const rarityImageMap = {
-        common: APC,
-        uncommon: APUC,
-        rare: APR,
-        mythic: APMR,
-        special: APMR,
-        bonus: APMR
-    };
-
-    const imageBasedOnRarity = rarityImageMap[rarity.toLowerCase()] || APMR;
 
     useEffect(() => {
     let isCancelled = false;
@@ -86,8 +75,8 @@ const FlipFrame = React.memo((props) => {
                     </div>
                 </div>
             <div className="frame-footer" style={{ color: source.colors.includes('B') ? 'white' : 'black' }}>
-                <span className="arcane-proxies-flip">Arcane Proxies</span>
-                <img className="set-symbol" src={imageBasedOnRarity} alt="Rarity Symbol" />
+                <span className="arcane-proxies-flip">Arcane-Proxies</span>
+                <img className="set-symbol" src={APC} alt="Rarity Symbol" />
             </div>
             </CardBackground>
 

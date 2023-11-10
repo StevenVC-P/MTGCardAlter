@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
-import { APC, APUC, APR, APMR } from '../../assets/Misc';
+import { APC } from '../../assets/Misc';
 import { getBorderStyle } from '../Shared/Borders';
 import domtoimage from 'dom-to-image';
 import "./Universal.css";
@@ -11,46 +11,34 @@ import "./Battles.css";
 const Battles = React.memo((props) => {
     const source = props.face || props.card;
     const imageData = props.imageData;
-    const {name, mana_cost, oracle_text, type_line, set, defense, colors } = source;
+    const {name, mana_cost, oracle_text, type_line, defense, colors } = source;
     const {color_identity, rarity} = props.card;
 
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
 
-    const rarityImageMap = {
-        common: APC,
-        uncommon: APUC,
-        rare: APR,
-        mythic: APMR,
-        special: APMR,
-        bonus: APMR
+    useEffect(() => {
+    let isCancelled = false;
+
+    if (imageData && cardRef.current) {
+        domtoimage.toPng(cardRef.current)
+            .then((imgData) => {
+                if (!isCancelled) {
+                    setImageURL(imgData);
+                }
+            })
+            .catch((error) => {
+                if (!isCancelled) {
+                    console.error('Error generating image:', error);
+                }
+            });
+    }
+
+    return () => {
+        isCancelled = true;
     };
-    
-   const imageBasedOnRarity = rarity ? rarityImageMap[rarity.toLowerCase()] || APMR : null;
+    }, [imageData]);
 
-    // useEffect(() => {
-    // let isCancelled = false;
-
-    // if (imageData && cardRef.current) {
-    //     domtoimage.toPng(cardRef.current)
-    //         .then((imgData) => {
-    //             if (!isCancelled) {
-    //                 setImageURL(imgData);
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             if (!isCancelled) {
-    //                 console.error('Error generating image:', error);
-    //             }
-    //         });
-    // }
-
-    // return () => {
-    //     isCancelled = true;
-    // };
-    // }, [imageData]);
-
-    console.log('imageURL', imageBasedOnRarity)
     return imageURL ? (
         <img src={imageURL} alt="Generated Card" />
     ) : (
@@ -66,7 +54,7 @@ const Battles = React.memo((props) => {
                         </div>
                         <div className="battle-frame-type-line card-color-border" style={getBorderStyle(colors, color_identity)}>
                             <h1 className="type">{type_line}</h1>
-                            {imageBasedOnRarity && <img className="set-symbol" src={imageBasedOnRarity} alt="Rarity Symbol" />}
+                            {rarity && <img className="set-symbol" src={APC} alt="Rarity Symbol" />}
                         </div>
                         <div className="battle-frame-text-box card-color-border-square" style={getBorderStyle(colors,color_identity)}>
                             <OracleTextCleaner text={oracle_text}/>
@@ -74,7 +62,7 @@ const Battles = React.memo((props) => {
                         </div>
                 </div>
             </CardBackground>
-            <span className="arcane-proxies-text">Arcane Proxy</span>
+            <span className="arcane-proxies-text">Arcane-Proxies</span>
         </div>
     )
 })

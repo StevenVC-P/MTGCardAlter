@@ -8,9 +8,12 @@ const User = require('../models/User');
 const { env } = require("../../env/config");
 
 const { JWT_SECRET, REFRESH_TOKEN_SECRET, EMAIL_USER, EMAIL_PASS } = env;
-
+console.log(EMAIL_USER);
+console.log(EMAIL_PASS);
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587, // or 465 if using SSL
+  secure: false, // true for 465, false for other ports
   auth: {
     user: EMAIL_USER,
     pass: EMAIL_PASS,
@@ -46,7 +49,7 @@ router.post("/register", async (req, res) => {
       // refresh_token: refreshToken,
     });
 
-    const verificationLink = `http://arcane-proxies.com/verify-email?token=${emailToken}`;
+    const verificationLink = `http://localhost:3000/verify-email?token=${emailToken}`;
 
     const mailOptions = {
       from: "your-email@gmail.com",
@@ -194,6 +197,41 @@ router.post("/token", async (req, res) => {
   } catch (error) {
     console.error("Error generating new access token:", error);
     res.status(500).json({ success: false, message: "Error generating new access token" });
+  }
+});
+
+router.post("/resend", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Check if user exists and is not already verified
+    const user = await User.findOne({ where: { email, isEmailVerified: false } });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found or already verified." });
+    }
+
+    const verificationLink = `http://arcane-proxies.com/verify-email?token=${user.emailVerificationToken}`;
+
+    const mailOptions = {
+      from: "your-email@gmail.com",
+      to: email,
+      subject: "Verify your email address",
+      text: `Please click the following link to verify your email address: ${verificationLink}`,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: "Failed to send verification email." });
+      } else {
+        console.log("Email sent: " + info.response);
+        return res.status(200).json({ success: true, message: "Verification email sent successfully." });
+      }
+    });
+  } catch (error) {
+    console.error("Error resending verification email:", error);
+    res.status(500).json({ success: false, message: "Error resending verification email" });
   }
 });
 
