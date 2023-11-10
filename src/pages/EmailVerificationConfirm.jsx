@@ -17,7 +17,6 @@ const EmailVerificationConfirm  = () => {
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
         navigate('/'); 
-        console.log('Email verified:', response.data);
       } catch (error) {
         console.log('Error verifying email:', error);
         setVerificationSuccessful(false);
