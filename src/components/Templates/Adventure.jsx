@@ -3,28 +3,17 @@ import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
 import { getBorderStyle } from '../Shared/Borders';
-import { APC, APUC, APR, APMR } from '../../assets/Misc';
+import { APC } from '../../assets/Misc';
 import domtoimage from 'dom-to-image';
 import "./Universal.css"
 import "./Adventure.css";
 
 const Adventure = React.memo((props) => {
-    const { card_faces, colors, rarity} = props.card;
+    const { card_faces, colors} = props.card;
     const imageData = props.imageData;
 
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
-
-    const rarityImageMap = {
-        common: APC,
-        uncommon: APUC,
-        rare: APR,
-        mythic: APMR,
-        special: APMR,
-        bonus: APMR
-    };
-
-    const imageBasedOnRarity = rarityImageMap[rarity.toLowerCase()] || APMR;
 
     useEffect(() => {
     let isCancelled = false;
@@ -63,7 +52,7 @@ const Adventure = React.memo((props) => {
                     </div>
                     <div className="frame-type-line card-color-border" style={getBorderStyle(colors,card_faces[0].mana_cost)}>
                         <h1 className="type">{card_faces[0].type_line}</h1>
-                        <img className="set-symbol" src={imageBasedOnRarity} alt="Rarity Symbol" />
+                        <img className="set-symbol" src={APC} alt="Rarity Symbol" />
                     </div>
                     <div className="bottom-section">
                         <div className="adventure-bottom" >
@@ -88,7 +77,7 @@ const Adventure = React.memo((props) => {
                     
                 </div>
             </CardBackground>
-            <span className="arcane-proxies-text">Arcane Proxy</span>
+            <span className="arcane-proxies-text">Arcane-Proxies</span>
         </div>
     )
 })

@@ -78,8 +78,7 @@ const CardBackground = ({ children, type_line, colors, mana_cost, className, col
             }
         }
     }, [type_line, colors, mana_cost, color_identity]);
-  
-    const isSplitCard = className.toLowerCase().includes("split");
+    const isSplitCard = className?.toLowerCase().includes("split") ?? false;
 
     const backgroundClass = isSplitCard ? 'split-card-background' : `card-background ${className || ''}`;
     

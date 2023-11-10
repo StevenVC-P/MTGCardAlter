@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
-import { APC, APUC, APR, APMR } from '../../assets/Misc';
+import { APC } from '../../assets/Misc';
 import { getBorderStyle } from '../Shared/Borders';
 import domtoimage from 'dom-to-image';
 import "./Universal.css";
@@ -16,38 +16,27 @@ const SplitFrame = React.memo((props) => {
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
 
-    const rarityImageMap = {
-        common: APC,
-        uncommon: APUC,
-        rare: APR,
-        mythic: APMR,
-        special: APMR,
-        bonus: APMR
+    useEffect(() => {
+    let isCancelled = false;
+
+    if (imageData && cardRef.current) {
+        domtoimage.toPng(cardRef.current)
+            .then((imgData) => {
+                if (!isCancelled) {
+                    setImageURL(imgData);
+                }
+            })
+            .catch((error) => {
+                if (!isCancelled) {
+                    console.error('Error generating image:', error);
+                }
+            });
+    }
+
+    return () => {
+        isCancelled = true;
     };
-
-    const imageBasedOnRarity = rarityImageMap[rarity.toLowerCase()] || APMR;
-
-    // useEffect(() => {
-    // let isCancelled = false;
-
-    // if (imageData && cardRef.current) {
-    //     domtoimage.toPng(cardRef.current)
-    //         .then((imgData) => {
-    //             if (!isCancelled) {
-    //                 setImageURL(imgData);
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             if (!isCancelled) {
-    //                 console.error('Error generating image:', error);
-    //             }
-    //         });
-    // }
-
-    // return () => {
-    //     isCancelled = true;
-    // };
-    // }, [imageData]);
+    }, [imageData]);
 
     console.log("steve", card_faces[0].mana_cost)
     return imageURL ? (
@@ -66,7 +55,7 @@ const SplitFrame = React.memo((props) => {
                         </div>
                         <div className="frame-type-line card-color-border" style={getBorderStyle(null, card_faces[0].mana_cost)}>
                             <h1 className="type">{card_faces[0].type_line}</h1>
-                            <img className="set-symbol" src={imageBasedOnRarity} alt="Rarity Symbol" />
+                            <img className="set-symbol" src={APC} alt="Rarity Symbol" />
                         </div>
                         <div className="split-frame-text-box card-color-border-square" style={getBorderStyle(null, card_faces[0].mana_cost)}>
                             <OracleTextCleaner text={card_faces[0].oracle_text} className={"split"}/>
@@ -87,7 +76,7 @@ const SplitFrame = React.memo((props) => {
                         </div>
                         <div className="frame-type-line card-color-border" style={getBorderStyle(null, card_faces[1].mana_cost)}>
                             <h1 className="type">{card_faces[1].type_line}</h1>
-                            <img className="set-symbol" src={imageBasedOnRarity} alt="Rarity Symbol" />
+                            <img className="set-symbol" src={APC} alt="Rarity Symbol" />
                         </div>
                         <div className="split-frame-text-box card-color-border-square" style={getBorderStyle(null, card_faces[1].mana_cost)}>
                             <OracleTextCleaner text={card_faces[1].oracle_text} className={"split"}/>
@@ -95,7 +84,7 @@ const SplitFrame = React.memo((props) => {
                     </div>
                 </CardBackground>
             </div>
-            <span className="arcane-proxies-text" >Arcane Proxy</span>
+            <span className="arcane-proxies-text" >Arcane-Proxies</span>
         </div>
     )
 })
