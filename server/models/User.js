@@ -7,10 +7,24 @@ const sequelize = new Sequelize("arcane_proxies", "username", "root", {
 });
 
 class User extends Model {
-
   static async getUserById(id) {
     try {
       return await this.findByPk(id);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  static async updateUserTokens(id, newTokenCount) {
+    try {
+      const user = await this.findByPk(id);
+      if (!user) {
+        return null;
+      }
+      user.tokens = newTokenCount;
+      await user.save();
+      return user;
     } catch (error) {
       console.error(error);
       return null;

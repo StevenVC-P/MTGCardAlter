@@ -31,7 +31,6 @@ const MainPage = ({ isPatreonConnected }) => {
   });
 
   useEffect(() => {
-    console.log(user)
     if (user && user.id) {
       fetchUserTokens(user.id).then((tokens) => {
         if (tokens !== null) {
@@ -54,8 +53,41 @@ const MainPage = ({ isPatreonConnected }) => {
   const handleClearError = () => {
     setErrorMessage("");
   };
-  const decrementCounter = () => {
-    setCounter((prevCounter) => Math.max(0, prevCounter - 1));
+  const decrementCounter = (decrementAmount = 1) => {
+    const newCounterValue = Math.max(0, counter - decrementAmount);
+    if (newCounterValue !== counter) {
+      console.log("newCounterValue", newCounterValue);
+      updateCounterInBackend(user.id, newCounterValue)
+        .then((success) => {
+          if (success) {
+            setCounter(newCounterValue);
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating counter in backend:", error);
+          setErrorMessage("Failed to update counter in the backend.");
+        });
+    }
+  };
+
+  const updateCounterInBackend = async (userId, newCounterValue) => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const response = await axios.put(
+        `http://localhost:5000/api/user/update-tokens/${userId}`,
+        {
+          tokens: newCounterValue,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response.status === 200 && response.data && response.data.tokens === newCounterValue;
+    } catch (error) {
+      throw error;
+    }
   };
 
   return (
@@ -90,7 +122,6 @@ useEffect(() => {
 
     if (accessToken) {
       try {
-        console.log(accessToken);
         const response = await axios.post("http://localhost:5000/api/auth/validate-access-token", { accessToken });
         setIsLoggedIn(true);
         setUser(response.data.user);
