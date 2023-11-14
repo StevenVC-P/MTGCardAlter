@@ -22,12 +22,12 @@ const MainPage = ({ isPatreonConnected }) => {
   const { user } = React.useContext(UserContext);
 
   const [otherValues, setOtherValues] = useState({
-    cardName: 1,
-    color: 1,
-    typeLine: 1,
-    keywords: 1,
-    tokens: 1,
-    favorText: 1,
+    cardName: 5,
+    color: 0,
+    typeLine: 0,
+    keywords: 0,
+    tokens: 0,
+    favorText: 0,
   });
 
   useEffect(() => {
@@ -56,7 +56,6 @@ const MainPage = ({ isPatreonConnected }) => {
   const decrementCounter = (decrementAmount = 1) => {
     const newCounterValue = Math.max(0, counter - decrementAmount);
     if (newCounterValue !== counter) {
-      console.log("newCounterValue", newCounterValue);
       updateCounterInBackend(user.id, newCounterValue)
         .then((success) => {
           if (success) {

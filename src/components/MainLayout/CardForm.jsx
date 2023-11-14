@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BasicFrame from "../Templates/BasicFrame";
 import SplitFrame from "../Templates/SplitFrame";
 import Aftermath from "../Templates/Aftermath";
@@ -13,6 +13,30 @@ const CardForm = ({ sidebarText, sidebarWeight, otherValues, decrementCounter, c
   // Using React's useState hook for managing state
   const [cardData, setCardData] = useState([]);
   const [images, setImages] = useState({});
+
+    // Load images from local storage when the component mounts
+  useEffect(() => {
+    try {
+      const savedCardData = JSON.parse(localStorage.getItem('cardData'));
+      const savedImages = JSON.parse(localStorage.getItem('cardImages'));
+      if (savedImages) {
+        setImages(savedImages);
+      }
+      if (savedCardData) {
+        setCardData(savedCardData);
+      }
+    } catch (error) {
+      console.error('Failed to load data from local storage:', error);
+      // Handle the error appropriately
+    }
+  }, []);
+
+  // Save card data and images to local storage whenever they change
+  useEffect(() => {
+    localStorage.setItem('cardImages', JSON.stringify(images));
+    localStorage.setItem('cardData', JSON.stringify(cardData));
+  }, [images, cardData]);
+
   
    // This function helps to create delay or pause execution for certain milliseconds
   return (

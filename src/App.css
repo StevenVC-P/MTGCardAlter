@@ -147,7 +147,7 @@ body {
 #card-results {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between; 
+  justify-content: flex-start; 
   gap: 5px; 
 }
 
@@ -446,4 +446,16 @@ button:hover {
 
 .error-container button:hover {
     background-color: #d32f2f; /* Darken on hover */
+}
+
+button:disabled,
+button:disabled:hover {
+  background-color: #ccc; /* Grey color */
+  color: #666; /* Darker text color */
+  cursor: not-allowed; /* Shows a 'not allowed' cursor */
+  border: 1px solid #999; /* Grey border */
+  /* Remove other styles that indicate interactivity */
+  box-shadow: none;
+  transform: none;
+  /* You can add additional styles to indicate the button is disabled */
 }
