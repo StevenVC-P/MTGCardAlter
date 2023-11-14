@@ -30,7 +30,6 @@ const RegisterPage = ({setIsLoggedIn}) => {
         });
 
         const data = await response.json();
-        console.log(data)
         if (data.success) {
           navigate('/verify-email-notice', { state: { email } }); 
         } else {
