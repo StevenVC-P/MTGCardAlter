@@ -187,7 +187,6 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
       }
     )
     const image = await generateImageFromPrompts(createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarWeight), width, height);
-    console.log(image)
     return { image };
   }
 }

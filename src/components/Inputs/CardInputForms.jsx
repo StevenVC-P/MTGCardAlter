@@ -65,7 +65,7 @@ const handleSubmit = async (event) => {
       // const response = await axios.get(`https://api.scryfall.com/cards/named?fuzzy=${sanitizedCardName}`);
       if (response.status === 200) {
         const imageData = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, counter);
-      console.error(imageData);
+        console.log(imageData)
       if (imageData.error) {
         // Detect specific DreamStudio API timeout error
         if (imageData.error === 'DreamStudio API timeout') {
@@ -80,10 +80,10 @@ const handleSubmit = async (event) => {
         localCategorizedErrors[imageData.error].push(cardName);
         continue; // Skip the current iteration as an error has occurred
       }
-
-
-        currentCounter--;
-        decrementCounter();
+        const numberOfImages = Object.keys(imageData).length;
+        console.log(numberOfImages)
+        currentCounter -= numberOfImages;
+        decrementCounter(numberOfImages);
 
         const cardDataPromises = Array.from({ length: quantity }, async () => {
           const count = (newCardCounts[sanitizedCardName] || 0) + 1;
