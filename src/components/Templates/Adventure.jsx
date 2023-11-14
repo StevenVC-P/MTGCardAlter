@@ -19,7 +19,7 @@ const Adventure = React.memo((props) => {
     let isCancelled = false;
 
     if (imageData && cardRef.current) {
-        domtoimage.toPng(cardRef.current)
+        domtoimage.toJpeg(cardRef.current, { quality: 0.7 })
             .then((imgData) => {
                 if (!isCancelled) {
                     setImageURL(imgData);
