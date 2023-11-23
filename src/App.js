@@ -30,6 +30,14 @@ const MainPage = ({ isPatreonConnected }) => {
     favorText: 0,
   });
 
+  const [engineValues, setEngineValues] = useState({
+    cfg_scale: 7,
+    clip_guidance_preset: "NONE",
+    sampler: "NONE",
+    steps: 25,
+    stylePreset: "fantasy_art",
+  });
+
   useEffect(() => {
     if (user && user.id) {
       fetchUserTokens(user.id).then((tokens) => {
@@ -94,8 +102,8 @@ const MainPage = ({ isPatreonConnected }) => {
       <Header isConnected={isPatreonConnected} />
       <ErrorComponent errorMessage={errorMessage} onClearError={handleClearError} />
       <div className="content">
-        <LeftSidebar text={sidebarText} weight={sidebarWeight} setText={setSidebarText} setWeight={setSidebarWeight} otherValues={otherValues} setOtherValues={setOtherValues} />
-        <CardForm sidebarText={sidebarText} sidebarWeight={sidebarWeight} otherValues={otherValues} decrementCounter={decrementCounter} counter={counter} setErrorMessage={setErrorMessage} />
+        <LeftSidebar text={sidebarText} weight={sidebarWeight} setText={setSidebarText} setWeight={setSidebarWeight} otherValues={otherValues} setOtherValues={setOtherValues} engineValues={engineValues} setEngineValues={setEngineValues} />
+        <CardForm sidebarText={sidebarText} sidebarWeight={sidebarWeight} otherValues={otherValues} engineValues={engineValues} decrementCounter={decrementCounter} counter={counter} setErrorMessage={setErrorMessage} />
         <RightSidebar counter={counter} errorMessage={errorMessage} />
       </div>
     </div>

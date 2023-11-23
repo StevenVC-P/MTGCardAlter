@@ -1,6 +1,6 @@
 import axios from "../utils/axiosSetup";
 
-const generateImage = async (textPromptsWithWeights, height, width) => {
+const generateImage = async (textPromptsWithWeights, engineValues, height, width) => {
   try {
     const accessToken  = localStorage.getItem('accessToken');
     const url = 'http://localhost:5000/api/generate-image';
@@ -11,14 +11,15 @@ const generateImage = async (textPromptsWithWeights, height, width) => {
       }
     };
 
+    const defaultValues = {
+      samples: 1,
+    }
+
     const data = {
       height,
       width,
-      cfg_scale: 25,
-      clip_guidance_preset: 'NONE',
-      samples: 1,
-      steps: 50,
-      style_preset: 'digital-art',
+      ...defaultValues,
+      ...engineValues,
       text_prompts: textPromptsWithWeights.map(prompt => ({
         text: prompt.text,
         weight: prompt.weight,

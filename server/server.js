@@ -24,7 +24,7 @@ app.use("/api/user", userRoutes);
 
 // app.use(jwtMiddleware);
 
-const engineId = "stable-diffusion-v1-5";
+const engineId = "stable-diffusion-v1-6";
 const apiHost = process.env.API_HOST;
 const apiKey = process.env.STABILITY_API_KEY;
 const PORT = process.env.PORT || 5000;

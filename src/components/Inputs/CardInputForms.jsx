@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from "../../utils/axiosSetup";
 import generateImageForCard from '../../helpers/imgGenerator';
 
-const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, otherValues, decrementCounter, counter, setErrorMessage }) => {
+const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, otherValues, engineValues, decrementCounter, counter, setErrorMessage }) => {
   const [cardNames, setCardNames] = useState("");
   const [cardCounts, setCardCounts] = useState({});
   const [categorizedErrors, setCategorizedErrors] = useState({});
@@ -75,7 +75,7 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, oth
       const response = await axios.get(`http://localhost:5000/api/cards/name/${sanitizedCardName}`);
         // const response = await axios.get(`https://api.scryfall.com/cards/named?fuzzy=${sanitizedCardName}`);
         if (response.status === 200) {
-          const imageData = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, counter);
+          const imageData = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, engineValues, counter);
         if (imageData.error) {
           // Detect specific DreamStudio API timeout error
           if (imageData.error === 'DreamStudio API timeout') {
@@ -140,13 +140,17 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, oth
     setCardNames(e.target.value);
   };
 
+  const cardImagesFromStorage = JSON.parse(localStorage.getItem('cardImages') || '{}');
+  const isSubmitDisabled = !cardNames.trim() || Object.keys(cardImagesFromStorage).length >= 10;
+
+
   return (
     <form className={"main-form"} onSubmit={handleSubmit}>
       <div className={"form-buttons"}>
         <button 
           type="submit" 
           className="submit form-button"
-          disabled={!cardNames.trim()}
+          disabled={isSubmitDisabled}
         >
           Submit
         </button>
