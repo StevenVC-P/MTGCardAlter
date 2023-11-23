@@ -153,12 +153,13 @@ body {
 
 .sidebar {
   width: 200px;
-  background-color: #333;
+  background-color: #1c1e22;
   color: #fff;
-  padding: 10px;
+  padding: 20px;
   flex-shrink: 0;
   height: 100%;
   position: absolute;
+  border-radius: 8px; 
 }
 
 .card-form-container { 
@@ -170,18 +171,64 @@ body {
   flex-direction: column;
 }
 
+.sidebar label,
+.sidebar button,
+.sidebar select,
+.sidebar input[type=range],
 .sidebar textarea {
-  width: 90%;
-  padding: 5px;
-  background-color: #333;
-  border: none;
-  color: #fff;
-  resize: none;
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
-.sidebar label {
-  display: block;
-  margin-bottom: 10px;
+.sidebar button {
+  background-color: #4CAF50; 
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px; 
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.sidebar button:hover {
+  background-color: #45a049; 
+}
+
+.sidebar input[type=range] {
+  height: 10px; 
+  border-radius: 5px;
+  background: #ddd; 
+  outline: none; 
+}
+
+
+.sidebar select {
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #333;
+  color: #fff;
+  border: none; 
+}
+
+
+.sidebar textarea {
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #333; 
+  color: #fff;
+  border: none; 
+}
+
+
+.advanced-engine-features {
+  margin-top: 20px; 
+  padding-top: 20px; 
+  border-top: 1px solid #555; 
+}
+
+.advanced-engine-features .slider-container {
+  margin-bottom: 20px; 
 }
 
 .main-form {
@@ -458,4 +505,29 @@ button:disabled:hover {
   box-shadow: none;
   transform: none;
   /* You can add additional styles to indicate the button is disabled */
+}
+
+.card-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.delete-button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  outline: none;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+  align-self: center; /* Centers the button below the card */
+}
+
+.delete-button:hover {
+  background-color: darkred;
 }
