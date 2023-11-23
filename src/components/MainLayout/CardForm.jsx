@@ -9,7 +9,7 @@ import Saga from "../Templates/Saga";
 import CardInputForm from "../Inputs/CardInputForms"; 
 
 // Main function component for the form
-const CardForm = ({ sidebarText, sidebarWeight, otherValues, decrementCounter, counter, setErrorMessage }) => {
+const CardForm = ({ sidebarText, sidebarWeight, otherValues, engineValues, decrementCounter, counter, setErrorMessage }) => {
   // Using React's useState hook for managing state
   const [cardData, setCardData] = useState([]);
   const [images, setImages] = useState({});
@@ -37,7 +37,20 @@ const CardForm = ({ sidebarText, sidebarWeight, otherValues, decrementCounter, c
     localStorage.setItem('cardData', JSON.stringify(cardData));
   }, [images, cardData]);
 
-  
+  const deleteCard = (imageKey) => {
+    // Remove card from cardData and images state
+    const updatedCardData = cardData.filter(card => card.imageKey !== imageKey);
+    const updatedImages = { ...images };
+    delete updatedImages[imageKey];
+
+    setCardData(updatedCardData);
+    setImages(updatedImages);
+
+    // Update local storage
+    localStorage.setItem('cardData', JSON.stringify(updatedCardData));
+    localStorage.setItem('cardImages', JSON.stringify(updatedImages));
+  };
+
    // This function helps to create delay or pause execution for certain milliseconds
   return (
     <div className="card-form-container">
@@ -47,9 +60,11 @@ const CardForm = ({ sidebarText, sidebarWeight, otherValues, decrementCounter, c
         sidebarText={sidebarText} 
         sidebarWeight={sidebarWeight} 
         otherValues={otherValues} 
+        engineValues={engineValues}
         decrementCounter={decrementCounter} 
         counter={counter} 
         setErrorMessage={setErrorMessage}
+        currentCardCount={cardData.length}
       />
       <div id="card-results">
         {cardData.map((card) => {
@@ -92,9 +107,10 @@ const CardForm = ({ sidebarText, sidebarWeight, otherValues, decrementCounter, c
             }
           };
           return (
-            <React.Fragment key={card.imageKey}>
-              <Component />
-            </React.Fragment>
+          <div className="card-box" key={card.imageKey}>
+            <Component />
+            <button className="delete-button" onClick={() => deleteCard(card.imageKey)}>Delete Card</button>
+          </div>
           );
           })}
       </div>

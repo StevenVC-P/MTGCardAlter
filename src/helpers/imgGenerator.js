@@ -97,7 +97,7 @@ function createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarW
   return defaultPrompts;
 }
 
-async function generateImageForFace(face, colorNames, keywords, tokenPrompts, otherValues, sidebarText, sidebarWeight, width, height) {
+async function generateImageForFace(face, colorNames, keywords, tokenPrompts, otherValues, sidebarText, sidebarWeight, engineValues, width, height) {
   const normalizedValues = {
     cardName: face.name,
     color: colorNames,
@@ -106,14 +106,14 @@ async function generateImageForFace(face, colorNames, keywords, tokenPrompts, ot
     tokens: tokenPrompts,
   };
   const prompts = createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarWeight);
-  return await generateImageFromPrompts(prompts, width, height);
+  return await generateImageFromPrompts(prompts, engineValues, width, height);
 }
 
-async function generateImageFromPrompts(prompts, width, height) {
-  return await generateImage(combinePromptsByWeight(prompts), width, height);
+async function generateImageFromPrompts(prompts, engineValues, width, height) {
+  return await generateImage(combinePromptsByWeight(prompts), engineValues, width, height);
 }
 
-export default async function generateImageForCard(cardData, sidebarText, sidebarWeight, otherValues, counter) {
+export default async function generateImageForCard(cardData, sidebarText, sidebarWeight, otherValues, engineValues, counter) {
   const { name, color_identity, type_line, layout, card_faces, keywords, relatedCards, flavor } = cardData.data;
 
   const colorNamesEach = getColorNames(color_identity);
@@ -132,13 +132,13 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
         if (keywords.includes("Aftermath")) {
           // Dimensions from your old "Aftermath" code
           width = index === 0 ? 576 : 512;
-          height = index === 0 ? 1600 : 832;
+          height = index === 0 ? 1536 : 832;
         } else {
           // Dimensions from your old "split" code
           width = 512;
           height = 640;
         }
-        return generateImageForFace(face, colorNames[index], keywords, tokenPrompts, otherValues, sidebarText, sidebarWeight, width, height);
+        return generateImageForFace(face, colorNames[index], keywords, tokenPrompts, otherValues, sidebarText, sidebarWeight, engineValues, width, height);
       })
     );
 
@@ -155,17 +155,17 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
 
         if (face.type_line.includes("Saga")) {
           height = 576;
-          width = 1600;
+          width = 1536;
         } else if (face.type_line.includes("Battle")) {
           height = 1280;
         }
 
-        return generateImageForFace(face, colorNamesEach, keywords, tokenPrompts, otherValues, sidebarText, sidebarWeight, width, height);
+        return generateImageForFace(face, colorNamesEach, keywords, tokenPrompts, otherValues, sidebarText, sidebarWeight, engineValues,width, height);
       })
     );
     return { firstImage: images[0], secondImage: images[1] };
   } else {
-    const width = layout === "saga" ? 1600 : 512;
+    const width = layout === "saga" ? 1536 : 512;
     const height = layout === "saga" ? 576 : 640;
 
     let normalizedValues= {}
@@ -186,7 +186,7 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
         tokens: tokenPrompts,
       }
     )
-    const image = await generateImageFromPrompts(createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarWeight), width, height);
+    const image = await generateImageFromPrompts(createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarWeight), engineValues, width, height);
     return { image };
   }
 }
