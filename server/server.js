@@ -76,6 +76,13 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
     let errorMessage = "Error generating image";
     let errorDetails = {};
 
+    if (error.response?.data?.message === "Invalid prompts detected") {
+      return res.status(400).json({
+        message: "Invalid prompt detected. 🚨",
+        error: true,
+      });
+    }
+
     if (error.code === "ECONNABORTED" && error.message.includes("timeout")) {
       errorMessage = "The request to DreamStudio API timed out. They might be experiencing issues";
       errorDetails = {
