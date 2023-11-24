@@ -1,7 +1,7 @@
 export const friendlyLabelNames = {
   clip_guidance_preset: 'Image Guidance Intensity',
   sampler: 'Image Generation Method',
-  // ... any other technical labels can be added here
+  stylePreset: "Image Style",
 };
 
 export const friendlyOptionNames = {
@@ -22,7 +22,6 @@ export const friendlyOptionNames = {
   K_EULER_ANCESTRAL: 'Euler Ancestral',
   K_HEUN: "Heun's Method",
   K_LMS: 'Least Mean Squares',
-  // ... any other options can be added here
 };
 
 export const stylePresetFriendlyNames = {
