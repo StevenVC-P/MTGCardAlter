@@ -33,9 +33,9 @@ const MainPage = ({ isPatreonConnected }) => {
   const [engineValues, setEngineValues] = useState({
     cfg_scale: 7,
     clip_guidance_preset: "NONE",
-    sampler: "NONE",
+    sampler: "DDIM",
     steps: 25,
-    stylePreset: "fantasy_art",
+    stylePreset: "fantasy-art",
   });
 
   useEffect(() => {
