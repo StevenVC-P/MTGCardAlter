@@ -1,9 +1,6 @@
-const { Sequelize, DataTypes, Model } = require("sequelize");
+const { DataTypes, Model } = require("sequelize");
 
-const sequelize = new Sequelize("arcane_proxies", "username", "root", {
-  host: "localhost",
-  dialect: "mysql",
-});
+const sequelize = require("../config/database");
 
 class Patreon extends Model {}
 

@@ -58,7 +58,7 @@ const FlipFrame = React.memo((props) => {
                         )}
                     </div>
                     <div className="frame-image card-color-border-square" style={getBorderStyle(colors)}>
-                        {imageData && <img src={`data:image/png;base64,${imageData.image}`} alt="Generated" />}
+                        {imageData && <img src={`data:image/png;base64,${imageData}`} alt="Generated" />}
                     </div>
                     <div className="frame-type-line flip card-color-border" style={getBorderStyle(colors)}>
                         <h1 className="type">{card_faces[1].type_line}</h1>

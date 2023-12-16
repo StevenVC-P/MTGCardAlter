@@ -90,7 +90,7 @@ const Saga = React.memo((props) => {
                         </div>
                         </div>
                         <div className="saga-frame-image" style={getBorderStyle(colors, color_identity)}>
-                            {imageData && <img src={`data:image/png;base64,${imageData.image}`} alt="Generated" />}
+                            {imageData && <img src={`data:image/png;base64,${imageData}`} alt="Generated" />}
                         </div>
                     </div>
                     <div className="frame-type-line card-color-border" style={getBorderStyle(colors, color_identity)}>

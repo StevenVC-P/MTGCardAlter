@@ -1,6 +1,6 @@
 // routes/cards.js
 const express = require("express");
-const Card = require("../models/Card");
+const Card = require("../models/Card/CardIndex");
 const router = express.Router();
 
 const { normalizeCardName } = require("./helpers/helpers");
@@ -12,9 +12,8 @@ router.get("/:id", async (req, res) => {
 
 router.get("/name/:name", async (req, res) => {
   try {
-
     const cardName = normalizeCardName(req.params.name);
-    console.log(cardName)
+    console.log(cardName);
     const card = await Card.getByName(cardName);
 
     if (!card) {
