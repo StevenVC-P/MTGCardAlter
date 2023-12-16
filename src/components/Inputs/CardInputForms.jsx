@@ -37,104 +37,115 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, oth
     localStorage.removeItem('cardImages');
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    console.log(cardNames)
+const handleSubmit = async (event) => {
+  event.preventDefault();
 
+  if (!isValidInput(sidebarText, sidebarWeight, otherValues)) {
+    return;
+  }
 
-    if ((sidebarText.trim() === '' || sidebarWeight === 0) && otherValues.cardName === 0) {
-      console.log("inside warning")
-      console.warn("'Prompt' or 'Card Name' must have a value and weight.");
-      setErrorMessage("'Prompt' or 'Card Name' must have a value and weight.");
-      return;
-    }
+  if (counter === 0) {
+    setErrorMessage("Counter is at 0, not making a request.");
+    return;
+  }
 
+  const cardNamesArr = getSanitizedCardNames(cardNames);
+  const [newImages, newCardCounts, tempCardData, localCategorizedErrors] = await processCardNames(cardNamesArr);
+
+  if (Object.keys(localCategorizedErrors).length) {
+    setErrorMessage(localCategorizedErrors);
+  } else {
+    setErrorMessage("");
+  }
+
+  updateStates(newImages, newCardCounts, tempCardData);
+};
+
+const isValidInput = (sidebarText, sidebarWeight, otherValues) => {
+  if ((sidebarText.trim() === '' || sidebarWeight === 0) && otherValues.cardName === 0) {
+    setErrorMessage("'Prompt' or 'Card Name' must have a value and weight.");
+    return false;
+  }
+  return true;
+};
+
+const getSanitizedCardNames = (cardNames) => {
+  return cardNames.split('\n').filter(name => name.trim() !== '');
+};
+
+const processCardNames = async (cardNamesArr) => {
+  let newImages = {};
+  let newCardCounts = { ...cardCounts };
+  let tempCardData = [];
+  let localCategorizedErrors = {};
+
+  for (const cardName of cardNamesArr) {
     if (counter === 0) {
-      console.warn("Counter is at 0, not making a request.");
       setErrorMessage("Counter is at 0, not making a request.");
-      return;
+      break;
     }
 
-    const cardNamesArr = cardNames.split('\n').filter(name => name.trim() !== '');
-    let newImages = {};
-    let newCardCounts = { ...cardCounts };
+    const { quantity, sanitizedCardName } = sanitizeInput(cardName);
 
-    let tempCardData = [];
-    let localCategorizedErrors = {};
-
-    for (const cardName of cardNamesArr) {
-      if (currentCounter === 0) {
-        console.warn("Counter is at 0, not making a request.");
-        setErrorMessage("Counter is at 0, not making a request.");
-        break;
-      }
-
-      const { quantity, sanitizedCardName } = sanitizeInput(cardName);
-
-      try {
+    try {
       const response = await axios.get(`http://localhost:5000/api/cards/name/${sanitizedCardName}`);
-        // const response = await axios.get(`https://api.scryfall.com/cards/named?fuzzy=${sanitizedCardName}`);
-        if (response.status === 200) {
-          const imageData = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, engineValues, counter);
-        if (imageData.error) {
-          // Detect specific DreamStudio API timeout error
-          if (imageData.error === 'DreamStudio API timeout') {
-            setErrorMessage(`The DreamStudio API is currently experiencing issues. Please check their status at https://dreamstudio.com/api/status/`);
-          } else {
-            setErrorMessage(imageData.error); // Set a generic error message
-          }
-          console.low(imageData.error);
-          if (!localCategorizedErrors[imageData.error]) {
-            localCategorizedErrors[imageData.error] = [];
-          }
-          localCategorizedErrors[imageData.error].push(cardName);
-          continue; // Skip the current iteration as an error has occurred
-        }
-          const numberOfImages = Object.keys(imageData).length;
-          currentCounter -= numberOfImages;
-          decrementCounter(numberOfImages);
+      if (response.status === 200) {
+        const newCardObjects = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, engineValues, counter);
 
-          const cardDataPromises = Array.from({ length: quantity }, async () => {
-            const count = (newCardCounts[sanitizedCardName] || 0) + 1;
-            newCardCounts[sanitizedCardName] = count;
-            const key = `${sanitizedCardName}-${count}`;
-            newImages[key] = imageData;
-            await delay(100);
-            return { ...response.data, imageKey: key };
-          });
+        console.log(newCardObjects);
+        newCardObjects.forEach(cardObject => {
+          // Decrement counter for each card face
+          counter -= 1;
+          decrementCounter(1); // Assuming this function has side effects, like updating state
 
-          tempCardData.push(...await Promise.all(cardDataPromises));
-        }
-      } catch (error) {
-        let errorMessage = "An error occurred. Please try again.";
-        if (error.response && error.response.data && error.response.data.message) {
-          errorMessage = error.response.data.message;
-        }
-
-        // Provide a link to check DreamStudio API status if it's a timeout error
-        if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
-          errorMessage += " The DreamStudio API may be down. Check the API status here: https://dreamstudio.com/api/status/";
-        }
-
-        setErrorMessage(errorMessage); // Update the user-facing error message
-
-        if (!localCategorizedErrors[errorMessage]) {
-          localCategorizedErrors[errorMessage] = [];
-        }
-        localCategorizedErrors[errorMessage].push(cardName);
+          const cardDataPromise = {
+            card_details: response.data, // Common card details
+            images: cardObject.images, // Images specific to the face of the card
+            card: cardObject.card // Card data including face_type
+          };
+          tempCardData.push(cardDataPromise);
+        });
       }
+    } catch (error) {
+      console.error("Caught an error:", error);
+      handleRequestError(error, cardName, localCategorizedErrors);
     }
+  }
 
-    if (Object.keys(localCategorizedErrors).length) {
-      setErrorMessage(localCategorizedErrors);
-    } else {
-      setErrorMessage(""); // Clear any previous error messages
-    }
-    setCardData(prevCardData => [...prevCardData, ...tempCardData]);
-    setCardCounts(newCardCounts);
-    setCardNames("");
-    setImages(prevImages => ({ ...prevImages, ...newImages }));
-  };
+  return [newImages, newCardCounts, tempCardData, localCategorizedErrors];
+};
+
+const handleImageError = (error, cardName, localCategorizedErrors) => {
+  if (!localCategorizedErrors[error]) {
+    localCategorizedErrors[error] = [];
+  }
+  localCategorizedErrors[error].push(cardName);
+};
+
+const handleRequestError = (error, cardName, localCategorizedErrors) => {
+  let errorMessage = "An error occurred. Please try again.";
+  if (error.response && error.response.data && error.response.data.message) {
+    errorMessage = error.response.data.message;
+  }
+
+  if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+    errorMessage += " The DreamStudio API may be down. Check the API status here: https://dreamstudio.com/api/status/";
+  }
+
+  setErrorMessage(errorMessage);
+
+  if (!localCategorizedErrors[errorMessage]) {
+    localCategorizedErrors[errorMessage] = [];
+  }
+  localCategorizedErrors[errorMessage].push(cardName);
+};
+
+const updateStates = (newImages, newCardCounts, tempCardData) => {
+  setCardData(prevCardData => [...tempCardData, ...prevCardData]);
+  setCardCounts(newCardCounts);
+  setCardNames("");
+  setImages(prevImages => ({ ...prevImages, ...newImages }));
+};
 
   const handleInputChange = (e) => {
     setCardNames(e.target.value);
