@@ -1,10 +1,7 @@
 const { Sequelize, DataTypes, Model } = require("sequelize");
 
 // Assuming you have a sequelize instance set up already
-const sequelize = new Sequelize("arcane_proxies", "username", "root", {
-  host: "localhost",
-  dialect: "mysql",
-});
+const sequelize = require("../config/database");
 
 class User extends Model {
   static async getUserById(id) {

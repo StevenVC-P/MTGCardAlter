@@ -11,10 +11,10 @@ router.get("/tokens/:userId", async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.json({ tokens: user.tokens });
+    return res.json({ tokens: user.tokens });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -27,10 +27,10 @@ router.put("/update-tokens/:userId", authenticateToken, async (req, res) => {
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.status(200).json({ tokens: updatedUser.tokens });
+    return res.status(200).json({ tokens: updatedUser.tokens });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 

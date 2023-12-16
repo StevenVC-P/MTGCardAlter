@@ -1,8 +1,6 @@
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 
-console.log("Directly in config.js:", process.env.JWT_SECRET);
-
 module.exports = {
   env: {
     API_HOST: process.env.API_HOST,

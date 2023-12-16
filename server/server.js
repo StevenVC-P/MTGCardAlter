@@ -8,11 +8,14 @@ const setupMiddleware = require("./middleware");
 const { credentials } = require("./config/setup");
 const jwtMiddleware = require("./jwtMiddleware");
 
+const { GeneratedImage, UserCard } = require("./models");
+
 // Adjusted paths
 const cardRoutes = require("./routes/cards");
 const authRoutes = require("./routes/auth-routes");
 const patreonRoutes = require("./routes/patreon-routes");
 const userRoutes = require("./routes/user-routes");
+const generatedImagesRouter = require("./routes/generatedImages"); 
 
 const app = express();
 setupMiddleware(app);
@@ -21,6 +24,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/cards", cardRoutes);
 app.use("/patreon", patreonRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/generated-images", generatedImagesRouter);
 
 // app.use(jwtMiddleware);
 
@@ -28,12 +32,19 @@ const engineId = "stable-diffusion-v1-6";
 const apiHost = process.env.API_HOST;
 const apiKey = process.env.STABILITY_API_KEY;
 const PORT = process.env.PORT || 5000;
-//"https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image";
+
 app.post("/api/generate-image", authenticateToken, async (req, res) => {
   try {
-    const { height, width, cfg_scale, clip_guidance_preset, sampler, samples, steps, style_preset, text_prompts } = req.body;
+      const { card_id, height, width, cfg_scale, clip_guidance_preset, sampler, samples, steps, stylePreset, text_prompts, facetype } = req.body;
     // Perform the image generation using Stability.AI API
-
+    const userId = req.user.id;
+    console.log("facetype", facetype);
+    const userCard = await UserCard.create({
+      user_id: userId,
+      card_id,
+      face_type: facetype
+    });
+    console.log("facetype", userCard);
     // Add a timeout configuration to the axios request
     const axiosConfig = {
       headers: {
@@ -43,18 +54,18 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
       },
       timeout: 300000, // Timeout after 300 seconds (5 minutes)
     };
-
+    
     const response = await axios.post(
       `${apiHost}/v1/generation/${engineId}/text-to-image`,
       {
         height,
         width,
-        cfg_scale,
+        cfg_scale, 
         clip_guidance_preset,
         sampler,
         samples,
         steps,
-        style_preset,
+        style_preset: stylePreset,
         text_prompts,
       },
       axiosConfig
@@ -63,13 +74,35 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
     // Access data
     const data = response.data;
 
-    // Check for artifacts
+  // Check for artifacts
     if (!data.artifacts || data.artifacts.length === 0) {
       throw new Error("No artifacts found in the image generation response");
     }
+    
+    const generatedImage = await GeneratedImage.create({
+      user_card_id: userCard.user_card_id,
+      image_url: data.artifacts[0].base64,
+      cfg_scale,
+      clip_guidance_preset,
+      sampler,
+      samples,
+      steps,
+      style_preset: stylePreset,
+    });
+
+    const imageObject = {
+      image_id: generatedImage.user_card_id,
+      image_url: generatedImage.image_url,
+    };
 
     // Return the generated image URL or data
-    return res.json({ image: data.artifacts[0].base64 });
+    return res.json({
+      card: {
+        user_card_id: userCard.user_card_id,
+        face_type: userCard.face_type, // Include the face_type in the response
+      },
+      images: [imageObject],
+    });
   } catch (error) {
     console.error("Error generating image:", error);
 

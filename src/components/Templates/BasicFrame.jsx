@@ -14,11 +14,9 @@ import "./Universal.css";
 import "./BasicFrame.css";
 
 const BasicFrame = React.memo((props) => {
-    const source = props.face || props.card;
     const imageData = props.imageData;
-    const {name, mana_cost, oracle_text, type_line, power, toughness, loyalty, colors, flavor_text, rarity } = source;
+    const {name, mana_cost, oracle_text, type_line, power, toughness, loyalty, colors, flavor_text, rarity } = props.card;
     const {color_identity} = props.card;
-    
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
 
@@ -151,7 +149,7 @@ const BasicFrame = React.memo((props) => {
                             <ManaCost manaCost={mana_cost}/>
                     </div>
                     <div className="frame-image card-color-border-square" style={getBorderStyle(colors, mana_cost, color_identity)}>
-                        {imageData && <img src={`data:image/png;base64,${imageData.image}`} alt="Generated" />}
+                        {imageData && <img src={`data:image/png;base64,${imageData}`} alt="Generated" />}
                     </div>
                     <div className="frame-type-line card-color-border" style={getBorderStyle(colors, mana_cost, color_identity)}>
                         <h1 className="type">{type_line}</h1>
