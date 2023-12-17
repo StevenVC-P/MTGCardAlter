@@ -86,67 +86,67 @@ const deleteCard = async (cardId) => {
     }
   }
    // This function helps to create delay or pause execution for certain milliseconds
-  return (
-    <div className="card-form-container">
-      <CardInputForm 
-        setCardData={setCardData} 
-        setImages={setImages} 
-        sidebarText={sidebarText} 
-        sidebarWeight={sidebarWeight} 
-        otherValues={otherValues} 
-        engineValues={engineValues}
-        decrementCounter={decrementCounter} 
-        counter={counter} 
-        setErrorMessage={setErrorMessage}
-        currentCardCount={cardData.length}
-      />
-        <div id="card-results">
-          {loading && <div>Loading cards...</div>} {/* Show loading message when fetching data */}
-          {error && <div>Error loading cards: {error.message}</div>}
+  return (     
+      <div className="card-form-container">
+        <CardInputForm 
+          setCardData={setCardData} 
+          setImages={setImages} 
+          sidebarText={sidebarText} 
+          sidebarWeight={sidebarWeight} 
+          otherValues={otherValues} 
+          engineValues={engineValues}
+          decrementCounter={decrementCounter} 
+          counter={counter} 
+          setErrorMessage={setErrorMessage}
+          currentCardCount={cardData.length}
+        />
+          <div id="card-results">
+            {loading && <div>Loading cards...</div>} {/* Show loading message when fetching data */}
+            {error && <div>Error loading cards: {error.message}</div>}
 
-          {!loading && !error && cardData.map((data) => {
-          
-            // Access the image URL safely
-            const imageUrls = data.images?.length > 0 ? data.images.map(img => img.image_url) : ['fallback-image-url'];
+            {!loading && !error && cardData.map((data) => {
+            
+              // Access the image URL safely
+              const imageUrls = data.images?.length > 0 ? data.images.map(img => img.image_url) : ['fallback-image-url'];
 
-            // Log the imageData to see what value is being passed to the BasicFrame component
-            const CardComponent = () => {
-              if (data.card_details.keywords && data.card_details.keywords.includes('Aftermath')) {
-                return <Aftermath card={data.card_details} imageData={imageUrls} />;
-              } else {
-                switch (data.card_details.layout) {
-                  case 'normal':
-                  return <BasicFrame card={data.card_details} imageData={imageUrls} />;
-                  case 'split':
-                    return <SplitFrame card={data.card_details} imageData={imageUrls} />;
-                  case 'adventure':
-                    return <Adventure card={data.card_details} imageData={imageUrls} />;
-                  case 'saga':
-                    return <Saga card={data.card_details} imageData={imageUrls} />;
-                  case 'flip':
-                    return <FlipFrame card={data.card_details} imageData={imageUrls} />;
-                  case 'transform':
-                    const faceIndex = data.card.face_type === 'front' ? 0 : 1;
-                    const faceData = data.card_details.card_faces[faceIndex];
-                    const combinedCardData = { ...data.card_details, ...faceData };
+              // Log the imageData to see what value is being passed to the BasicFrame component
+              const CardComponent = () => {
+                if (data.card_details.keywords && data.card_details.keywords.includes('Aftermath')) {
+                  return <Aftermath card={data.card_details} imageData={imageUrls} />;
+                } else {
+                  switch (data.card_details.layout) {
+                    case 'normal':
+                    return <BasicFrame card={data.card_details} imageData={imageUrls} />;
+                    case 'split':
+                      return <SplitFrame card={data.card_details} imageData={imageUrls} />;
+                    case 'adventure':
+                      return <Adventure card={data.card_details} imageData={imageUrls} />;
+                    case 'saga':
+                      return <Saga card={data.card_details} imageData={imageUrls} />;
+                    case 'flip':
+                      return <FlipFrame card={data.card_details} imageData={imageUrls} />;
+                    case 'transform':
+                      const faceIndex = data.card.face_type === 'front' ? 0 : 1;
+                      const faceData = data.card_details.card_faces[faceIndex];
+                      const combinedCardData = { ...data.card_details, ...faceData };
 
-                    return selectComponentForFace(combinedCardData, imageUrls)
+                      return selectComponentForFace(combinedCardData, imageUrls)
 
-                  default:
-                    return <BasicFrame card={data.card} imageData={imageUrls}/>;
+                    default:
+                      return <BasicFrame card={data.card} imageData={imageUrls}/>;
+                    }
                   }
-                }
-              };
-            return (
-              <div className="card-box" key={data.card.user_card_id}>
-                <CardComponent />
-                <button className="delete-button" onClick={() => deleteCard(data.card.user_card_id)}>Delete Card</button>
+                };
+              return (
+                <div className="card-box" key={data.card.user_card_id}>
+                  <CardComponent />
+                  <button className="delete-button" onClick={() => deleteCard(data.card.user_card_id)}>Delete Card</button>
 
-              </div>
-            );
-          })}
+                </div>
+              );
+            })}
+        </div>
       </div>
-    </div>
   );
 };
 
