@@ -11,10 +11,11 @@ body {
 .container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   height: 100vh;
   width: 100%;
+  margin-top: 55px;;
 }
 
 .auth-container {
@@ -26,7 +27,9 @@ body {
 
 .content {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
   height: 100%;
   width: 100%
 }
@@ -71,6 +74,20 @@ body {
   transform: translateX(-50%);
 }
 
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.main-form {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px; 
+}
 
 .input-box {
   width: 100%;
@@ -116,12 +133,37 @@ body {
     background-color: darkred;
 }
 
+.card-form-container {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: flex-start; 
+  flex: 1; 
+  padding: 20px; 
+  box-sizing: border-box;
+}
+
 .card-result {
   margin-bottom: 20px;
 }
 
 #card-results {
-    overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start; 
+  align-items: stretch;
+  gap: 5px; 
+  overflow: hidden;
+  margin: 0 -5px;
+}
+
+.card-box {
+  display: flex;
+  flex: 1 1 200px;
+  flex-direction: column;
+  align-items: center;
+  margin: 5px;
+  max-width: calc(100% - 10px);
 }
 
 .card-name {
@@ -143,31 +185,15 @@ body {
   margin-top: 10px;
 }
 
-#card-results {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start; 
-  gap: 5px; 
-}
-
 .sidebar {
   width: 200px;
+  flex-shrink: 0;
   background-color: #1c1e22;
   color: #fff;
   padding: 20px;
-  flex-shrink: 0;
-  height: 100%;
-  position: absolute;
-  border-radius: 8px; 
-}
-
-.card-form-container { 
-  margin-left: 15%;
-  margin-right: 15%;
-  width: 100%;
-  display: flex;
-  align-items: space-between;
-  flex-direction: column;
+  height: 100vh; 
+  border-radius: 8px;
+  overflow-y: auto
 }
 
 .sidebar label,
@@ -219,6 +245,44 @@ body {
   border: none; 
 }
 
+@media (max-width: 787px) {
+  .sidebar, .right-sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    justify-content: space-around;
+  }
+
+  .left-header-content,
+  .app-name,
+  .logout-button {
+    width: 100%;
+    text-align: center; 
+    margin: 10px 0;
+  }
+
+
+  .left-header-content {
+    order: 1;
+  }
+
+  .app-name {
+    position: static; 
+    left: auto; 
+    transform: none;
+    order: 0;
+  }
+
+  .logout-button {
+    order: 2;
+  }
+}
 
 .advanced-engine-features {
   margin-top: 20px; 
@@ -228,15 +292,6 @@ body {
 
 .advanced-engine-features .slider-container {
   margin-bottom: 20px; 
-}
-
-.main-form {
-  display: flex;
-  flex-direction: column; 
-  align-items: center;
-  margin-left: 220px; 
-  margin-right: 220px;
-  margin-top: -30px;
 }
 
 .form-buttons {
@@ -482,7 +537,7 @@ button:hover {
 .error-container button {
     margin-top: auto;
     padding: 10px 15px;
-    background-color: #f44336; /* Error red */
+    background-color: #f44336;
     border: none;
     border-radius: 5px;
     color: white;
@@ -491,26 +546,17 @@ button:hover {
 }
 
 .error-container button:hover {
-    background-color: #d32f2f; /* Darken on hover */
+    background-color: #d32f2f;
 }
 
 button:disabled,
 button:disabled:hover {
-  background-color: #ccc; /* Grey color */
-  color: #666; /* Darker text color */
-  cursor: not-allowed; /* Shows a 'not allowed' cursor */
-  border: 1px solid #999; /* Grey border */
-  /* Remove other styles that indicate interactivity */
+  background-color: #ccc; 
+  color: #666;
+  cursor: not-allowed; 
+  border: 1px solid #999;
   box-shadow: none;
   transform: none;
-  /* You can add additional styles to indicate the button is disabled */
-}
-
-.card-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
 }
 
 .delete-button {
@@ -524,7 +570,7 @@ button:disabled:hover {
   border-radius: 5px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s ease;
-  align-self: center; /* Centers the button below the card */
+  align-self: center;
 }
 
 .delete-button:hover {

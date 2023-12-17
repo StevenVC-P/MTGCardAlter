@@ -156,26 +156,28 @@ const updateStates = (newImages, newCardCounts, tempCardData) => {
 
 
   return (
-    <form className={"main-form"} onSubmit={handleSubmit}>
-      <div className={"form-buttons"}>
-        <button 
-          type="submit" 
-          className="submit form-button"
-          disabled={isSubmitDisabled}
-        >
-          Submit
-        </button>
-        <button type="button" className="clear form-button" onClick={handleClear}>
-          Clear
-        </button>
-      </div>
-      <textarea 
-        onChange={handleInputChange} // Use the new handler
-        value={cardNames} // Join the array into a string for the textarea
-        className="input-box" 
-        placeholder="Copy/Paste Magic card names and quantities" 
-      />
-    </form>
+    <div className="form-wrapper">
+      <form className={"main-form"} onSubmit={handleSubmit}>
+        <div className={"form-buttons"}>
+          <button 
+            type="submit" 
+            className="submit form-button"
+            disabled={isSubmitDisabled}
+          >
+            Submit
+          </button>
+          <button type="button" className="clear form-button" onClick={handleClear}>
+            Clear
+          </button>
+        </div>
+        <textarea 
+          onChange={handleInputChange} // Use the new handler
+          value={cardNames} // Join the array into a string for the textarea
+          className="input-box" 
+          placeholder="Copy/Paste Magic card names and quantities" 
+        />
+      </form>
+    </div>
   );
 };
 
