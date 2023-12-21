@@ -32,7 +32,7 @@ class Card {
     const [cardRows] = await pool.query(query, parameters);
 
     if (cardRows.length === 0) {
-      throw new Error(`No card matches found for these names:`);
+      throw new Error(`No card matches found for these names`);
     }
 
     const exactMatch = cardRows.find((card) => card.name.toLowerCase() === lowerCaseCardName);
