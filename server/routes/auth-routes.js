@@ -8,8 +8,6 @@ const User = require('../models/User');
 const { env } = require("../../env/config");
 
 const { JWT_SECRET, REFRESH_TOKEN_SECRET, EMAIL_USER, EMAIL_PASS } = env;
-console.log(EMAIL_USER);
-console.log(EMAIL_PASS);
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587, // or 465 if using SSL

@@ -5,7 +5,7 @@ body {
   text-align: center;
   padding-top: 10px;
   margin: 0;
-    height: 100%;
+  height: 100%;
 }
 
 .container {
@@ -15,7 +15,8 @@ body {
   align-items: center;
   height: 100vh;
   width: 100%;
-  margin-top: 55px;;
+  margin-top: 55px;
+  min-height: 100vh; 
 }
 
 .auth-container {
@@ -31,7 +32,8 @@ body {
   justify-content: center;
   align-items: flex-start;
   height: 100%;
-  width: 100%
+  width: 100%;
+  flex-grow: 1;
 }
 
 .header {
@@ -86,7 +88,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px; 
+  width:50%;
 }
 
 .input-box {
@@ -136,34 +138,28 @@ body {
 .card-form-container {
   display: flex;
   flex-direction: column; 
-  align-items: center; 
   justify-content: flex-start; 
   flex: 1; 
   padding: 20px; 
   box-sizing: border-box;
 }
 
-.card-result {
-  margin-bottom: 20px;
-}
-
 #card-results {
   display: flex;
   flex-wrap: wrap;
-  justify-content: start; 
-  align-items: stretch;
+  justify-content: flex-start; 
+  align-items: center;
   gap: 5px; 
-  overflow: hidden;
   margin: 0 -5px;
 }
 
 .card-box {
   display: flex;
-  flex: 1 1 200px;
+  flex: 0 1 200px;
   flex-direction: column;
   align-items: center;
-  margin: 5px;
-  max-width: calc(100% - 10px);
+  margin: 15px 30px;
+  max-width: 200px;
 }
 
 .card-name {
@@ -187,11 +183,12 @@ body {
 
 .sidebar {
   width: 200px;
-  flex-shrink: 0;
+  flex: 0 0 200px;
   background-color: #1c1e22;
   color: #fff;
   padding: 20px;
-  height: 100vh; 
+  min-height: 100%; 
+  box-sizing: border-box;
   border-radius: 8px;
   overflow-y: auto
 }
@@ -580,4 +577,43 @@ button:disabled:hover {
 .tooltip-icon {
   margin-right: 8px;
   cursor: help;
+}
+
+.loading-banner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  width: 60vw;
+  max-width: 400px;
+  padding: 1rem;
+  box-sizing: border-box;
+
+  background-color: #121212; 
+  border: 1px solid #2e2e2e;
+  border-radius: 10px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+
+  color: #30d5c8;
+  text-align: center;
+  font-family: 'Orbitron', sans-serif; 
+  letter-spacing: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: all 0.3s ease-in-out;
+}
+
+@keyframes pulsate {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.loading-banner-text {
+  animation: pulsate 1.5s infinite; /* Apply the animation to the text */
+  font-size: 1.2rem;
+  font-weight: 600;
 }
