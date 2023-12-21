@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from "../../utils/axiosSetup";
 import generateImageForCard from '../../helpers/imgGenerator';
+import LoadingBanner from '../MainLayout/LoadingBanner';
 
-const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, otherValues, engineValues, decrementCounter, counter, setErrorMessage }) => {
+const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, otherValues, engineValues, decrementCounter, counter, setErrorMessage, isLoading, setIsLoading }) => {
   const [cardNames, setCardNames] = useState("");
   const [cardCounts, setCardCounts] = useState({});
   const [categorizedErrors, setCategorizedErrors] = useState({});
@@ -78,6 +79,7 @@ const processCardNames = async (cardNamesArr) => {
   let newCardCounts = { ...cardCounts };
   let tempCardData = [];
   let localCategorizedErrors = {};
+  setIsLoading(true);
 
   for (const cardName of cardNamesArr) {
     if (counter === 0) {
@@ -92,24 +94,26 @@ const processCardNames = async (cardNamesArr) => {
       if (response.status === 200) {
         const newCardObjects = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, engineValues, counter);
 
-        console.log(newCardObjects);
         newCardObjects.forEach(cardObject => {
-          // Decrement counter for each card face
           counter -= 1;
-          decrementCounter(1); // Assuming this function has side effects, like updating state
+          decrementCounter(1);
 
-          const cardDataPromise = {
-            card_details: response.data, // Common card details
-            images: cardObject.images, // Images specific to the face of the card
-            card: cardObject.card // Card data including face_type
-          };
-          tempCardData.push(cardDataPromise);
+          for (let i = 0; i < quantity; i++) {
+            const cardDataPromise = {
+              card_details: response.data, 
+              images: cardObject.images, 
+              card: cardObject.card 
+            };
+            tempCardData.push(cardDataPromise);
+          }
         });
       }
     } catch (error) {
       console.error("Caught an error:", error);
       handleRequestError(error, cardName, localCategorizedErrors);
-    }
+    } finally {
+        setIsLoading(false);
+    };
   }
 
   return [newImages, newCardCounts, tempCardData, localCategorizedErrors];
@@ -162,11 +166,16 @@ const updateStates = (newImages, newCardCounts, tempCardData) => {
           <button 
             type="submit" 
             className="submit form-button"
-            disabled={isSubmitDisabled}
+            disabled={isSubmitDisabled || isLoading}
           >
             Submit
           </button>
-          <button type="button" className="clear form-button" onClick={handleClear}>
+          <button 
+            type="button"
+            className="clear form-button"
+            onClick={handleClear}
+            disabled={isLoading}
+          >
             Clear
           </button>
         </div>

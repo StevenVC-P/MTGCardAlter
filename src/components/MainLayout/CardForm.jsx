@@ -10,12 +10,13 @@ import Saga from "../Templates/Saga";
 import CardInputForm from "../Inputs/CardInputForms"; 
 
 // Main function component for the form
-const CardForm = ({ sidebarText, sidebarWeight, otherValues, engineValues, decrementCounter, counter, setErrorMessage }) => {
+const CardForm = ({ sidebarText, sidebarWeight, otherValues, engineValues, decrementCounter, counter, isLoading, setIsLoading, setErrorMessage }) => {
   // Using React's useState hook for managing state
   const [cardData, setCardData] = useState([]);
   const [images, setImages] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchImagesAndCards = async () => {
@@ -47,32 +48,31 @@ const CardForm = ({ sidebarText, sidebarWeight, otherValues, engineValues, decre
 
   // Modify deleteCard to handle deletion from the database
 const deleteCard = async (cardId) => {
+  setIsDeleting(prevState => ({ ...prevState, [cardId]: true }));
   const accessToken = localStorage.getItem('accessToken');
   if (!accessToken) {
     console.error('No access token available.');
-    // Optionally handle the absence of an access token (e.g., redirect to login)
+    setIsDeleting(prevState => ({ ...prevState, [cardId]: false }))
     return;
   }
 
   try {
-    // Ensure you're sending the correct identifier to your endpoint.
-    // If your endpoint requires the image ID, you should send that instead of cardId.
     await axios.delete(`http://localhost:5000/api/generated-images/${cardId}`, {
       headers: {
         'Authorization': `Bearer ${accessToken}`
       }
     });
-
-    // Update state to reflect deletion.
-    // This assumes cardData is an array of card objects and each card object has an images array.
-    console.log(cardData)
     const updatedCardData = cardData.filter(card => card.card.user_card_id !== cardId);
 
     setCardData(updatedCardData);
-
+    setIsDeleting(prevState => {
+      const newState = { ...prevState };
+      delete newState[cardId];  // Remove cardId from the state
+      return newState;
+    });
   } catch (error) {
     console.error('Failed to delete image:', error);
-    // Handle the error appropriately, such as showing a message to the user
+    setIsDeleting(prevState => ({ ...prevState, [cardId]: false }));
   }
 };
 
@@ -99,6 +99,8 @@ const deleteCard = async (cardId) => {
           counter={counter} 
           setErrorMessage={setErrorMessage}
           currentCardCount={cardData.length}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
         />
           <div id="card-results">
             {loading && <div>Loading cards...</div>} {/* Show loading message when fetching data */}
@@ -140,8 +142,13 @@ const deleteCard = async (cardId) => {
               return (
                 <div className="card-box" key={data.card.user_card_id}>
                   <CardComponent />
-                  <button className="delete-button" onClick={() => deleteCard(data.card.user_card_id)}>Delete Card</button>
-
+                  <button 
+                    className="delete-button"
+                    onClick={() => deleteCard(data.card.user_card_id)}
+                    disabled={isDeleting[data.card.user_card_id]}
+                  >
+                    Delete Card
+                  </button>
                 </div>
               );
             })}
