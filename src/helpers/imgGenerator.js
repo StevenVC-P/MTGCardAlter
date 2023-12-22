@@ -106,7 +106,6 @@ async function generateImageForFace(face, colorNames, keywords, tokenPrompts, ot
   };
   const prompts = createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarWeight);
   const result = await generateImageFromPrompts(prompts, engineValues, card_id, width, height, faceType);
-  console.log(result)
   return result;
 }
 

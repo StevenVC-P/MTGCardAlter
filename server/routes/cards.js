@@ -13,7 +13,6 @@ router.get("/:id", async (req, res) => {
 router.get("/name/:name", async (req, res) => {
   try {
     const cardName = normalizeCardName(req.params.name);
-    console.log(cardName);
     const card = await Card.getByName(cardName);
 
     if (!card) {
