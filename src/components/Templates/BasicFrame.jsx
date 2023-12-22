@@ -25,32 +25,32 @@ const BasicFrame = React.memo((props) => {
 
     const [isPlaneswalker, setIsPlaneswalker] = useState(false);
 
-    useEffect(() => {
-        let isCancelled = false;
-        if (type_line.includes("Planeswalker")) {
-            setIsPlaneswalker(true);
-        } else {
-            setIsPlaneswalker(false);
-        }
+    // useEffect(() => {
+    //     let isCancelled = false;
+    //     if (type_line.includes("Planeswalker")) {
+    //         setIsPlaneswalker(true);
+    //     } else {
+    //         setIsPlaneswalker(false);
+    //     }
         
-        if (imageData && cardRef.current) {
-            domtoimage.toJpeg(cardRef.current, { quality: 0.7 })
-                .then((imgData) => {
-                    if (!isCancelled) {
-                        setImageURL(imgData);
-                    }
-                })
-                .catch((error) => {
-                    if (!isCancelled) {
-                        console.error('Error generating image:', error);
-                    }
-                });
-        }
+    //     if (imageData && cardRef.current) {
+    //         domtoimage.toJpeg(cardRef.current, { quality: 0.7 })
+    //             .then((imgData) => {
+    //                 if (!isCancelled) {
+    //                     setImageURL(imgData);
+    //                 }
+    //             })
+    //             .catch((error) => {
+    //                 if (!isCancelled) {
+    //                     console.error('Error generating image:', error);
+    //                 }
+    //             });
+    //     }
 
-        return () => {
-            isCancelled = true;
-        };
-    }, [imageData, isPlaneswalker]);
+    //     return () => {
+    //         isCancelled = true;
+    //     };
+    // }, [imageData, isPlaneswalker]);
 
     function escapeRegex(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
