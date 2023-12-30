@@ -28,10 +28,13 @@ const EmailVerificationNotice = () => {
   };
 
   return (
-    <div className="verification-page">
-      <h1>Email Verification</h1>
-      <p>Please check your email to verify your account. If you did not receive an email, you can <button onClick={resendVerificationEmail}>resend the verification email</button>.</p>
-      {message && <p>{message}</p>}
+    <div className="auth-container">
+        <div className="card">
+          <h1>Email Verification</h1>
+          <p>Please check your email to verify your account. If you did not receive an email, you can resend the verification email</p>
+          <button className="resend-btn" onClick={resendVerificationEmail}>Resend</button>
+          {message && <p>{message}</p>}
+        </div>
     </div>
   );
 };
