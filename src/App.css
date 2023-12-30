@@ -356,7 +356,7 @@ button:hover {
   outline: none;
 }
 
-.auth-btn {
+.auth-btn, .resend-btn {
   width: 100%;
   padding: 10px 15px;
   background-color: #4CAF50;
@@ -367,8 +367,13 @@ button:hover {
   transition: background-color 0.2s;
 }
 
-.auth-btn:hover {
+.auth-btn:hover, .resend-btn:hover {
   background-color: #45a049;
+}
+
+.resend-btn {
+  width: 100px;
+  margin-top: 30px;
 }
 
 .auth-error-message {
