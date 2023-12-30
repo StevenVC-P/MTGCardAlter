@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import axios from "../../utils/axiosSetup";
 import generateImageForCard from '../../helpers/imgGenerator';
-import LoadingBanner from '../MainLayout/LoadingBanner';
 
-const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, otherValues, engineValues, decrementCounter, counter, setErrorMessage, isLoading, setIsLoading }) => {
+const CardInputForm = ({ cardData, setCardData, sidebarText, sidebarWeight, otherValues, engineValues, decrementCounter, counter, setErrorMessage, isLoading, setIsLoading }) => {
   const [cardNames, setCardNames] = useState("");
-  const [cardCounts, setCardCounts] = useState({});
   const [categorizedErrors, setCategorizedErrors] = useState({});
 
   let currentCounter = counter;
@@ -33,14 +31,13 @@ const CardInputForm = ({ setCardData, setImages, sidebarText, sidebarWeight, oth
   const handleClear = () => {
     setCardNames("");
     setCardData([]);
-    setImages({});
 
     localStorage.removeItem('cardImages');
   };
 
 const handleSubmit = async (event) => {
   event.preventDefault();
-
+  const slotsRemaining = 10 - cardData.length;
   if (!isValidInput(sidebarText, sidebarWeight, otherValues)) {
     return;
   }
@@ -51,7 +48,8 @@ const handleSubmit = async (event) => {
   }
 
   const cardNamesArr = getSanitizedCardNames(cardNames);
-  const [newImages, newCardCounts, tempCardData, localCategorizedErrors] = await processCardNames(cardNamesArr);
+  const cardNamesToProcess = cardNamesArr.slice(0, slotsRemaining);
+  const [tempCardData, localCategorizedErrors] = await processCardNames(cardNamesToProcess);
 
   if (Object.keys(localCategorizedErrors).length) {
     setErrorMessage(localCategorizedErrors);
@@ -59,7 +57,7 @@ const handleSubmit = async (event) => {
     setErrorMessage("");
   }
 
-  updateStates(newImages, newCardCounts, tempCardData);
+  updateStates(tempCardData);
 };
 
 const isValidInput = (sidebarText, sidebarWeight, otherValues) => {
@@ -75,48 +73,53 @@ const getSanitizedCardNames = (cardNames) => {
 };
 
 const processCardNames = async (cardNamesArr) => {
-  let newImages = {};
-  let newCardCounts = { ...cardCounts };
   let tempCardData = [];
   let localCategorizedErrors = {};
+  let slotsRemaining  = 10-cardData.length;
+
   setIsLoading(true);
+
+  const decrementSlotsAndCounter = (count) => {
+    counter -= count;
+    decrementCounter(count);
+  };
 
   for (const cardName of cardNamesArr) {
     if (counter === 0) {
       setErrorMessage("Counter is at 0, not making a request.");
       break;
     }
-
     const { quantity, sanitizedCardName } = sanitizeInput(cardName);
+    const effectiveQuantity = Math.min(quantity, slotsRemaining );
 
     try {
       const response = await axios.get(`http://localhost:5000/api/cards/name/${sanitizedCardName}`);
       if (response.status === 200) {
         const newCardObjects = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, engineValues, counter);
 
-        newCardObjects.forEach(cardObject => {
-          counter -= 1;
-          decrementCounter(1);
-
-          for (let i = 0; i < quantity; i++) {
-            const cardDataPromise = {
-              card_details: response.data, 
-              images: cardObject.images, 
-              card: cardObject.card 
-            };
-            tempCardData.push(cardDataPromise);
+        for (const cardObject of newCardObjects) {
+          decrementSlotsAndCounter(1); 
+          for (let i = 0; i < effectiveQuantity; i++) {
+            if (slotsRemaining > 0) {
+              const cardDataPromise = {
+                card_details: response.data, 
+                images: cardObject.images, 
+                card: cardObject.card 
+              };
+              slotsRemaining--;
+              tempCardData.push(cardDataPromise);
+            }
+            
           }
-        });
+        }
       }
     } catch (error) {
       console.error("Caught an error:", error);
       handleRequestError(error, cardName, localCategorizedErrors);
-    } finally {
-        setIsLoading(false);
-    };
+    }
   }
-
-  return [newImages, newCardCounts, tempCardData, localCategorizedErrors];
+  setIsLoading(false);
+  return [tempCardData, localCategorizedErrors];
 };
 
 const handleImageError = (error, cardName, localCategorizedErrors) => {
@@ -144,20 +147,16 @@ const handleRequestError = (error, cardName, localCategorizedErrors) => {
   localCategorizedErrors[errorMessage].push(cardName);
 };
 
-const updateStates = (newImages, newCardCounts, tempCardData) => {
+const updateStates = (tempCardData) => {
   setCardData(prevCardData => [...tempCardData, ...prevCardData]);
-  setCardCounts(newCardCounts);
   setCardNames("");
-  setImages(prevImages => ({ ...prevImages, ...newImages }));
 };
 
   const handleInputChange = (e) => {
     setCardNames(e.target.value);
   };
 
-  const cardImagesFromStorage = JSON.parse(localStorage.getItem('cardImages') || '{}');
-  const isSubmitDisabled = !cardNames.trim() || Object.keys(cardImagesFromStorage).length >= 10;
-
+  const isSubmitDisabled = !cardNames.trim() ||cardData.length >= 10 || isLoading;
 
   return (
     <div className="form-wrapper">
@@ -166,7 +165,7 @@ const updateStates = (newImages, newCardCounts, tempCardData) => {
           <button 
             type="submit" 
             className="submit form-button"
-            disabled={isSubmitDisabled || isLoading}
+            disabled={isSubmitDisabled}
           >
             Submit
           </button>

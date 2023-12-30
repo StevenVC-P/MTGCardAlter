@@ -38,13 +38,11 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
       const { card_id, height, width, cfg_scale, clip_guidance_preset, sampler, samples, steps, stylePreset, text_prompts, facetype } = req.body;
     // Perform the image generation using Stability.AI API
     const userId = req.user.id;
-    console.log("facetype", facetype);
     const userCard = await UserCard.create({
       user_id: userId,
       card_id,
       face_type: facetype
     });
-    console.log("facetype", userCard);
     // Add a timeout configuration to the axios request
     const axiosConfig = {
       headers: {
@@ -95,11 +93,10 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
       image_url: generatedImage.image_url,
     };
 
-    // Return the generated image URL or data
     return res.json({
       card: {
         user_card_id: userCard.user_card_id,
-        face_type: userCard.face_type, // Include the face_type in the response
+        face_type: userCard.face_type, 
       },
       images: [imageObject],
     });

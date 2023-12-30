@@ -33,7 +33,6 @@ async function refreshTokenAndRetry(failedRequest) {
 
 axios.interceptors.response.use(
   (response) => {
-    console.log("response", response);
     return response;
   },
   async (error) => {
