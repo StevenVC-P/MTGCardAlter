@@ -9,8 +9,6 @@ const pool = mysql.createPool({
   port: 3306,
 });
 
-// console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(pool)));
-
 async function getUserById(id, provider = null) {
   let query = "SELECT * FROM users WHERE ";
   if (provider === "google") query += "google_id = ?";

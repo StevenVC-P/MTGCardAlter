@@ -13,7 +13,7 @@ import CardInputForm from "../Inputs/CardInputForms";
 const CardForm = ({ sidebarText, sidebarWeight, otherValues, engineValues, decrementCounter, counter, isLoading, setIsLoading, setErrorMessage }) => {
   // Using React's useState hook for managing state
   const [cardData, setCardData] = useState([]);
-  const [images, setImages] = useState({});
+  // const [images, setImages] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -89,8 +89,9 @@ const deleteCard = async (cardId) => {
   return (     
       <div className="card-form-container">
         <CardInputForm 
+          cardData={cardData}
           setCardData={setCardData} 
-          setImages={setImages} 
+          // setImages={setImages} 
           sidebarText={sidebarText} 
           sidebarWeight={sidebarWeight} 
           otherValues={otherValues} 
@@ -145,7 +146,7 @@ const deleteCard = async (cardId) => {
                   <button 
                     className="delete-button"
                     onClick={() => deleteCard(data.card.user_card_id)}
-                    disabled={isDeleting[data.card.user_card_id]}
+                    disabled={isDeleting[data.card.user_card_id] || isLoading}
                   >
                     Delete Card
                   </button>
