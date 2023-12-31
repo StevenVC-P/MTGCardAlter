@@ -35,24 +35,27 @@ const CardBackground = ({ children, type_line, colors, mana_cost, className, col
                         const colorPair = cost.split("/");
                         if (colorPair.includes("2")) { // special case: hybrid mana that can be paid with 2 colorless mana or one colored mana
                             colorPair.splice(colorPair.indexOf("2"), 1); // remove "2" from array
+
                             colorPair.forEach(color => manaColors.add(color));
                             if (!hybridColors.includes(colorPair.join(""))) {
                                 hybridColors.push(colorPair.join(""));
                             }
                         } else {
+                                                        console.log(colorPair)
                             colorPair.forEach(color => manaColors.add(color));
                             if (!hybridColors.includes(colorPair.join(""))) {
                                 hybridColors.push(colorPair.join(""));
                             }
                         }
-                    } else { // if cost is a solid mana
+                    } else { 
                         if (!manaColors.has(cost)) {
-                            manaColors.add(cost.replace('P', '')); // remove 'P' for Phyrexian mana
+                            manaColors.add(cost.replace('P', '')); 
+                            manaColors.delete('X');
                         }
                     }
                 }
             });
-
+            
             // Fallback to the 'colors' prop if 'mana_cost' is not available
             if (manaColors.size === 0 && colors && colors.length > 0) {
                 colors.forEach(color => manaColors.add(color));
@@ -63,6 +66,7 @@ const CardBackground = ({ children, type_line, colors, mana_cost, className, col
             }
 
             if (Array.from(manaColors).sort().join("") !== Array.from(hybridColors).sort().join("") && hybridColors.length !== 0 ) {
+
                 return backgroundsSolid['Gold.jpg'];
             } 
             else if (hybridColors.length === 1 && manaColors.size !== 1) {
@@ -70,6 +74,7 @@ const CardBackground = ({ children, type_line, colors, mana_cost, className, col
                 return backgroundsHybrid[`${colorPair}.jpg`];
             } 
             else if (hybridColors.length > 1 || manaColors.size > 1) {
+                                console.log(manaColors)
                 return backgroundsSolid['Gold.jpg'];
             }
             else {

@@ -2,26 +2,27 @@ import React, { useState } from 'react';
 import ValidatedInput from './ValidatedInput'; 
 
 const EmailLoginForm = ( { onSuccessfulLogin } ) => {
-  const [email, setEmail] = useState('');
+  const [login, setLogin] = useState(''); 
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-    const emailValidator = (email) => {
-    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    return regex.test(email);
+  const loginValidator = (input) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    const usernameRegex = /^[a-zA-Z0-9_-]+$/; // Adjust as needed for username validation
+    return emailRegex.test(input) || usernameRegex.test(input);
   };
 
   const passwordValidator = (password) => {
     return password.length >= 8;
   };
 
-  const emailLogin = async () => {
+  const handleLogin  = async () => {
     try {
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ login, password }),
       });
 
       const data = await response.json();
@@ -39,14 +40,17 @@ const EmailLoginForm = ( { onSuccessfulLogin } ) => {
 
   return (
   <div className="login-container">
-    <h2 className="login-header">Login with Email</h2>
+  <h2 className="login-header">
+    Login with
+    <span style={{ display: 'block' }}>Username or Email</span>
+  </h2>
     <ValidatedInput
-      type="email"
-      placeholder="Email"
-      value={email}
-      onChange={(e) => setEmail(e.target.value)}
-      validator={emailValidator}
-      errorMessage="Please enter a valid email."
+      type="text"
+      placeholder="Username or Email"
+      value={login}
+      onChange={(e) => setLogin(e.target.value)}
+      validator={loginValidator}
+      errorMessage="Please enter a valid username or email."
       className="login-input"
     />
     <ValidatedInput
@@ -58,7 +62,7 @@ const EmailLoginForm = ( { onSuccessfulLogin } ) => {
       errorMessage="Password should be at least 8 characters long."
       className="login-input"
     />
-    <button className="login-btn" onClick={emailLogin}>Login</button>
+    <button className="login-btn" onClick={handleLogin}>Login</button>
     {message && <p className="login-error-message">{message}</p>}
   </div>
   );
