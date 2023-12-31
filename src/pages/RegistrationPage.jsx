@@ -13,7 +13,21 @@ const RegisterPage = ({setIsLoggedIn}) => {
   const [shouldValidate, setShouldValidate] = useState(false);
 
   const emailValidator = (email) => /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email);
-  const usernameValidator = (username) => username.length >= 3;
+  const usernameValidator = (username) => {
+    const minLength = 3;
+    if (username.length < minLength) {
+      return false;
+    }
+    const validUsernamePattern = /^[a-zA-Z0-9_-]+$/;
+    if (!validUsernamePattern.test(username)) {
+      return false;
+    }
+    if (username.includes('@')) {
+      return false;
+    }
+    return true;
+  };
+
   const passwordValidator = (password) => password.length >= 8;
 
   const register = async () => {

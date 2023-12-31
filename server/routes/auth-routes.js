@@ -1,4 +1,5 @@
 const express = require("express");
+const { Sequelize } = require("sequelize");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
@@ -76,21 +77,24 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ where: { email } });
+    const { login, password } = req.body; // 'login' can be either username or email
+    // Attempt to find the user by email or username
+    const user = await User.findOne({
+      where: {
+        [Sequelize.Op.or]: [{ email: login }, { username: login }],
+      },
+    });
 
     if (!user) {
-      return res.status(400).json({ success: false, message: "Invalid email or password." });
+      return res.status(400).json({ success: false, message: "Invalid login credentials." });
     }
 
     const isMatch = await bcrypt.compare(password, user.password_hash);
-
     if (!isMatch) {
-      return res.status(400).json({ success: false, message: "Invalid email or password." });
+      return res.status(400).json({ success: false, message: "Invalid login credentials." });
     }
 
     const accessToken = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: "15m" });
-
     const refreshToken = jwt.sign({ id: user.id, email: user.email }, REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
 
     await User.update({ refresh_token: refreshToken }, { where: { id: user.id } });
