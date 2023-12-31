@@ -12,6 +12,11 @@ module.exports = {
     JWT_SECRET: process.env.JWT_SECRET,
     REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
     EMAIL_USER: process.env.EMAIL_USER,
-    EMAIL_PASS: process.env.EMAIL_PASS
+    EMAIL_PASS: process.env.EMAIL_PASS,
+    USER: process.env.USER,
+    HOST: process.env.HOST,
+    DATABASE: process.env.DATABASE,
+    PASSWORD: process.env.PASSWORD,
+    PORT: process.env.PORT,
   },
 };

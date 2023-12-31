@@ -17,6 +17,8 @@
     "dotenv": "^16.3.1",
     "facebook-sdk": "^0.3.3",
     "fb": "^2.0.0",
+    "firebase": "^10.7.1",
+    "firebase-admin": "^12.0.0",
     "google-auth-library": "^9.0.0",
     "jsonwebtoken": "^9.0.2",
     "jspdf": "^2.5.1",

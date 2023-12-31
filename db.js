@@ -1,12 +1,15 @@
 // db.js
 const mysql = require("mysql2/promise");
+const { env } = require("./env/config");
+
+const { USER, HOST, DATABASE, PASSWORD, PORT} = env;
 
 const pool = mysql.createPool({
-  user: "root",
-  host: "localhost",
-  database: "arcane_proxies",
-  password: "root",
-  port: 3306,
+  user: USER,
+  host: HOST,
+  database: DATABASE,
+  password: PASSWORD,
+  port: PORT,
 });
 
 async function getUserById(id, provider = null) {

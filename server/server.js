@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "./env/.env" }); // Adjusted path
+require("dotenv").config({ path: "./env/.env" });
 const http = require("http");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
@@ -31,7 +31,7 @@ app.use("/api/generated-images", generatedImagesRouter);
 const engineId = "stable-diffusion-v1-6";
 const apiHost = process.env.API_HOST;
 const apiKey = process.env.STABILITY_API_KEY;
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 app.post("/api/generate-image", authenticateToken, async (req, res) => {
   try {
