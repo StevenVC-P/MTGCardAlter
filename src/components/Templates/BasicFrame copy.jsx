@@ -149,7 +149,7 @@ const BasicFrame = React.memo((props) => {
                             <ManaCost manaCost={mana_cost}/>
                     </div>
                     <div className="frame-image card-color-border-square" style={getBorderStyle(colors, mana_cost, color_identity)}>
-                        {imageData && <img src={`data:image/png;base64,${imageData}`} alt="Generated" />}
+                        {imageData && <img src={imageData} alt="Generated" />}
                     </div>
                     <div className="frame-type-line card-color-border" style={getBorderStyle(colors, mana_cost, color_identity)}>
                         <h1 className="type">{type_line}</h1>

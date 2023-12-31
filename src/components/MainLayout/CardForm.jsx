@@ -136,7 +136,7 @@ const deleteCard = async (cardId) => {
                       return selectComponentForFace(combinedCardData, imageUrls)
 
                     default:
-                      return <BasicFrame card={data.card} imageData={imageUrls}/>;
+                      return <BasicFrame card={data.card_details} imageData={imageUrls}/>;
                     }
                   }
                 };
