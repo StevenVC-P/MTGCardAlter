@@ -1,7 +1,11 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize("arcane_proxies", "root", "root", {
-  host: "localhost",
+const { env } = require("../../env/config");
+
+const { USER, HOST, DATABASE, PASSWORD, } = env;
+
+const sequelize = new Sequelize(DATABASE, USER, PASSWORD, {
+  host: HOST,
   dialect: "mysql",
 });
 
