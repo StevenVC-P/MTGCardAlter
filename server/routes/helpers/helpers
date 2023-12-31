@@ -8,6 +8,20 @@ const normalizeCardName = (input) => {
   normalized = normalized.replace(/\/+/g, "/");
   normalized = normalized.replace(/\s*\/\s*/g, "/");
   normalized = normalized.replace(/\//g, " // ");
+
+  normalized = normalized
+    .split(" ")
+    // Capitalize the first letter of each word and lowercase the rest of the letters
+    .map((word) => {
+      // Do not capitalize if the word is part of a split card name
+      if (word === "//") {
+        return word;
+      }
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    // Rejoin the words back into a single string
+    .join(" ");
+
   return normalized;
 };
 
