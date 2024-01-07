@@ -1,5 +1,19 @@
 import axios from "../utils/axiosSetup";
 
+const replacements = {
+  virtuous: "righteous",
+  // Add more word replacements here as needed
+};
+
+function replaceWords(text, replacements) {
+  let modifiedText = text;
+  for (const [target, replacement] of Object.entries(replacements)) {
+    const regex = new RegExp(target, 'gi');
+    modifiedText = modifiedText.replace(regex, replacement);
+  }
+  return modifiedText;
+}
+
 const generateImage = async (textPromptsWithWeights, engineValues, card_id, height, width, facetype) => {
   try {
     const accessToken  = localStorage.getItem('accessToken');
@@ -22,7 +36,7 @@ const generateImage = async (textPromptsWithWeights, engineValues, card_id, heig
       ...defaultValues,
       ...engineValues,
       text_prompts: textPromptsWithWeights.map(prompt => ({
-        text: prompt.text,
+        text: replaceWords(prompt.text, replacements),
         weight: prompt.weight,
       })),
       facetype,

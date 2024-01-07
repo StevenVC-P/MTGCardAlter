@@ -115,11 +115,13 @@ async function generateImageFromPrompts(prompts, engineValues, card_id, width, h
 
 export default async function generateImageForCard(cardData, sidebarText, sidebarWeight, otherValues, engineValues, counter) {
   const { card_id, name, color_identity, type_line, layout, card_faces, keywords, relatedCards, flavor } = cardData.data;
-
   const colorNamesEach = getColorNames(color_identity);
   const tokenPrompts = getTokenPrompts(relatedCards);
 
+  const dualLayouts = ["transform", "modal_dfc", "art_series", "reversible_card", "double_faced_token"];
+  console.log("steve1", cardData.data);
   if (keywords.includes("Aftermath") || (layout === "split" && card_faces)) {
+    console.log("steve5", cardData.data);
     if (counter < 2) {
       console.warn("Counter less than 2, not generating image for multiple-faced card.");
       return { error: "Counter insufficient for multi-faced cards." };
@@ -156,7 +158,7 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
         })),
       };
     });
-
+    
     try {
       const success = await generateMultiFaceImage(facesData, engineValues, card_id);
       return [success];
@@ -165,54 +167,61 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
       throw error;
     }
 
-  } else if (layout === "transform" && card_faces) {
+  } else if (dualLayouts.includes(layout) && card_faces) {
+    console.log("steve4", cardData.data);
     if (counter < 2) {
       console.warn("Counter less than 2, not generating image for multiple-faced card.");
       return { error: "Counter insufficient for multi-faced cards." };
     }
     const cardResults = await Promise.all(
       card_faces.map((face, index) => {
-        let width = 512;
-        let height = 640;
+        let height = 512;
+        let width = 640;
 
         if (face.type_line.includes("Saga")) {
           height = 576;
           width = 1536;
         } else if (face.type_line.includes("Battle")) {
-          height = 1280;
+          width = 1280;
         }
 
         const faceType = index === 0 ? "front" : "back";
 
         return generateImageForFace(face, colorNamesEach, keywords, tokenPrompts, otherValues, sidebarText, sidebarWeight, engineValues, card_id, width, height, faceType);
-        })
+      })
     );
 
     return cardResults;
-
   } else {
-    const width = layout === "saga" ? 1536 : 512;
-    const height = layout === "saga" ? 576 : 640;
+    let width, height;
+    console.log("steve2", cardData.data);
+    if (layout.includes("planar")) {
+      height = 448;
+      width = 1408;
+    } else {
+      width = layout === "saga" ? 1536 : 512;
+      height = layout === "saga" ? 576 : 640;
+    }
 
-    let normalizedValues= {}
-    if ( layout === "adventure" && card_faces) {
-        normalizedValues = {
-          cardName: [card_faces[0].name, card_faces[1].name],
-          color: colorNamesEach,
-          typeLine: card_faces[0].type_line,
-          keywords: keywords,
-          tokens: tokenPrompts,
-        };
-    } else (
-        normalizedValues = {
+    let normalizedValues = {};
+    if (layout === "adventure" && card_faces) {
+      normalizedValues = {
+        cardName: [card_faces[0].name, card_faces[1].name],
+        color: colorNamesEach,
+        typeLine: card_faces[0].type_line,
+        keywords: keywords,
+        tokens: tokenPrompts,
+      };
+    } else
+      normalizedValues = {
         cardName: name,
         color: colorNamesEach,
         typeLine: type_line,
         keywords: keywords,
         tokens: tokenPrompts,
-      }
-    )
+      };
     const imageResult = await generateImageFromPrompts(createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarWeight), engineValues, card_id, width, height, null);
     return [imageResult];
   }
+  console.log("steve3", cardData.data);
 }

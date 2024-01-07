@@ -15,42 +15,42 @@ import "./BasicFrame.css";
 
 const BasicFrame = React.memo((props) => {
     const imageData = props.imageData;
-    const {name, mana_cost, oracle_text, type_line, power, toughness, loyalty, colors, flavor_text, rarity } = props.card;
+    const {name, mana_cost, oracle_text, type_line, power, toughness, loyalty, colors, flavor_text, rarity, layout } = props.card;
     const {color_identity} = props.card;
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
 
     let planeswalker_text = "";
     let abilities = [];
-
+    console.log(props.card)
     const [isPlaneswalker, setIsPlaneswalker] = useState(false);
 
-    useEffect(() => {
-        let isCancelled = false;
-        if (type_line.includes("Planeswalker")) {
-            setIsPlaneswalker(true);
-        } else {
-            setIsPlaneswalker(false);
-        }
+    // useEffect(() => {
+    //     let isCancelled = false;
+    //     if (type_line.includes("Planeswalker")) {
+    //         setIsPlaneswalker(true);
+    //     } else {
+    //         setIsPlaneswalker(false);
+    //     }
         
-        if (imageData && cardRef.current) {
-            domtoimage.toJpeg(cardRef.current, { quality: 0.7 })
-                .then((imgData) => {
-                    if (!isCancelled) {
-                        setImageURL(imgData);
-                    }
-                })
-                .catch((error) => {
-                    if (!isCancelled) {
-                        console.error('Error generating image:', error);
-                    }
-                });
-        }
+    //     if (imageData && cardRef.current) {
+    //         domtoimage.toJpeg(cardRef.current, { quality: 0.7 })
+    //             .then((imgData) => {
+    //                 if (!isCancelled) {
+    //                     setImageURL(imgData);
+    //                 }
+    //             })
+    //             .catch((error) => {
+    //                 if (!isCancelled) {
+    //                     console.error('Error generating image:', error);
+    //                 }
+    //             });
+    //     }
 
-        return () => {
-            isCancelled = true;
-        };
-    }, [imageData, isPlaneswalker]);
+    //     return () => {
+    //         isCancelled = true;
+    //     };
+    // }, [imageData, isPlaneswalker]);
 
     function escapeRegex(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -142,7 +142,7 @@ const BasicFrame = React.memo((props) => {
         <img src={imageURL} alt="Generated Card" />
     ) : (
         <div className="card-container" ref={cardRef}>
-            <CardBackground type_line={type_line} colors={(colors, color_identity)} mana_cost={mana_cost} className={"basic-card-background"}>
+            <CardBackground type_line={type_line} colors={(colors, color_identity)} mana_cost={mana_cost} className={"basic-card-background"} layout={layout}>
                 <div className="card-frame">
                     <div className="frame-header card-color-border" style={getBorderStyle(colors, mana_cost, color_identity)}>
                             <h1 className="name">{name}</h1>

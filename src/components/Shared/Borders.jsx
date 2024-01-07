@@ -42,34 +42,25 @@ const extractColorsFromManaCost = (manaCost) => {
     return Array.from(colors);
 };
 
-export const getBorderStyle = (colors, manaCost, color_identity) => {
-
+export const getBorderStyle = (colors, manaCost, color_identity, layout) => {
     const boxShadow = "4px 4px 3px rgba(0, 0, 0, 0.5)";
-    if (!colors || colors.length === 0) {
-        if (!color_identity || color_identity.length === 0) {
-    
-           colors = extractColorsFromManaCost(manaCost);
-        } else {
-            
-            const styleObject = {
-                borderColor: colorMap[color_identity[0]],
-                borderWidth: '3px',
-                borderStyle: 'solid',
-                backgroundColor: backgroundColorMap[color_identity[0]],
-                boxShadow,
-            };
 
-            return styleObject;
+    if (!colors || colors.length === 0) {
+        if (color_identity && color_identity.length > 0) {
+            colors = extractColorsFromManaCost(color_identity);
+        } else if (color_identity) {
+            colors = extractColorsFromManaCost(manaCost);
         }
     }
 
-    const borderColor = colors.length === 1 ? colorMap[colors[0]] :
-        colors.length >= 2 ? colorMap["gold"] : 
-        colorMap["artifact"];
+    const borderColor = layout && layout.includes("planar") ? colorMap['gold']
+        : colors.length === 1 ? colorMap[colors[0]] 
+        : colors.length >= 2 ? colorMap["gold"]
+        : colorMap["artifact"];
 
     const borderWidth = colors.length === 2 ? '2px' : '3px';
 
-    const backgroundColor = colors.length === 1 ? backgroundColorMap[colors[0]] :
+    const backgroundColor = layout && layout.includes("planar") ? backgroundColorMap['gold'] : colors.length === 1 ? backgroundColorMap[colors[0]] :
         colors.length >= 2 ? backgroundColorMap["dual"] :
         colors.length > 2 ? backgroundColorMap["gold"] : backgroundColorMap["artifact"];
 
