@@ -91,7 +91,6 @@ const deleteCard = async (cardId) => {
         <CardInputForm 
           cardData={cardData}
           setCardData={setCardData} 
-          // setImages={setImages} 
           sidebarText={sidebarText} 
           sidebarWeight={sidebarWeight} 
           otherValues={otherValues} 
@@ -112,7 +111,6 @@ const deleteCard = async (cardId) => {
               // Access the image URL safely
               const imageUrls = data.images?.length > 0 ? data.images.map(img => img.image_url) : ['fallback-image-url'];
 
-              // Log the imageData to see what value is being passed to the BasicFrame component
               const CardComponent = () => {
                 if (data.card_details.keywords && data.card_details.keywords.includes('Aftermath')) {
                   return <Aftermath card={data.card_details} imageData={imageUrls} />;
@@ -128,6 +126,11 @@ const deleteCard = async (cardId) => {
                       return <Saga card={data.card_details} imageData={imageUrls} />;
                     case 'flip':
                       return <FlipFrame card={data.card_details} imageData={imageUrls} />;
+                    case 'planar':
+                      return <Battle card={data.card_details} imageData={imageUrls} />;
+                    case 'double_faced_token':
+                    case 'reversible_card':
+                    case 'modal_dfc':
                     case 'transform':
                       const faceIndex = data.card.face_type === 'front' ? 0 : 1;
                       const faceData = data.card_details.card_faces[faceIndex];

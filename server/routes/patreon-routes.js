@@ -13,6 +13,7 @@ const oauthClient = patreonOAuth(PATREON_CLIENT_ID, PATREON_CLIENT_SECRET);
 // Redirect to Patreon login
 router.get("/auth/patreon", (req, res) => {
   const clientID = PATREON_CLIENT_ID;
+  console.log("steve ", clientID);
   const redirectURI = encodeURIComponent("http://localhost:5000/patreon/oauth/redirect");
   const scopes = encodeURIComponent("identity identity.memberships");
   const token = req.headers.authorization.split(" ")[1]; // Extract token from Authorization header

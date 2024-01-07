@@ -6,6 +6,7 @@ const express = require("express");
 const authenticateToken = require("./utils/authenticateToken");
 const setupMiddleware = require("./middleware"); 
 const { credentials } = require("./config/setup");
+// require("./utils/scryfallUpdater");
 const jwtMiddleware = require("./jwtMiddleware");
 
 const { GeneratedImage, UserCard } = require("./models");
@@ -36,14 +37,7 @@ const PORT = 5000;
 app.post("/api/generate-image", authenticateToken, async (req, res) => {
   try {
       const { card_id, height, width, cfg_scale, clip_guidance_preset, sampler, samples, steps, stylePreset, text_prompts, facetype } = req.body;
-    // Perform the image generation using Stability.AI API
-    const userId = req.user.id;
-    const userCard = await UserCard.create({
-      user_id: userId,
-      card_id,
-      face_type: facetype
-    });
-    // Add a timeout configuration to the axios request
+
     const axiosConfig = {
       headers: {
         "Content-Type": "application/json",
@@ -77,6 +71,13 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
       throw new Error("No artifacts found in the image generation response");
     }
     
+    const userId = req.user.id;
+    const userCard = await UserCard.create({
+      user_id: userId,
+      card_id,
+      face_type: facetype,
+    });
+
     const generatedImage = await GeneratedImage.create({
       user_card_id: userCard.user_card_id,
       image_url: data.artifacts[0].base64,

@@ -11,7 +11,14 @@ export const stylingFormatter = (type_line, className, text) => {
     marginLeft: '4px',
   };
 
-  if (type_line && type_line.includes('Saga')) {
+  if (type_line && (type_line.includes('Plane ') || type_line.includes('Phenomenon') )) {
+      console.log(type_line)
+    styles.fontSize = '0.6em';
+    styles.flexDirection = 'column';
+    styles.iconSize = '8px';
+    styles.width = '100%';
+  }
+  else if (type_line && type_line.includes('Saga')) {
     styles.fontSize = text.length <= 50 ? '.55em' : text.length <= 200 ? '0.55em' : '0.5em';
     styles.display = 'flex';
     styles.flexDirection = text.length <= 50 ? 'row' : 'column';
