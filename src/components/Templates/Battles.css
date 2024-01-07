@@ -3,9 +3,15 @@
     height: 70%;
     position: absolute;
     transform: rotate(270deg);
-    top: -10;
-    left: -10; 
 }
+
+.planar-card-background {
+    width: 130%;
+    height: 70%;
+    position: absolute;
+    transform: rotate(270deg) translatex(10px);
+}
+
 
 .battle-card-frame {
     position: absolute;
@@ -21,12 +27,26 @@
 .battle-frame-type-line {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 90%;
     height: 10%;
     font-size: clamp(0.4em, .3em, .8em);
     background: linear-gradient( 0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3) ); 
     border-radius: 18px/40px;
 }
+
+.planar-frame-header,
+.planar-frame-type-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 97%;
+    height: 7%;
+    font-size: clamp(0.4em, .3em, .8em);
+    background: linear-gradient( 0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3) ); 
+    border-radius: 18px/40px;
+}
+
 
 .battle-frame-image {
     flex-grow: 1;
@@ -42,7 +62,22 @@
     width: 100%;
     height: 100%;
     object-fit: fill;
-    
+}
+
+.planar-frame-image {
+    flex-grow: 1;
+    width: 95%; 
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.planar-frame-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
 }
 
 .battle-frame-text-box {
@@ -52,6 +87,18 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    justify-content: space-between; 
+    align-items: start;
+    background: #d3ded6;
+    font-size: clamp(0.5em, 1.1em, 3.5em);
+}
+
+.planar-frame-text-box {
+    margin:  0 10px;
+    width: 97%;
+    height: 35%;
+    display: flex;
+    flex-direction: column;
     justify-content: space-between; 
     box-sizing: border-box;
     align-items: start;
@@ -74,4 +121,17 @@
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
     font-size: clamp(0.5em, .8em, 2em);
     z-index: 4;
+}
+
+.card-color-border-battle::before {
+    /* content: "";
+    position: absolute;
+    top: -1.5px;
+    left: -1.5px;
+    right: -1.5px;
+    bottom: -1.5px;
+    border: 1px solid black;
+    z-index: 2;
+    border-radius: 18px/40px;
+    box-sizing: border-box; */
 }

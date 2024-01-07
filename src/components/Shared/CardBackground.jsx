@@ -22,6 +22,9 @@ const CardBackground = ({ children, type_line, colors, mana_cost, className, col
         else if (type_line.includes('Artifact')) {
             return backgroundsSolid['Artifact.jpg'];
         }
+        else if (type_line.includes("Plane ") || type_line.includes('Phenomenon')) {
+            return backgroundsSolid['Gold.jpg'];
+        }
         else {
             const costElements = mana_cost ? mana_cost.match(/{[^}]+}/g) : [];
             let manaColors = new Set();
@@ -41,7 +44,6 @@ const CardBackground = ({ children, type_line, colors, mana_cost, className, col
                                 hybridColors.push(colorPair.join(""));
                             }
                         } else {
-                                                        console.log(colorPair)
                             colorPair.forEach(color => manaColors.add(color));
                             if (!hybridColors.includes(colorPair.join(""))) {
                                 hybridColors.push(colorPair.join(""));
@@ -74,7 +76,6 @@ const CardBackground = ({ children, type_line, colors, mana_cost, className, col
                 return backgroundsHybrid[`${colorPair}.jpg`];
             } 
             else if (hybridColors.length > 1 || manaColors.size > 1) {
-                                console.log(manaColors)
                 return backgroundsSolid['Gold.jpg'];
             }
             else {

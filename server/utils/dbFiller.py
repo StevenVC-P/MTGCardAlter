@@ -23,7 +23,7 @@ try:
     related_cards_batch = []
 
     # Read from the JSON file
-    with open('all-cards.json', 'r', encoding='utf-8') as f:
+    with open('tempBulkData.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     for card in data:
@@ -89,33 +89,73 @@ try:
     # Execute batch queries
 
     # Insert Cards
-    card_query = """INSERT INTO Cards (
+    card_query = """
+    INSERT INTO Cards (
         card_id, oracle_id, mtgo_id, tcgplayer_id, cardmarket_id, name, mana_cost, 
         type_line, oracle_text, flavor_text, power, toughness, watermark, artist, lang, loyalty, released_at, uri,
         scryfall_uri, layout, cmc, rarity, border_color, set_id, set_code, set_name, set_type, oversized,
         promo, reprint, variation, digital, booster, story_spotlight, edhrec_rank, penny_rank
-    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)"""
+    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)
+    ON DUPLICATE KEY UPDATE
+        oracle_id=VALUES(oracle_id), mtgo_id=VALUES(mtgo_id), tcgplayer_id=VALUES(tcgplayer_id), 
+        cardmarket_id=VALUES(cardmarket_id), name=VALUES(name), mana_cost=VALUES(mana_cost), 
+        type_line=VALUES(type_line), oracle_text=VALUES(oracle_text), flavor_text=VALUES(flavor_text), 
+        power=VALUES(power), toughness=VALUES(toughness), watermark=VALUES(watermark), 
+        artist=VALUES(artist), lang=VALUES(lang), loyalty=VALUES(loyalty), released_at=VALUES(released_at), 
+        uri=VALUES(uri), scryfall_uri=VALUES(scryfall_uri), layout=VALUES(layout), cmc=VALUES(cmc), 
+        rarity=VALUES(rarity), border_color=VALUES(border_color), set_id=VALUES(set_id), 
+        set_code=VALUES(set_code), set_name=VALUES(set_name), set_type=VALUES(set_type), 
+        oversized=VALUES(oversized), promo=VALUES(promo), reprint=VALUES(reprint), 
+        variation=VALUES(variation), digital=VALUES(digital), booster=VALUES(booster), 
+        story_spotlight=VALUES(story_spotlight), edhrec_rank=VALUES(edhrec_rank), penny_rank=VALUES(penny_rank);
+    """
+
     cursor.executemany(card_query, card_batch)
 
-    # Insert CardColors
+    # Clear existing entries for each card
+    clear_color_query = "DELETE FROM CardColors WHERE card_id = %s"
+    card_ids = {color_entry[0] for color_entry in card_color_batch}  # Extract unique card_ids from the batch
+    cursor.executemany(clear_color_query, [(card_id,) for card_id in card_ids])
+
+    # Insert new entries
     card_color_query = "INSERT INTO CardColors (card_id, color) VALUES (%s, %s)"
     cursor.executemany(card_color_query, card_color_batch)
 
+
     # Insert CardColorIdentities
+    clear_color_identity_query = "DELETE FROM CardColorIdentities WHERE card_id = %s"
+    card_ids = {entry[0] for entry in card_color_identity_batch}
+    cursor.executemany(clear_color_identity_query, [(card_id,) for card_id in card_ids])
+
     card_color_identity_query = "INSERT INTO CardColorIdentities (card_id, color_identity) VALUES (%s, %s)"
     cursor.executemany(card_color_identity_query, card_color_identity_batch)
 
+
     # Insert Keywords
+    clear_keywords_query = "DELETE FROM Keywords WHERE card_id = %s"
+    card_ids = {entry[0] for entry in keyword_batch}
+    cursor.executemany(clear_keywords_query, [(card_id,) for card_id in card_ids])
+
     keyword_query = "INSERT INTO Keywords (card_id, keyword) VALUES (%s, %s)"
     cursor.executemany(keyword_query, keyword_batch)
 
+
     # Insert CardFaces
-    card_face_query = "INSERT INTO CardFaces (card_id, name, mana_cost, type_line, oracle_text, power, toughness, loyalty, defense, watermark, artist) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    clear_card_faces_query = "DELETE FROM CardFaces WHERE card_id = %s"
+    card_ids = {entry[0] for entry in card_face_batch}
+    cursor.executemany(clear_card_faces_query, [(card_id,) for card_id in card_ids])
+
+    card_face_query = "INSERT INTO CardFaces (card_id, name, mana_cost, type_line, oracle_text, power, toughness, loyalty, defense, watermark, artist) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     cursor.executemany(card_face_query, card_face_batch)
 
     # Insert CardPrices
+    clear_card_prices_query = "DELETE FROM CardPrices WHERE card_id = %s"
+    card_ids = {entry[0] for entry in card_prices_batch}
+    cursor.executemany(clear_card_prices_query, [(card_id,) for card_id in card_ids])
+
     card_prices_query = "INSERT INTO CardPrices (card_id, usd, usd_foil, usd_etched, eur, eur_foil, tix) VALUES (%s, %s, %s, %s, %s, %s, %s)"
     cursor.executemany(card_prices_query, card_prices_batch)
+
 
         # Insert RelatedCards
     # Insert into RelatedCards table
