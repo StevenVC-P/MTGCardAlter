@@ -27,3 +27,5 @@ localhost-key.pem
 localhost.pem
 new_server.cert
 new_server.key
+
+server/utils/tempBulkData.json.gz
