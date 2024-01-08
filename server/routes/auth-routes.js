@@ -132,6 +132,72 @@ router.post("/verify-email", async (req, res) => {
   }
 });
 
+router.post("/forgot-password", async (req, res) => {
+  const { identifier } = req.body; 
+
+    const user = await User.findOne({
+      $or: [{ email: identifier }, { username: identifier }],
+    });
+
+
+  if (!user) {
+    return res.json({ success: true, message: "If your email or username is in our database, you will receive a password reset link shortly." });
+  }
+
+  // Generate a token
+  const token = crypto.randomBytes(20).toString("hex");
+
+  // Set an expiry time (e.g., 1 hour)
+  const expiryTime = Date.now() + 3600000;
+
+  // Store the token and expiry time in the user's record
+  user.resetPasswordToken = token;
+  user.resetPasswordExpires = expiryTime;
+  await user.save();
+
+  // Email content
+  const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+  const mailOptions = {
+    to: user.email,
+    from: "your-email@example.com",
+    subject: "Password Reset",
+    text:
+      `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n` + `Please click on the following link, or paste this into your browser to complete the process:\n\n` + `${resetLink}\n\n` + `If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+  };
+
+  // Send the email
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending email: ", error);
+      return res.status(500).send("Error sending email");
+    }
+    res.json({ success: true, message: "An email has been sent to " + user.email + " with further instructions." });
+  });
+});
+
+router.post("/reset-password", async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  // Find user by token and check expiry
+  const user = await User.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpires: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({ success: false, message: "Password reset token is invalid or has expired." });
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  user.password_hash = await bcrypt.hash(newPassword, salt);
+
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+  await user.save();
+
+  res.json({ success: true, message: "Your password has been updated." });
+});
+
 router.post("/validate-access-token", (req, res) => {
   const accessToken = req.body.accessToken;
   if (!accessToken) {
