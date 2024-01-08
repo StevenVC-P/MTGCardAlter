@@ -12,6 +12,8 @@ import EmailVerificationConfirm from "./pages/EmailVerificationConfirm.jsx";
 import UserContext from "./contexts/UserContext";
 import ErrorComponent from "./components/Shared/ErrorMessage";
 import LoadingBanner from "./components/MainLayout/LoadingBanner.jsx";
+import ForgotPasswordForm from "./pages/ForgotPasswordForm.jsx";
+import PasswordResetForm from "./pages/PasswordResetForm.jsx";
 
 import "./App.css";
 
@@ -210,10 +212,8 @@ useEffect(() => {
         <Route path="/register" element={!isLoggedIn ? <RegisterPage setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/" />} />
         <Route path="/verify-email-notice" element={<EmailVerificationNotice />} />
         <Route path="/verify-email" element={<EmailVerificationConfirm />} />
-        {/* <Route 
-          path="/login/email" 
-          element={!isLoggedIn ? <EmailLoginPage setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/" />} 
-        /> */}
+        <Route path="/forgot-password" element={<ForgotPasswordForm />} />
+        <Route path="/reset-password" element={<PasswordResetForm />} />
       </Routes>
     </UserContext.Provider>
   );

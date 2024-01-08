@@ -87,6 +87,14 @@ User.init(
     emailVerificationExpires: {
       type: DataTypes.DATE,
     },
+    resetPasswordToken: {
+      type: DataTypes.STRING,
+      allowNull: true, // Token is nullable
+    },
+    resetPasswordExpires: {
+      type: DataTypes.DATE,
+      allowNull: true, // Expiry date is nullable
+    },
   },
   {
     sequelize,
