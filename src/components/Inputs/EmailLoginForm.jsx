@@ -63,6 +63,9 @@ const EmailLoginForm = ( { onSuccessfulLogin } ) => {
       className="login-input"
     />
     <button className="login-btn" onClick={handleLogin}>Login</button>
+    <div className="forgot-password-link">
+      <a href="/forgot-password">Forgot Password?</a> 
+    </div>
     {message && <p className="login-error-message">{message}</p>}
   </div>
   );
