@@ -622,3 +622,34 @@ button:disabled:hover {
   font-size: 1.2rem;
   font-weight: 600;
 }
+
+.forgot-password-link {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.forgot-password-link a {
+  color: #007bff; /* Example color, adjust as needed */
+  text-decoration: none;
+}
+.forgot-password-link a:hover {
+  text-decoration: underline;
+}
+
+.forgot-password-form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.forgot-password-form-container h2 {
+  margin-bottom: 20px;
+}
+
+.forgot-password-form-container input,
+.forgot-password-form-container button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
