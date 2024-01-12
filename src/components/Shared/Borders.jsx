@@ -48,21 +48,41 @@ export const getBorderStyle = (colors, manaCost, color_identity, layout) => {
     if (!colors || colors.length === 0) {
         if (color_identity && color_identity.length > 0) {
             colors = extractColorsFromManaCost(color_identity);
-        } else if (color_identity) {
+        } else if (manaCost) {
             colors = extractColorsFromManaCost(manaCost);
         }
     }
 
-    const borderColor = layout && layout.includes("planar") ? colorMap['gold']
-        : colors.length === 1 ? colorMap[colors[0]] 
-        : colors.length >= 2 ? colorMap["gold"]
-        : colorMap["artifact"];
+    let borderColor = ''
+    let backgroundColor = ''
+
+    if (layout !== undefined) {
+
+        borderColor = layout.includes("planar ") ? colorMap['gold']
+            : colors.length === 1 ? colorMap[colors[0]] 
+            : colors.length >= 2 ? colorMap["gold"]
+            : colorMap["artifact"];
+
+        backgroundColor = layout.includes("planar ") ? backgroundColorMap['gold'] : colors.length === 1 ? backgroundColorMap[colors[0]] :
+            colors.length >= 2 ? backgroundColorMap["dual"] :
+            colors.length > 2 ? backgroundColorMap["gold"] : backgroundColorMap["artifact"];
+
+    } else  {
+
+        borderColor = colors.length === 1 ? colorMap[colors[0]] 
+            : colors.length >= 2 ? colorMap["gold"]
+            : colorMap["artifact"];
+
+        backgroundColor = colors.length === 1 ? backgroundColorMap[colors[0]] :
+            colors.length >= 2 ? backgroundColorMap["dual"] :
+            colors.length > 2 ? backgroundColorMap["gold"] : backgroundColorMap["artifact"];
+
+    }
+
 
     const borderWidth = colors.length === 2 ? '2px' : '3px';
 
-    const backgroundColor = layout && layout.includes("planar") ? backgroundColorMap['gold'] : colors.length === 1 ? backgroundColorMap[colors[0]] :
-        colors.length >= 2 ? backgroundColorMap["dual"] :
-        colors.length > 2 ? backgroundColorMap["gold"] : backgroundColorMap["artifact"];
+    
 
     return {
         borderColor,
