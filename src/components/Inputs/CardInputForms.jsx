@@ -97,8 +97,10 @@ const processCardNames = async (cardNamesArr) => {
       if (response.status === 200) {
         const newCardObjects = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, engineValues, counter);
 
+        let totalImages = 0;
+
         for (const cardObject of newCardObjects) {
-          decrementSlotsAndCounter(1); 
+         totalImages = totalImages + cardObject.images.length
           for (let i = 0; i < effectiveQuantity; i++) {
             if (slotsRemaining > 0) {
               const cardDataPromise = {
@@ -112,6 +114,8 @@ const processCardNames = async (cardNamesArr) => {
             
           }
         }
+
+         decrementSlotsAndCounter(totalImages); 
       }
     } catch (error) {
       console.error("Caught an error:", error);

@@ -119,9 +119,7 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
   const tokenPrompts = getTokenPrompts(relatedCards);
 
   const dualLayouts = ["transform", "modal_dfc", "art_series", "reversible_card", "double_faced_token"];
-  console.log("steve1", cardData.data);
   if (keywords.includes("Aftermath") || (layout === "split" && card_faces)) {
-    console.log("steve5", cardData.data);
     if (counter < 2) {
       console.warn("Counter less than 2, not generating image for multiple-faced card.");
       return { error: "Counter insufficient for multi-faced cards." };
@@ -168,7 +166,6 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
     }
 
   } else if (dualLayouts.includes(layout) && card_faces) {
-    console.log("steve4", cardData.data);
     if (counter < 2) {
       console.warn("Counter less than 2, not generating image for multiple-faced card.");
       return { error: "Counter insufficient for multi-faced cards." };
@@ -194,7 +191,6 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
     return cardResults;
   } else {
     let width, height;
-    console.log("steve2", cardData.data);
     if (layout.includes("planar")) {
       height = 448;
       width = 1408;
@@ -223,5 +219,4 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
     const imageResult = await generateImageFromPrompts(createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarWeight), engineValues, card_id, width, height, null);
     return [imageResult];
   }
-  console.log("steve3", cardData.data);
 }
