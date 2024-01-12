@@ -12,7 +12,6 @@ export const stylingFormatter = (type_line, className, text) => {
   };
 
   if (type_line && (type_line.includes('Plane ') || type_line.includes('Phenomenon') )) {
-      console.log(type_line)
     styles.fontSize = '0.6em';
     styles.flexDirection = 'column';
     styles.iconSize = '8px';

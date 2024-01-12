@@ -14,28 +14,28 @@ const Battles = React.memo((props) => {
     const {color_identity, rarity} = props.card;
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
-    console.log(props.card)
-    // useEffect(() => {
-    // let isCancelled = false;
+    
+    useEffect(() => {
+    let isCancelled = false;
 
-    // if (imageData && cardRef.current) {
-    //     domtoimage.toJpeg(cardRef.current, { quality: 0.7 })
-    //         .then((imgData) => {
-    //             if (!isCancelled) {
-    //                 setImageURL(imgData);
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             if (!isCancelled) {
-    //                 console.error('Error generating image:', error);
-    //             }
-    //         });
-    // }
+    if (imageData && cardRef.current) {
+        domtoimage.toJpeg(cardRef.current, { quality: 0.7 })
+            .then((imgData) => {
+                if (!isCancelled) {
+                    setImageURL(imgData);
+                }
+            })
+            .catch((error) => {
+                if (!isCancelled) {
+                    console.error('Error generating image:', error);
+                }
+            });
+    }
 
-    // return () => {
-    //     isCancelled = true;
-    // };
-    // }, [imageData]);
+    return () => {
+        isCancelled = true;
+    };
+    }, [imageData]);
 
     return imageURL ? (
         <img src={imageURL} alt="Generated Card" />
