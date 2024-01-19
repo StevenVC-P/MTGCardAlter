@@ -17,6 +17,24 @@ const CardForm = ({ sidebarText, sidebarWeight, otherValues, engineValues, decre
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+    // Calculate total pages
+  const totalPages = Math.ceil(cardData.length / itemsPerPage);
+
+  // Calculate the index of the first and last item on the current page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  
+    // Slice the cardData for the current page
+  const currentCards = cardData.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Handlers for pagination controls
+  const goToNextPage = () => setCurrentPage(currentPage + 1);
+  const goToPreviousPage = () => setCurrentPage(currentPage - 1);
+  const goToFirstPage = () => setCurrentPage(1);
+  const goToLastPage = () => setCurrentPage(totalPages);
 
   useEffect(() => {
     const fetchImagesAndCards = async () => {
@@ -102,60 +120,69 @@ const deleteCard = async (cardId) => {
           isLoading={isLoading}
           setIsLoading={setIsLoading}
         />
-          <div id="card-results">
-            {loading && <div>Loading cards...</div>} {/* Show loading message when fetching data */}
-            {error && <div>Error loading cards: {error.message}</div>}
+        <div id="card-results">
+          {loading && <div>Loading cards...</div>}
+          {error && <div>Error loading cards: {error.message}</div>}
 
-            {!loading && !error && cardData.map((data) => {
-            
-              // Access the image URL safely
-              const imageUrls = data.images?.length > 0 ? data.images.map(img => img.image_url) : ['fallback-image-url'];
+          {!loading && !error && currentCards.map((data) => {
+          
+            // Access the image URL safely
+            const imageUrls = data.images?.length > 0 ? data.images.map(img => img.image_url) : ['fallback-image-url'];
 
-              const CardComponent = () => {
-                if (data.card_details.keywords && data.card_details.keywords.includes('Aftermath')) {
-                  return <Aftermath card={data.card_details} imageData={imageUrls} />;
-                } else {
-                  switch (data.card_details.layout) {
-                    case 'normal':
-                    return <BasicFrame card={data.card_details} imageData={imageUrls} />;
-                    case 'split':
-                      return <SplitFrame card={data.card_details} imageData={imageUrls} />;
-                    case 'adventure':
-                      return <Adventure card={data.card_details} imageData={imageUrls} />;
-                    case 'saga':
-                      return <Saga card={data.card_details} imageData={imageUrls} />;
-                    case 'flip':
-                      return <FlipFrame card={data.card_details} imageData={imageUrls} />;
-                    case 'planar':
-                      return <Battle card={data.card_details} imageData={imageUrls} />;
-                    case 'double_faced_token':
-                    case 'reversible_card':
-                    case 'modal_dfc':
-                    case 'transform':
-                      const faceIndex = data.card.face_type === 'front' ? 0 : 1;
-                      const faceData = data.card_details.card_faces[faceIndex];
-                      const combinedCardData = { ...data.card_details, ...faceData };
+            const CardComponent = () => {
+              if (data.card_details.keywords && data.card_details.keywords.includes('Aftermath')) {
+                return <Aftermath card={data.card_details} imageData={imageUrls} />;
+              } else {
+                switch (data.card_details.layout) {
+                  case 'normal':
+                  return <BasicFrame card={data.card_details} imageData={imageUrls} />;
+                  case 'split':
+                    return <SplitFrame card={data.card_details} imageData={imageUrls} />;
+                  case 'adventure':
+                    return <Adventure card={data.card_details} imageData={imageUrls} />;
+                  case 'saga':
+                    return <Saga card={data.card_details} imageData={imageUrls} />;
+                  case 'flip':
+                    return <FlipFrame card={data.card_details} imageData={imageUrls} />;
+                  case 'planar':
+                    return <Battle card={data.card_details} imageData={imageUrls} />;
+                  case 'double_faced_token':
+                  case 'reversible_card':
+                  case 'modal_dfc':
+                  case 'transform':
+                    const faceIndex = data.card.face_type === 'front' ? 0 : 1;
+                    const faceData = data.card_details.card_faces[faceIndex];
+                    const combinedCardData = { ...data.card_details, ...faceData };
 
-                      return selectComponentForFace(combinedCardData, imageUrls)
+                    return selectComponentForFace(combinedCardData, imageUrls)
 
-                    default:
-                      return <BasicFrame card={data.card_details} imageData={imageUrls}/>;
-                    }
+                  default:
+                    return <BasicFrame card={data.card_details} imageData={imageUrls}/>;
                   }
-                };
-              return (
-                <div className="card-box" key={data.card.user_card_id}>
-                  <CardComponent />
-                  <button 
-                    className="delete-button"
-                    onClick={() => deleteCard(data.card.user_card_id)}
-                    disabled={isDeleting[data.card.user_card_id] || isLoading}
-                  >
-                    Delete Card
-                  </button>
-                </div>
-              );
-            })}
+                }
+              };
+
+            return (
+              <div className="card-box" key={data.card.user_card_id}>
+                <CardComponent />
+                <button 
+                  className="delete-button"
+                  onClick={() => deleteCard(data.card.user_card_id)}
+                  disabled={isDeleting[data.card.user_card_id] || isLoading}
+                >
+                  Delete Card
+                </button>
+              </div>
+            );
+          })}
+
+        </div>
+        <div className="pagination-controls">
+          <button onClick={goToFirstPage} disabled={currentPage === 1}>First</button>
+          <button onClick={goToPreviousPage} disabled={currentPage === 1}>Previous</button>
+          <span>Page {currentPage} of {totalPages}</span>
+          <button onClick={goToNextPage} disabled={currentPage === totalPages}>Next</button>
+          <button onClick={goToLastPage} disabled={currentPage === totalPages}>Last</button>
         </div>
       </div>
   );
