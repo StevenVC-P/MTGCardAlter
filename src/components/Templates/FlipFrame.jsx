@@ -16,27 +16,27 @@ const FlipFrame = React.memo((props) => {
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
 
-    // useEffect(() => {
-    // let isCancelled = false;
+    useEffect(() => {
+    let isCancelled = false;
 
-    // if (imageData && cardRef.current) {
-    //     domtoimage.toJpeg(cardRef.current, { quality: 0.7 })
-    //         .then((imgData) => {
-    //             if (!isCancelled) {
-    //                 setImageURL(imgData);
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             if (!isCancelled) {
-    //                 console.error('Error generating image:', error);
-    //             }
-    //         });
-    // }
+    if (imageData && cardRef.current) {
+        domtoimage.toJpeg(cardRef.current, { quality: 0.7 })
+            .then((imgData) => {
+                if (!isCancelled) {
+                    setImageURL(imgData);
+                }
+            })
+            .catch((error) => {
+                if (!isCancelled) {
+                    console.error('Error generating image:', error);
+                }
+            });
+    }
 
-    // return () => {
-    //     isCancelled = true;
-    // };
-    // }, [imageData]);
+    return () => {
+        isCancelled = true;
+    };
+    }, [imageData]);
 
     return imageURL ? (
         <img src={imageURL} alt="Generated Card" />
@@ -58,7 +58,7 @@ const FlipFrame = React.memo((props) => {
                         )}
                     </div>
                     <div className="frame-image card-color-border-square" style={getBorderStyle(colors)}>
-                        {imageData && <img src={`data:image/png;base64,${imageData}`} alt="Generated" />}
+                        {imageData && <img src={imageData} alt="Generated" />}
                     </div>
                     <div className="frame-type-line flip card-color-border" style={getBorderStyle(colors)}>
                         <h1 className="type">{card_faces[1].type_line}</h1>
