@@ -49,7 +49,7 @@ const Aftermath = React.memo((props) => {
                             <ManaCost manaCost={card_faces[0].mana_cost}/>
                         </div>
                         <div className="frame-split-image card-color-border-square" style={getBorderStyle(card_faces[0].colors, card_faces[0].mana_cost)}>
-                            {imageData && imageData[0] && <img src={`data:image/png;base64,${imageData[0]}`} alt="First" />}
+                            {imageData && imageData[0] && <img src={imageData[0]} alt="First" />}
                         </div>
                         <div className="frame-type-line card-color-border" style={getBorderStyle(card_faces[0].colors, card_faces[0].mana_cost)}>
                             <h1 className="type">{card_faces[0].type_line}</h1>
@@ -69,7 +69,7 @@ const Aftermath = React.memo((props) => {
                             <ManaCost manaCost={card_faces[1].mana_cost}/>
                         </div>
                         <div className="frame-split-image card-color-border-square" style={getBorderStyle(card_faces[1].colors, card_faces[1].mana_cost)}>
-                            {imageData && imageData[1] && <img src={`data:image/png;base64,${imageData[1]}`} alt="Second" />}
+                            {imageData && imageData[1] && <img src={imageData[1]} alt="Second" />}
                         </div>
                         <div className="frame-type-line card-color-border" style={getBorderStyle(card_faces[1].colors, card_faces[1].mana_cost)}>
                             <h1 className="type">{card_faces[1].type_line}</h1>
