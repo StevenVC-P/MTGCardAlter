@@ -49,7 +49,7 @@ const Battles = React.memo((props) => {
                             <ManaCost manaCost={mana_cost}/>
                         </div>
                             <div className="planar-frame-image" style={getBorderStyle(colors, mana_cost, color_identity, layout)}>
-                                {imageData && <img src={`data:image/png;base64,${imageData}`} alt="Generated" />}
+                                {imageData && <img src={imageData} alt="Generated" />}
                             </div>
                             <div className="planar-frame-type-line card-color-border-planar" style={getBorderStyle(colors, mana_cost, color_identity, layout)}>
                                 <h1 className="type">{type_line}</h1>
@@ -68,7 +68,7 @@ const Battles = React.memo((props) => {
                         <ManaCost manaCost={mana_cost}/>
                     </div>
                         <div className="battle-frame-image card-color-border-square" style={getBorderStyle(colors, mana_cost, color_identity, layout)}>
-                            {imageData && <img src={`data:image/png;base64,${imageData}`} alt="Generated" />}
+                            {imageData && <img src={imageData} alt="Generated" />}
                         </div>
                         <div className="battle-frame-type-line card-color-border-battle" style={getBorderStyle(colors, mana_cost, color_identity, layout)}>
                             <h1 className="type">{type_line}</h1>

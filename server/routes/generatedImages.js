@@ -8,6 +8,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 const authenticateToken = require("../utils/authenticateToken");
 const { Card, GeneratedImage, UserCard } = require("../models/index");
+const { uploadImageToGCS, deleteImagesFromGCS } = require("./googleRoutes");
 
 const engineId = "stable-diffusion-v1-6";
 const apiHost = process.env.API_HOST;
@@ -139,12 +140,12 @@ router.get("/user", authenticateToken, async (req, res) => {
 router.post("/generate-multi-face-image", authenticateToken, async (req, res) => {
   try {
     const { card_id, faces } = req.body;
-    const userId = req.user.id; // Assuming you store user ID in req.user
+    const userId = req.user.id;
 
     // Find or create a UserCard instance
     const userCard = await UserCard.create({
       user_id: userId,
-      card_id,
+      card_id: card_id,
     });
 
     const axiosConfig = {
@@ -177,11 +178,22 @@ router.post("/generate-multi-face-image", authenticateToken, async (req, res) =>
         axiosConfig
       );
 
+      const data = imageResponse.data;
+
+      if (!data.artifacts || data.artifacts.length === 0) {
+        throw new Error("No artifacts found in the image generation response");
+      }
+
+      const base64ImageData = data.artifacts[0].base64;
+
+      // Upload the image to Google Cloud Storage and get the public URL
+      const imageUrl = await uploadImageToGCS(base64ImageData, userId);
+
       // Handle the response and save the generated image
       if (imageResponse.status === 200 && imageResponse.data.artifacts) {
         const generatedImage = await GeneratedImage.create({
           user_card_id: userCard.user_card_id,
-          image_url: imageResponse.data.artifacts[0].base64, // Or however you access the image URL
+          image_url: imageUrl,
           cfg_scale: face.cfg_scale,
           clip_guidance_preset: face.clip_guidance_preset,
           sampler: face.sampler,
@@ -259,7 +271,8 @@ router.delete("/:userCardId", authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
     const userCardId = req.params.userCardId;
-
+    console.log("userId ", userId);
+    console.log("userCardId ", userCardId);
     // Find the UserCard to ensure it belongs to the user
     const userCard = await UserCard.findOne({
       where: { 
@@ -270,9 +283,23 @@ router.delete("/:userCardId", authenticateToken, async (req, res) => {
     });
 
     if (!userCard) {
+      console.log("FAILED")
       await transaction.rollback();
       return res.status(404).send("User card not found or you do not have permission to delete this card.");
     }
+    
+
+    const images = await GeneratedImage.findAll({
+      where: { user_card_id: userCard.user_card_id },
+      transaction: transaction,
+    });
+
+    const filenames = images.map((image) => {
+      const urlParts = image.image_url.split("/");
+      return urlParts[urlParts.length - 1];
+    });
+    
+    await deleteImagesFromGCS(filenames);
 
     // Delete all associated GeneratedImages
     await GeneratedImage.destroy({
@@ -289,6 +316,7 @@ router.delete("/:userCardId", authenticateToken, async (req, res) => {
     await transaction.commit();
     res.send("User card and associated images deleted successfully.");
   } catch (error) {
+    console.error("Error fetching generated images:", error);
     await transaction.rollback();
     res.status(500).send(error.message);
   }

@@ -17,6 +17,7 @@ const authRoutes = require("./routes/auth-routes");
 const patreonRoutes = require("./routes/patreon-routes");
 const userRoutes = require("./routes/user-routes");
 const generatedImagesRouter = require("./routes/generatedImages"); 
+const { uploadImageToGCS } = require("./routes/googleRoutes");
 
 const app = express();
 setupMiddleware(app);
@@ -36,7 +37,8 @@ const PORT = 5000;
 
 app.post("/api/generate-image", authenticateToken, async (req, res) => {
   try {
-      const { card_id, height, width, cfg_scale, clip_guidance_preset, sampler, samples, steps, stylePreset, text_prompts, facetype } = req.body;
+    const { card_id, height, width, cfg_scale, clip_guidance_preset, sampler, samples, steps, stylePreset, text_prompts, facetype } = req.body;
+    const userId = req.user.id;
 
     const axiosConfig = {
       headers: {
@@ -46,13 +48,13 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
       },
       timeout: 300000, // Timeout after 300 seconds (5 minutes)
     };
-    
+
     const response = await axios.post(
       `${apiHost}/v1/generation/${engineId}/text-to-image`,
       {
         height,
         width,
-        cfg_scale, 
+        cfg_scale,
         clip_guidance_preset,
         sampler,
         samples,
@@ -66,12 +68,17 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
     // Access data
     const data = response.data;
 
-  // Check for artifacts
+    // Check for artifacts
     if (!data.artifacts || data.artifacts.length === 0) {
       throw new Error("No artifacts found in the image generation response");
     }
-    
-    const userId = req.user.id;
+
+    // Assuming the first artifact contains the image base64 data
+    const base64ImageData = data.artifacts[0].base64;
+
+    // Upload the image to Google Cloud Storage and get the public URL
+    const imageUrl = await uploadImageToGCS(base64ImageData, userId);
+
     const userCard = await UserCard.create({
       user_id: userId,
       card_id,
@@ -80,7 +87,7 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
 
     const generatedImage = await GeneratedImage.create({
       user_card_id: userCard.user_card_id,
-      image_url: data.artifacts[0].base64,
+      image_url: imageUrl,
       cfg_scale,
       clip_guidance_preset,
       sampler,
@@ -97,7 +104,7 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
     return res.json({
       card: {
         user_card_id: userCard.user_card_id,
-        face_type: userCard.face_type, 
+        face_type: userCard.face_type,
       },
       images: [imageObject],
     });

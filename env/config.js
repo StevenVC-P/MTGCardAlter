@@ -18,5 +18,6 @@ module.exports = {
     DATABASE: process.env.DATABASE,
     PASSWORD: process.env.PASSWORD,
     PORT: process.env.PORT,
+    STORAGE_BUCKET: process.env.GOOGLE_CLOUD_STORAGE_BUCKET,
   },
 };

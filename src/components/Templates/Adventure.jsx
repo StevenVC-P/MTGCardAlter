@@ -47,7 +47,7 @@ const Adventure = React.memo((props) => {
                             <ManaCost manaCost={card_faces[0].mana_cost}/>
                     </div>
                     <div className="frame-image card-color-border-square" style={getBorderStyle(colors,card_faces[0].mana_cost)}>
-                        {imageData && <img src={`data:image/png;base64,${imageData}`} alt="Generated" />}
+                        {imageData && <img src={imageData} alt="Generated" />}
                     </div>
                     <div className="frame-type-line card-color-border" style={getBorderStyle(colors,card_faces[0].mana_cost)}>
                         <h1 className="type">{card_faces[0].type_line}</h1>
