@@ -52,13 +52,6 @@ User.init(
     },
     google_id: DataTypes.STRING(50),
     facebook_id: DataTypes.STRING(50),
-    patreon_account_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "patreon_accounts",
-        key: "id",
-      },
-    },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,

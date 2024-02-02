@@ -22,6 +22,10 @@ TokenTransaction.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    details: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,

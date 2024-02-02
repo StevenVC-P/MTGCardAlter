@@ -20,6 +20,10 @@ Patreon.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    deferred_tokens: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
   },
   {
     sequelize,
