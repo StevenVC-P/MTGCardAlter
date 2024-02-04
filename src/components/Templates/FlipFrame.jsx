@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
-import { APC } from '../../assets/Misc';
+import { APC, paintbrush } from '../../assets/Misc';
 import { getBorderStyle } from '../Shared/Borders';
 import domtoimage from 'dom-to-image';
 import "./Universal.css";
@@ -37,12 +37,14 @@ const FlipFrame = React.memo((props) => {
         isCancelled = true;
     };
     }, [imageData]);
+    
+    const textColorStyle = { color: colors.includes('B') ? 'white' : 'inherit' };
 
     return imageURL ? (
         <img src={imageURL} alt="Generated Card" />
     ) : (
         <div className="card-container" ref={cardRef}>
-            <CardBackground type_line={card_faces[0].type_line} colors={source.colors} mana_cost={card_faces[0].mana_cost} className={"flip-card-background"}>
+            <CardBackground type_line={card_faces[0].type_line} colors={colors} mana_cost={card_faces[0].mana_cost} className={"flip-card-background"}>
                 <div className="card-frame">
                     <div className="frame-header card-color-border" style={getBorderStyle(colors)}>
                         <h1 className="name">{card_faces[0].name}</h1>
@@ -75,8 +77,14 @@ const FlipFrame = React.memo((props) => {
                     </div>
                 </div>
             <div className="frame-footer" style={{ color: source.colors.includes('B') ? 'white' : 'black' }}>
-                <span className="arcane-proxies-flip">Arcane-Proxies</span>
-                <img className="set-symbol" src={APC} alt="Rarity Symbol" />
+                <div className="info">
+                    <div className="artist">
+                        <img className="paintbrush" src={paintbrush} alt="paintbrush"/>
+                        <span className="artist-text-flip" style={textColorStyle}>STABILITY AI</span>
+                    </div>
+                    <span className="arcane-proxies-flip" style={textColorStyle}>Arcane-Proxies</span>
+                </div>
+                <img className="set-symbol-flip" src={APC} alt="Rarity Symbol" />
             </div>
             </CardBackground>
 
