@@ -41,6 +41,20 @@
     z-index: 2;
 }
 
-.arcane-proxies-flip{
- font-size: 10px;
+.arcane-proxies-flip{   
+    text-align: left;
+    font-size: 6px;
+}
+
+.set-symbol-flip {
+    position: absolute;
+    bottom: 5px; 
+    right: 5px; 
+    width: 20px;
+    height: 15px;
+}
+
+.artist-text-flip {
+  align-self: flex-start; 
+  font-size: 6px;
 }

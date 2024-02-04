@@ -3,7 +3,7 @@ import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
 import { getBorderStyle } from '../Shared/Borders';
-import { APC } from '../../assets/Misc';
+import { APC, paintbrush } from '../../assets/Misc';
 import sage_icon from '../../assets/Misc/Saga.webp';
 import domtoimage from 'dom-to-image';
 import "./Universal.css";
@@ -84,7 +84,7 @@ const Saga = React.memo((props) => {
                     </div>
                     <div className="saga-container">
                         <div className="saga-frame-text-box card-color-border-square"style={getBorderStyle(colors, color_identity)}>
-                            <OracleTextCleaner className="saga_text" text={saga_text}/>
+                            <OracleTextCleaner className="saga_text" text={saga_text} type_line={type_line}/>
                         <div className="abilities">
                             {abilities}
                         </div>
@@ -99,7 +99,13 @@ const Saga = React.memo((props) => {
                     </div>
                 </div>
             </CardBackground>
-            <span className="arcane-proxies-text">Arcane-Proxies</span>
+            <div className="info">
+                <div className="artist">
+                    <img className="paintbrush" src={paintbrush} alt="paintbrush"/>
+                    <span className="artist-text">STABILITY AI</span>
+                </div>
+                <span className="arcane-proxies-text">Arcane-Proxies</span>
+            </div>
         </div>
     )
 })

@@ -266,11 +266,36 @@ p {
 }
 
 .arcane-proxies-text {
-  align-self: flex-start; /* Align the text to the left */
-  position: absolute; /* Position the text absolutely to stay at the bottom */
-  bottom: 0; /* Align to the bottom */
-  left: 0; /* Align to the left */
-  padding: 4px; /* Add some space from the edges */
+  text-align: left;
   color : white;
-  font-size: 8px;
+  font-size: 6px;
+}
+
+.paintbrush{
+  align-self: flex-start;
+  height: 2%;
+  width: 10%;
+}
+
+.artist {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+}
+
+.artist-text {
+  align-self: flex-start; 
+  color : white;
+  font-size: 6px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    width: 100%;
 }

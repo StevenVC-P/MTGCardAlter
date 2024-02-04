@@ -94,3 +94,21 @@
     transform: rotate(-90deg) translateX(0);
     z-index: 2; /* Ensure it's above the card halves */
 }
+
+.info-split {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start; 
+    position: absolute;
+    bottom: 3px;
+    left: 5px;
+    width: 100%;
+}
+
+.arcane-proxies-split {
+  position: absolute;
+  right: 14px;
+  text-align: right;
+  color : white;
+  font-size: 6px;
+}
