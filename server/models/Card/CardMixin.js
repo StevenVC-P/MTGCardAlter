@@ -55,6 +55,7 @@ const cardMixin = (CardModel) => {
         const fetchRelatedCardsQuery = "SELECT related_card_id, component, name FROM RelatedCards WHERE parent_card_name = ?";
         const fetchLegalitiesQuery = "SELECT format_name, legality FROM Legalities WHERE card_id = ?";
         const fetchGamesQuery = "SELECT game FROM Games WHERE card_id = ?";
+        const fetchFlavorQuery = "SELECT flavor_text from Cards WHERE name = ? AND lang = 'en' LIMIT 1";
 
         const [colorRows] = await pool.execute(fetchColorQuery, [card.card_id]);
         card.colors = colorRows.map((row) => row.color);
@@ -97,6 +98,13 @@ const cardMixin = (CardModel) => {
 
         // Assign the unique related cards to your card object.
         card.relatedCards = uniqueRelatedCards;
+        const [flavorRows] = await pool.execute(fetchFlavorQuery, [card.name]);
+        if (flavorRows.length > 0) {
+            card.flavor_text = flavorRows[0].flavor_text; 
+        } else {
+            card.flavor_text = "";
+        }
+
 
         const [legalities] = await pool.execute(fetchLegalitiesQuery, [card.card_id]);
         card.legalities = legalities.map((row) => ({
