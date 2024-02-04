@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
-import { APC } from '../../assets/Misc';
+import { APC, APUC, APR, APMR, paintbrush } from '../../assets/Misc';
 import { getBorderStyle } from '../Shared/Borders';
 import domtoimage from 'dom-to-image';
 import "./Aftermath.css";
@@ -80,7 +80,13 @@ const Aftermath = React.memo((props) => {
                     </div>
                 </CardBackground>
             </div>
-            <span className="arcane-proxies-text">Arcane-Proxies</span>
+            <div className="info">
+                <div className="artist">
+                    <img className="paintbrush" src={paintbrush} alt="paintbrush"/>
+                    <span className="artist-text">STABILITY AI</span>
+                </div>
+                <span className="arcane-proxies-text">Arcane-Proxies</span>
+            </div>
         </div>
     )
 })

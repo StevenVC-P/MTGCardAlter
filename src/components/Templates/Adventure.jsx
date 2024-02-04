@@ -3,17 +3,16 @@ import ManaCost from '../Shared/ManaCost';
 import OracleTextCleaner from '../Shared/OracleTextCleaner';
 import CardBackground from '../Shared/CardBackground';
 import { getBorderStyle } from '../Shared/Borders';
-import { APC } from '../../assets/Misc';
+import { APC, APUC, APR, APMR, paintbrush } from '../../assets/Misc';
 import domtoimage from 'dom-to-image';
 import "./Universal.css"
 import "./Adventure.css";
 
 const Adventure = React.memo((props) => {
-    const { card_faces, colors} = props.card;
+    const { card_faces, colors, layout} = props.card;
     const imageData = props.imageData;
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
-
     useEffect(() => {
     let isCancelled = false;
 
@@ -63,11 +62,11 @@ const Adventure = React.memo((props) => {
                                 <h1 className="type">{card_faces[1].type_line}</h1>
                             </div>
                             <div className="adventureframe-text-box card-color-border-square" style={getBorderStyle(colors, card_faces[1].mana_cost)}>
-                                <OracleTextCleaner text={card_faces[1].oracle_text}/>
+                                <OracleTextCleaner text={card_faces[1].oracle_text} layout={layout}/>
                             </div>
                         </div>
                         <div className="adventureer-text-box frame-text-box card-color-border-square" style={getBorderStyle(colors, card_faces[1].mana_cost)}>
-                            <OracleTextCleaner text={card_faces[0].oracle_text}/>
+                            <OracleTextCleaner text={card_faces[0].oracle_text} layout={layout}/>
                             {(card_faces[0].type_line.includes("Creature") || card_faces[0].type_line.includes("Vehicle")) && (
                             <div className="power-toughness">{card_faces[0].power}/{card_faces[0].toughness}</div>
                             )}
@@ -76,7 +75,13 @@ const Adventure = React.memo((props) => {
                     
                 </div>
             </CardBackground>
-            <span className="arcane-proxies-text">Arcane-Proxies</span>
+            <div className="info">
+                <div className="artist">
+                    <img className="paintbrush" src={paintbrush} alt="paintbrush"/>
+                    <span className="artist-text">STABILITY AI</span>
+                </div>
+                <span className="arcane-proxies-text">Arcane-Proxies</span>
+            </div>
         </div>
     )
 })
