@@ -7,7 +7,7 @@ import Loyalty_start from'../../assets/WalkerSymbols/Loyalty_start.webp';
 import Loyalty_up from'../../assets/WalkerSymbols/Loyalty_up.webp';
 import Loyalty_down from'../../assets/WalkerSymbols/Loyalty_down.webp';
 import Loyalty_neutral from'../../assets/WalkerSymbols/Loyalty_neutral.webp';
-import { APC, APUC, APR, APMR } from '../../assets/Misc';
+import { APC, APUC, APR, APMR, paintbrush } from '../../assets/Misc';
 
 import domtoimage from 'dom-to-image';
 import "./Universal.css";
@@ -195,7 +195,13 @@ const BasicFrame = React.memo((props) => {
                     </div>
                 </div>
             </CardBackground>
-            <span className="arcane-proxies-text">Arcane-Proxies</span>
+            <div className="info">
+                <div className="artist">
+                    <img className="paintbrush" src={paintbrush} alt="paintbrush"/>
+                    <span className="artist-text">STABILITY AI</span>
+                </div>
+                <span className="arcane-proxies-text">Arcane-Proxies</span>
+            </div>
         </div>
     )
 })
