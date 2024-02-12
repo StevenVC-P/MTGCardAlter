@@ -33,7 +33,7 @@ const BasicFrame = React.memo((props) => {
         }
         
         if (imageData && cardRef.current) {
-            domtoimage.toJpeg(cardRef.current, { quality: 0.7 })
+            domtoimage.toJpeg(cardRef.current, { quality: 1 })
                 .then((imgData) => {
                     if (!isCancelled) {
                         setImageURL(imgData);
@@ -137,6 +137,7 @@ const BasicFrame = React.memo((props) => {
             }
         });
     }  
+
     return imageURL ? (
         <img src={imageURL} alt="Generated Card" />
     ) : (
