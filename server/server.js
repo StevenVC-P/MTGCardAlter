@@ -6,7 +6,7 @@ const express = require("express");
 const authenticateToken = require("./utils/authenticateToken");
 const setupMiddleware = require("./middleware"); 
 const { credentials } = require("./config/setup");
-// require("./utils/scryfallUpdater");
+require("./utils/scryfallUpdater");
 const jwtMiddleware = require("./jwtMiddleware");
 
 const { GeneratedImage, UserCard } = require("./models");
@@ -20,8 +20,8 @@ const generatedImagesRouter = require("./routes/generatedImages");
 const { uploadImageToGCS } = require("./routes/googleRoutes");
 
 const app = express();
-setupMiddleware(app);
 
+setupMiddleware(app);
 app.use("/api/auth", authRoutes);
 app.use("/api/cards", cardRoutes);
 app.use("/patreon", patreonRoutes);
