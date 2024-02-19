@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "../../utils/axiosSetup";
 import BasicFrame from "../Templates/BasicFrame";
 import SplitFrame from "../Templates/SplitFrame";
 import Aftermath from "../Templates/Aftermath";
@@ -8,17 +7,19 @@ import FlipFrame from "../Templates/FlipFrame";
 import Battle from "../Templates/Battles";
 import Saga from "../Templates/Saga";
 import CardInputForm from "../Inputs/CardInputForms"; 
+import axiosInstance from "../../utils/axiosConfig.js";
+
 
 // Main function component for the form
 const CardForm = ({ sidebarText, sidebarWeight, otherValues, engineValues, decrementCounter, counter, isLoading, setIsLoading, setErrorMessage }) => {
   // Using React's useState hook for managing state
   const [cardData, setCardData] = useState([]);
-  // const [images, setImages] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  
 
     // Calculate total pages
   const totalPages = Math.ceil(cardData.length / itemsPerPage);
@@ -38,8 +39,8 @@ const CardForm = ({ sidebarText, sidebarWeight, otherValues, engineValues, decre
 
   useEffect(() => {
     const fetchImagesAndCards = async () => {
-      setLoading(true); // Begin loading
-      setError(null);   // Reset error state
+      setLoading(true);
+      setError(null); 
       try {
         const accessToken = localStorage.getItem('accessToken');
         if (!accessToken) {
@@ -52,12 +53,12 @@ const CardForm = ({ sidebarText, sidebarWeight, otherValues, engineValues, decre
           }
         };
 
-        const imagesResponse = await axios.get('http://localhost:5000/api/generated-images/user', config);
-        setCardData(imagesResponse.data); // Update card data with the response
-        setLoading(false); // Loading complete
+        const imagesResponse = await axiosInstance.get('/api/generated-images/user', config);
+        setCardData(imagesResponse.data); 
+        setLoading(false);
       } catch (error) {
-        setError(error);  // Set error if there is a problem fetching data
-        setLoading(false); // Loading complete
+        setError(error); 
+        setLoading(false);
       }
     };
 
@@ -75,7 +76,7 @@ const deleteCard = async (cardId) => {
   }
 
   try {
-    await axios.delete(`http://localhost:5000/api/generated-images/${cardId}`, {
+    await axiosInstance.delete(`/api/generated-images/${cardId}`, {
       headers: {
         'Authorization': `Bearer ${accessToken}`
       }

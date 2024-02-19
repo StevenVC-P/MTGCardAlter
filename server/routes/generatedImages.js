@@ -13,6 +13,8 @@ const { uploadImageToGCS, deleteImagesFromGCS } = require("./googleRoutes");
 const engineId = "stable-diffusion-v1-6";
 const apiHost = process.env.API_HOST;
 const apiKey = process.env.STABILITY_API_KEY;
+const PORT = process.env.SERVERPORT || 5000;
+const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 // Route to get a list of generated images by a user
 router.get("/", authenticateToken, async (req, res) => {
   try {
@@ -117,13 +119,13 @@ router.get("/user", authenticateToken, async (req, res) => {
         return {
           card: {
             user_card_id: userCard.user_card_id,
-            face_type: userCard.face_type, 
+            face_type: userCard.face_type,
           },
           card_details: cardDetails,
           images: Array.isArray(userCard.generatedImages)
             ? userCard.generatedImages.map((image) => ({
                 image_id: image.image_id,
-                image_url: image.image_url,
+                image_url: `${BASE_URL}/proxy-image?url=${encodeURIComponent(image.image_url)}`,
               }))
             : [],
         };

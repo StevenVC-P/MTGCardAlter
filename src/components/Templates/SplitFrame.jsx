@@ -14,12 +14,29 @@ const SplitFrame = React.memo((props) => {
     const imageData = props.imageData;
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
+    const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+    const handleImageLoaded = () => {
+        setIsImageLoaded(true);
+    };
 
     useEffect(() => {
     let isCancelled = false;
+    if (imageData && cardRef.current && isImageLoaded) {
+        setTimeout(() => {
+            const scale = 1   
 
-    if (imageData && cardRef.current) {
-        domtoimage.toJpeg(cardRef.current, { quality: 0.7 })
+            const param = {
+                height: 350 * scale,
+                width: 250 * scale,
+                quality: 1,
+                style: {
+                    'transform': `scale(${scale})`,
+                    'transform-origin': 'top left'
+                }
+            };
+
+            domtoimage.toJpeg(cardRef.current, param)
             .then((imgData) => {
                 if (!isCancelled) {
                     setImageURL(imgData);
@@ -30,12 +47,13 @@ const SplitFrame = React.memo((props) => {
                     console.error('Error generating image:', error);
                 }
             });
+        }, 2000);
     }
 
     return () => {
         isCancelled = true;
     };
-    }, [imageData]);
+    }, [imageData, isImageLoaded]);
 
     return imageURL ? (
         <img src={imageURL} alt="Generated Card" />
@@ -49,7 +67,7 @@ const SplitFrame = React.memo((props) => {
                             <ManaCost manaCost={card_faces[0].mana_cost}/>
                         </div>
                         <div className="frame-split-image card-color-border-square" style={getBorderStyle(null, card_faces[0].mana_cost)}>
-                            {imageData && imageData[0] && <img src={imageData[0]} alt="Second" />}
+                            {imageData && imageData[0] && <img src={imageData[0]} onLoad={handleImageLoaded} alt="Second" />}
                         </div>
                         <div className="frame-type-line card-color-border" style={getBorderStyle(null, card_faces[0].mana_cost)}>
                             <h1 className="type">{card_faces[0].type_line}</h1>
@@ -70,7 +88,7 @@ const SplitFrame = React.memo((props) => {
                             <ManaCost manaCost={card_faces[1].mana_cost}/>
                         </div>
                         <div className="frame-split-image card-color-border-square" style={getBorderStyle(null, card_faces[1].mana_cost)}>
-                            {imageData && imageData[1] && <img src={imageData[1]} alt="First" />}
+                            {imageData && imageData[1] && <img src={imageData[1]} onLoad={handleImageLoaded} alt="First" />}
                         </div>
                         <div className="frame-type-line card-color-border" style={getBorderStyle(null, card_faces[1].mana_cost)}>
                             <h1 className="type">{card_faces[1].type_line}</h1>

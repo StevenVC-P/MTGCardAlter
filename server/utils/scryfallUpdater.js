@@ -6,7 +6,7 @@ const cron = require("node-cron");
 const scriptPath = path.join(__dirname, "dbFiller.py");
 
 cron.schedule(
-  "*/0 3 * * *",
+  "0 3 * * *",
   async () => {
     console.log("Scryfall update process started.");
     try {

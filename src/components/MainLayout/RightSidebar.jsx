@@ -44,10 +44,10 @@ const RightSidebar = ({ counter, errorMessage }) => {
         </div>
       }
 
-      <div className="message-section">
+      {/* <div className="message-section">
         <label htmlFor="placeholder-message">Message:</label>
         <p id="placeholder-message">The page is limited to 10 cards at a time.</p>
-      </div>
+      </div> */}
     </div>
   );
 };

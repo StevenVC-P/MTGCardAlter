@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ValidatedInput from './ValidatedInput'; 
+import axiosInstance from '../../utils/axiosConfig.js';
 
 const EmailLoginForm = ( { onSuccessfulLogin } ) => {
   const [login, setLogin] = useState(''); 
@@ -17,18 +18,12 @@ const EmailLoginForm = ( { onSuccessfulLogin } ) => {
 
   const handleLogin  = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ login, password }),
-      });
-
-      const data = await response.json();
+      const response = await axiosInstance.post('/api/auth/login', { login, password });
+      const data = await response.data;
       if (data.success) {
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('refreshToken', data.refreshToken);
+
         onSuccessfulLogin();
       } else {
         setMessage(data.message);

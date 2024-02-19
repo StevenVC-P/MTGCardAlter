@@ -1,5 +1,5 @@
 import React, { useState , useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosConfig.js';
 import { useLocation, useNavigate  } from 'react-router-dom';
 
 const EmailVerificationConfirm  = () => {
@@ -12,7 +12,7 @@ const EmailVerificationConfirm  = () => {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const response = await axios.post('http://localhost:5000/api/auth/verify-email', { token });
+        const response = await axiosInstance.post('http://localhost:5000/api/auth/verify-email', { token });
         setVerificationSuccessful(true);
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);

@@ -17,7 +17,20 @@ const Adventure = React.memo((props) => {
     let isCancelled = false;
 
     if (imageData && cardRef.current) {
-        domtoimage.toJpeg(cardRef.current, { quality: 0.7 })
+        setTimeout(() => {
+            const scale = 1   
+
+            const param = {
+                height: 350 * scale,
+                width: 250 * scale,
+                quality: 1,
+                style: {
+                    'transform': `scale(${scale})`,
+                    'transform-origin': 'top left'
+                }
+            };
+
+            domtoimage.toJpeg(cardRef.current, param)
             .then((imgData) => {
                 if (!isCancelled) {
                     setImageURL(imgData);
@@ -28,6 +41,7 @@ const Adventure = React.memo((props) => {
                     console.error('Error generating image:', error);
                 }
             });
+        }, 2000);
     }
 
     return () => {
