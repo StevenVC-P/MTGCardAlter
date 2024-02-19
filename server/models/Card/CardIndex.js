@@ -28,7 +28,7 @@ class Card {
         LIMIT 1;
     `;
 
-    const parameters = [likeLowerCaseCardName, likeLowerCaseCardNameWithDelimiterStart, likeLowerCaseCardNameWithDelimiterEnd, exactLowerCaseCardName, exactLowerCaseCardName, likeLowerCaseCardNameWithDelimiterStart];
+    const parameters = [likeLowerCaseCardName, likeLowerCaseCardNameWithDelimiterStart, likeLowerCaseCardNameWithDelimiterEnd, exactLowerCaseCardName, exactLowerCaseCardName, likeLowerCaseCardName];
     const [cardRows] = await pool.query(query, parameters);
 
     if (cardRows.length === 0) {
@@ -39,6 +39,7 @@ class Card {
     if (exactMatch) {
       return await this.getAdditionalData(exactMatch);
     }
+
     const splitMatch = cardRows.find((card) => card.name.toLowerCase().split(" // ").includes(lowerCaseCardName));
     if (splitMatch) {
       return await this.getAdditionalData(splitMatch);

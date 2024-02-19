@@ -14,7 +14,6 @@ router.get("/name/:name", async (req, res) => {
   try {
     const cardName = normalizeCardName(req.params.name);
     const card = await Card.getByName(cardName);
-
     if (!card) {
       return res.status(404).json({ message: `These cards could not be found` });
     }
