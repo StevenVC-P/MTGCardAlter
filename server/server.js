@@ -1,13 +1,16 @@
+const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fetch(...args));
+
 require("dotenv").config({ path: "./env/.env" });
 const http = require("http");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
 const express = require("express");
 const authenticateToken = require("./utils/authenticateToken");
-const setupMiddleware = require("./middleware"); 
+const setupMiddleware = require("./middleware");
 const { credentials } = require("./config/setup");
 require("./utils/scryfallUpdater");
 const jwtMiddleware = require("./jwtMiddleware");
+const sharp = require("sharp");
 
 const { GeneratedImage, UserCard } = require("./models");
 
@@ -16,7 +19,7 @@ const cardRoutes = require("./routes/cards");
 const authRoutes = require("./routes/auth-routes");
 const patreonRoutes = require("./routes/patreon-routes");
 const userRoutes = require("./routes/user-routes");
-const generatedImagesRouter = require("./routes/generatedImages"); 
+const generatedImagesRouter = require("./routes/generatedImages");
 const { uploadImageToGCS } = require("./routes/googleRoutes");
 
 const app = express();
@@ -33,7 +36,46 @@ app.use("/api/generated-images", generatedImagesRouter);
 const engineId = "stable-diffusion-v1-6";
 const apiHost = process.env.API_HOST;
 const apiKey = process.env.STABILITY_API_KEY;
-const PORT = 5000;
+const PORT = process.env.SERVERPORT || 5000;
+const origin = process.env.FRONTEND_ORIGIN || "http://localhost:3000";
+
+app.get("/proxy-image", async (req, res) => {
+  const imageUrl = req.query.url;
+
+  try {
+    const response = await fetch(imageUrl, {
+      headers: {
+        Origin: origin,
+      },
+    });
+
+    if (response.ok) {
+      let imageBuffer = await response.buffer();
+      const contentType = response.headers.get("Content-Type");
+
+      if (contentType.includes("image/jpeg")) {
+        // Decrease JPEG quality
+        imageBuffer = await sharp(imageBuffer)
+          .jpeg({ quality: 10 }) // Adjust quality as needed
+          .toBuffer();
+      } else if (contentType.includes("image/png")) {
+        // Decrease PNG quality by increasing compression level
+        imageBuffer = await sharp(imageBuffer)
+          .png({ quality: 10 }) // Adjust quality as needed
+          .toBuffer();
+      }
+      res.setHeader("Content-Type", contentType);
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Cache-Control", "public, max-age=31557600");
+      res.send(imageBuffer);
+    } else {
+      res.status(404).send("Image not found");
+    }
+  } catch (error) {
+    console.error("Failed to fetch image:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 app.post("/api/generate-image", authenticateToken, async (req, res) => {
   try {

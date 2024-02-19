@@ -15,20 +15,20 @@ export const stylingFormatter = (type_line, className, text, layout) => {
     styles.fontSize = '0.6em';
     styles.flexDirection = 'column';
     styles.iconSize = '8px';
-    styles.width = '100%';
+    styles.width = '99%';
   }
   else if (type_line && type_line.includes('Saga')) {
-    styles.fontSize = text.length <= 50 ? '.7em' : text.length <= 200 ? '0.60em' : '0.5em';
+    styles.fontSize = text.length <= 50 ? '.7em' : text.length <= 200 ? '0.55em' : '0.5em';
     styles.display = 'flex';
     styles.flexDirection = text.length <= 50 ? 'row' : 'column';
     styles.iconSize = text.length <= 50 ? '10px' : '8px';
-    styles.width = '100%';
+    styles.width = '99%';
     styles.marginLeft = '2px';
     styles.marginTop = '5px';  
   } else if (className && className.includes('split')) {
     styles.fontSize = text.length <= 50 ? '.6em' : '0.57em';
     styles.flexDirection = 'column';
-    styles.width = '100%';
+    styles.width = '99%';
     styles.iconSize = text.length <= 50 ? '10px' : '8px';
   } else if (className && className.includes('planeswalker')) {
     styles.fontSize = '.5em';
@@ -69,24 +69,24 @@ export const stylingFormatter = (type_line, className, text, layout) => {
         styles.justifyContent = 'center'; 
         styles.alignItems = 'center';
         styles.flexDirection = 'column';
-        styles.width = '100%';
+        styles.width = '99%';
         styles.marginLeft = '0';
     } else if (text.length > 50 && text.length <= 100) {
         styles.fontSize = '0.8em';
         styles.flexDirection = 'column';
         styles.iconSize = '8px';
-        styles.width = '100%';
+        styles.width = '99%';
       } else if (text.length > 100 && text.length <= 200) {
         styles.fontSize = '0.6em';
         styles.flexDirection = 'column';
         styles.iconSize = '8px';
-        styles.width = '100%';
+        styles.width = '99%';
       } else if (text.length > 200) {
         styles.fontSize = '0.55em';
         styles.flexDirection = 'column';
         styles.alignItems = 'space-around';
         styles.iconSize = '8px';
-        styles.width = '100%';
+        styles.width = '99%';
       }
   }
 

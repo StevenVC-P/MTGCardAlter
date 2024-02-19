@@ -65,6 +65,26 @@
     z-index: 1;
 }
 
+.frame-type-line-basic {
+    background: 
+        linear-gradient(0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3)); 
+    display: flex;
+    margin-top: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 93%; /* or whatever percentage or pixel value you prefer */
+    padding: 8px 0;
+    justify-content: space-between;
+    border-radius: 18px/40px !important;
+    font-size: clamp(0.3em, .2em, .5em);
+    position: absolute;
+    top: 168px;
+    left: 6px;
+    height: 2px;
+    align-items: center;
+    z-index: 1;
+}
+
 .name,
 .type {
  margin-left: 5px;
@@ -83,6 +103,28 @@
 }
 
 .frame-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit:fill;
+    object-position: center;
+}
+
+.frame-image-basic {
+    width: 91%; 
+    height: 47%; 
+    position: absolute;
+    top: 22px;
+    left: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    z-index: 0;
+}
+
+.frame-image-basic img {
     position: absolute;
     top: 0;
     left: 0;

@@ -1,4 +1,4 @@
-import axios from "../utils/axiosSetup";
+import axiosInstance from "../utils/axiosConfig.js";
 
 const replacements = {
   virtuous: "righteous",
@@ -17,7 +17,7 @@ function replaceWords(text, replacements) {
 const generateImage = async (textPromptsWithWeights, engineValues, card_id, height, width, facetype) => {
   try {
     const accessToken  = localStorage.getItem('accessToken');
-    const url = 'http://localhost:5000/api/generate-image';
+    const url = '/api/generate-image';
 
     const config = {
       headers: {
@@ -42,7 +42,7 @@ const generateImage = async (textPromptsWithWeights, engineValues, card_id, heig
       facetype,
     };
 
-    const response = await axios.post(url, data, config);
+    const response = await axiosInstance.post(url, data, config);
 
     if (response.status === 200) {
       return response.data; // Return the response data to be used by the calling function
@@ -58,7 +58,7 @@ const generateImage = async (textPromptsWithWeights, engineValues, card_id, heig
 const generateMultiFaceImage = async (facesData, engineValues, card_id) => {
   try {
     const accessToken = localStorage.getItem('accessToken');
-    const url = 'http://localhost:5000/api/generated-images/generate-multi-face-image'; 
+    const url = '/api/generated-images/generate-multi-face-image'; 
 
     const config = {
       headers: {
@@ -87,7 +87,7 @@ const generateMultiFaceImage = async (facesData, engineValues, card_id) => {
       faces,
     };
 
-    const response = await axios.post(url, data, config);
+    const response = await axiosInstance.post(url, data, config);
 
     if (response.status === 200) {
       return response.data; // Return the response data to be used by the calling function

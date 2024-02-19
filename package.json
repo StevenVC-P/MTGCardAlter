@@ -46,6 +46,7 @@
     "react-window": "^1.8.9",
     "request": "^2.88.2",
     "sequelize": "^6.33.0",
+    "sharp": "^0.33.2",
     "uuid": "^9.0.0",
     "web-vitals": "^2.1.4"
   },

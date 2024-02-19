@@ -9,6 +9,7 @@ import Loyalty_down from'../../assets/WalkerSymbols/Loyalty_down.webp';
 import Loyalty_neutral from'../../assets/WalkerSymbols/Loyalty_neutral.webp';
 import { APC, APUC, APR, APMR, paintbrush } from '../../assets/Misc';
 
+
 import domtoimage from 'dom-to-image';
 import "./Universal.css";
 import "./BasicFrame.css";
@@ -19,6 +20,11 @@ const BasicFrame = React.memo((props) => {
     const {color_identity} = props.card;
     const cardRef = useRef(null);
     const [imageURL, setImageURL] = useState(null);
+    const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+    const handleImageLoaded = () => {
+        setIsImageLoaded(true);
+    };
 
     let planeswalker_text = "";
     let abilities = [];
@@ -31,9 +37,21 @@ const BasicFrame = React.memo((props) => {
         } else {
             setIsPlaneswalker(false);
         }
-        
-        if (imageData && cardRef.current) {
-            domtoimage.toJpeg(cardRef.current, { quality: 1 })
+        if (imageData && cardRef.current && isImageLoaded) {
+            setTimeout(() => {
+                const scale = 1   
+
+                const param = {
+                    height: 350 * scale,
+                    width: 250 * scale,
+                    quality: 1,
+                    style: {
+                        'transform': `scale(${scale})`,
+                        'transform-origin': 'top left'
+                    }
+                };
+
+                domtoimage.toJpeg(cardRef.current, param)
                 .then((imgData) => {
                     if (!isCancelled) {
                         setImageURL(imgData);
@@ -44,12 +62,13 @@ const BasicFrame = React.memo((props) => {
                         console.error('Error generating image:', error);
                     }
                 });
+            }, 2000);
         }
 
         return () => {
             isCancelled = true;
         };
-    }, [imageData, isPlaneswalker]);
+    }, [imageData, isPlaneswalker, isImageLoaded]);
 
     function escapeRegex(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -141,69 +160,71 @@ const BasicFrame = React.memo((props) => {
     return imageURL ? (
         <img src={imageURL} alt="Generated Card" />
     ) : (
-        <div className="card-container" ref={cardRef}>
-            <CardBackground type_line={type_line} colors={(colors, color_identity)} mana_cost={mana_cost} className={"basic-card-background"} layout={layout}>
-                <div className="card-frame">
-                    <div className="frame-header card-color-border" style={getBorderStyle(colors, mana_cost, color_identity)}>
-                            <h1 className="name">{name}</h1>
-                            <ManaCost manaCost={mana_cost}/>
-                    </div>
-                    <div className="frame-image card-color-border-square" style={getBorderStyle(colors, mana_cost, color_identity)}>
-                        {imageData && <img src={imageData} alt="Generated" />}
-                    </div>
-                    <div className="frame-type-line card-color-border" style={getBorderStyle(colors, mana_cost, color_identity)}>
-                        <h1 className="type">{type_line}</h1>
-                        {rarity && <img className="set-symbol" src={APC} alt="Rarity Symbol" />}
-                    </div>
-                    <div className="frame-text-box card-color-border-square" style={getBorderStyle(colors, mana_cost,color_identity)}>
-                        {type_line.includes("Planeswalker") ? (
-                                <React.Fragment>
-                                    {planeswalker_text &&<OracleTextCleaner text={planeswalker_text} className="planeswalker_text" /> }
-                                    <div className="planeswalker_abilities">
-                                        {abilities}
-                                    </div>
-                                    <div className="planeswalker_loyalty">
-                                        {
-                                            (loyalty !== null && loyalty !== undefined && loyalty !== "") && 
-                                            <React.Fragment>
-                                                <img src={Loyalty_start} alt="Loyalty Icon" />
-                                                <span className="loyalty-text">{loyalty}</span>
-                                            </React.Fragment>
-                                        }
-                                    </div>
-                                </React.Fragment>
-                                
-                            ) : type_line.includes("Creature") && oracle_text.includes("Level up") ? (
-                                <div className="levels">
-                                    {levels}
-                                </div>
-                            ) : (
-                                <React.Fragment>
-                                    <OracleTextCleaner className="card-color-border-square" text={oracle_text} />
-                                    {flavor_text && (
-                                        <div className="flavor-text">
-                                            <OracleTextCleaner text={flavor_text} />
+        <>
+            <div className="card-container" ref={cardRef}>
+                <CardBackground type_line={type_line} colors={(colors, color_identity)} mana_cost={mana_cost} className={"basic-card-background"} layout={layout}>
+                    <div className="card-frame">
+                        <div className="frame-header card-color-border" style={getBorderStyle(colors, mana_cost, color_identity)}>
+                                <h1 className="name">{name}</h1>
+                                <ManaCost manaCost={mana_cost}/>
+                        </div>
+                        <div className="frame-image-basic card-color-border-square" style={getBorderStyle(colors, mana_cost, color_identity)}>
+                            {imageData && <img src={imageData} onLoad={handleImageLoaded} crossOrigin="anonymous" alt="Generated" />}
+                        </div>
+                        <div className="frame-type-line-basic card-color-border" style={getBorderStyle(colors, mana_cost, color_identity)}>
+                            <h1 className="type">{type_line}</h1>
+                            {rarity && <img className="set-symbol" src={APC} alt="Rarity Symbol" />}
+                        </div>
+                        <div className="frame-text-box card-color-border-square" style={getBorderStyle(colors, mana_cost,color_identity)}>
+                            {type_line.includes("Planeswalker") ? (
+                                    <React.Fragment>
+                                        {planeswalker_text &&<OracleTextCleaner text={planeswalker_text} className="planeswalker_text" /> }
+                                        <div className="planeswalker_abilities">
+                                            {abilities}
                                         </div>
-                                    )}
+                                        <div className="planeswalker_loyalty">
+                                            {
+                                                (loyalty !== null && loyalty !== undefined && loyalty !== "") && 
+                                                <React.Fragment>
+                                                    <img src={Loyalty_start} alt="Loyalty Icon" />
+                                                    <span className="loyalty-text">{loyalty}</span>
+                                                </React.Fragment>
+                                            }
+                                        </div>
+                                    </React.Fragment>
+                                    
+                                ) : type_line.includes("Creature") && oracle_text.includes("Level up") ? (
+                                    <div className="levels">
+                                        {levels}
+                                    </div>
+                                ) : (
+                                    <React.Fragment>
+                                        <OracleTextCleaner className="card-color-border-square" text={oracle_text} />
+                                        {flavor_text && (
+                                            <div className="flavor-text">
+                                                <OracleTextCleaner text={flavor_text} />
+                                            </div>
+                                        )}
 
-                                    {
-                                    (type_line.includes("Creature") || type_line.includes("Vehicle")) && !oracle_text.includes("Level up") &&
-                                    (<div className="power-toughness">{power}/{toughness}</div>)
-                                    }
+                                        {
+                                        (type_line.includes("Creature") || type_line.includes("Vehicle")) && !oracle_text.includes("Level up") &&
+                                        (<div className="power-toughness">{power}/{toughness}</div>)
+                                        }
 
-                                </React.Fragment>
-                            )}
+                                    </React.Fragment>
+                                )}
+                        </div>
                     </div>
+                </CardBackground>
+                <div className="info">
+                    <div className="artist">
+                        <img className="paintbrush" src={paintbrush} alt="paintbrush"/>
+                        <span className="artist-text">STABILITY AI</span>
+                    </div>
+                    <span className="arcane-proxies-text">Arcane-Proxies</span>
                 </div>
-            </CardBackground>
-            <div className="info">
-                <div className="artist">
-                    <img className="paintbrush" src={paintbrush} alt="paintbrush"/>
-                    <span className="artist-text">STABILITY AI</span>
-                </div>
-                <span className="arcane-proxies-text">Arcane-Proxies</span>
             </div>
-        </div>
+        </>
     )
 })
 

@@ -35,21 +35,6 @@ function getTokenPrompts(all_parts) {
   return tokenParts.map((part) => `${part.name}`);
 }
 
-// function getThemes(setName, colorNamesEach, keywords) {
-//   let themes = setThemes[setName] || [];
-
-//   const colorsArray = colorNamesEach.split(", ");
-
-//   colorsArray.forEach((colorName) => {
-//     const coreSetThemes = setThemes["Core sets"][colorName];
-//     if (coreSetThemes) {
-//       themes.push(...coreSetThemes);
-//     }
-//   });
-
-//   return themes.concat(keywords).join(", ");
-// }
-
 function combinePromptsByWeight(prompts) {
   const groupedPrompts = new Map();
 
@@ -195,8 +180,8 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
       height = 448;
       width = 1408;
     } else {
-      width = layout === "saga" ? 1536 : 512;
-      height = layout === "saga" ? 576 : 640;
+      width = layout === "saga" ? 576 : 512;
+      height = layout === "saga" ? 1536 : 640;
     }
 
     let normalizedValues = {};

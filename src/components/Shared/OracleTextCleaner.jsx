@@ -9,7 +9,8 @@ const OracleTextCleaner = ({ text, className, type_line, layout }) => {
   const regex = /{([^}]+)}/g;
 
   // Extract styling rules based on text content and type
-  let { fontSize, textAlign, alignItems, display, justifyContent, flexDirection, iconSize, width, height, marginLeft, marginTop, marginRight } = stylingFormatter(type_line, className, text, layout);
+  let { fontSize, textAlign, alignItems, display, justifyContent, flexDirection,
+    iconSize, width, height, marginLeft, marginTop, marginRight } = stylingFormatter(type_line, className, text, layout);
   // Split the text into lines first
   const lines = text.split('\n');
   const finalParts = lines.map((line, lineIndex) => {

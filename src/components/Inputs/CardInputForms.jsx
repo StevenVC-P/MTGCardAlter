@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from "../../utils/axiosSetup";
 import generateImageForCard from '../../helpers/imgGenerator';
+import axiosInstance from '../../utils/axiosConfig.js';
 
 const CardInputForm = ({ cardData, setCardData, sidebarText, sidebarWeight, otherValues, engineValues, decrementCounter, counter, setErrorMessage, isLoading, setIsLoading }) => {
   const [cardNames, setCardNames] = useState("");
@@ -93,7 +93,7 @@ const processCardNames = async (cardNamesArr) => {
     const effectiveQuantity = Math.min(quantity, slotsRemaining );
 
     try {
-      const response = await axios.get(`http://localhost:5000/api/cards/name/${sanitizedCardName}`);
+      const response = await axiosInstance.get(`/api/cards/name/${sanitizedCardName}`);
       if (response.status === 200) {
         const newCardObjects = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, engineValues, counter);
 
