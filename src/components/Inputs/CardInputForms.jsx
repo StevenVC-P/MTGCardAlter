@@ -160,7 +160,7 @@ const updateStates = (tempCardData) => {
     setCardNames(e.target.value);
   };
 
-  const isSubmitDisabled = !cardNames.trim() ||cardData.length >= 10 || isLoading;
+  const isSubmitDisabled = !cardNames.trim() || isLoading;
 
   return (
     <div className="form-wrapper">
