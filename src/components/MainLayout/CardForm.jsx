@@ -129,7 +129,6 @@ const deleteCard = async (cardId) => {
           
             // Access the image URL safely
             const imageUrls = data.images?.length > 0 ? data.images.map(img => img.image_url) : ['fallback-image-url'];
-
             const CardComponent = () => {
               if (data.card_details.keywords && data.card_details.keywords.includes('Aftermath')) {
                 return <Aftermath card={data.card_details} imageData={imageUrls} />;
@@ -150,12 +149,15 @@ const deleteCard = async (cardId) => {
                   case 'double_faced_token':
                   case 'reversible_card':
                   case 'modal_dfc':
+                  case 'art_series':
                   case 'transform':
                     const faceIndex = data.card.face_type === 'front' ? 0 : 1;
                     const faceData = data.card_details.card_faces[faceIndex];
-                    const combinedCardData = { ...data.card_details, ...faceData };
-
-                    return selectComponentForFace(combinedCardData, imageUrls)
+                    const combinedCardData = { 
+                      ...data.card_details,
+                      ...Object.fromEntries(Object.entries(faceData).map(([key, value]) => [`${key}`, value])) 
+                    };
+                    return selectComponentForFace(combinedCardData, imageUrls, )
 
                   default:
                     return <BasicFrame card={data.card_details} imageData={imageUrls}/>;

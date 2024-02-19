@@ -100,6 +100,7 @@ async function generateImageFromPrompts(prompts, engineValues, card_id, width, h
 
 export default async function generateImageForCard(cardData, sidebarText, sidebarWeight, otherValues, engineValues, counter) {
   const { card_id, name, color_identity, type_line, layout, card_faces, keywords, relatedCards, flavor } = cardData.data;
+  
   const colorNamesEach = getColorNames(color_identity);
   const tokenPrompts = getTokenPrompts(relatedCards);
 
