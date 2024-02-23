@@ -30,3 +30,5 @@ new_server.key
 
 server/utils/tempBulkData.json.gz
 gcp-service-account-key.json
+
+tempBulkData.json
