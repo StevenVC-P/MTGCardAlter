@@ -382,8 +382,14 @@ button:hover {
 
 .auth-error-message {
   color: #ff6b6b;
-  text-align: center;
+  text-align: left;
+  margin-top : 15px;
 }
+
+.auth-error-message li {
+  margin-top : 5px;
+}
+
 
 .requirements-container {
   margin-top: 20px;
