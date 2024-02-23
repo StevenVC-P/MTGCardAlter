@@ -4,10 +4,6 @@ import axiosInstance from '../../utils/axiosConfig.js';
 
 const CardInputForm = ({ cardData, setCardData, sidebarText, sidebarWeight, otherValues, engineValues, decrementCounter, counter, setErrorMessage, isLoading, setIsLoading }) => {
   const [cardNames, setCardNames] = useState("");
-  const [categorizedErrors, setCategorizedErrors] = useState({});
-
-  let currentCounter = counter;
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const sanitizeInput = (input) => {
     let quantity;
@@ -126,12 +122,6 @@ const processCardNames = async (cardNamesArr) => {
   return [tempCardData, localCategorizedErrors];
 };
 
-const handleImageError = (error, cardName, localCategorizedErrors) => {
-  if (!localCategorizedErrors[error]) {
-    localCategorizedErrors[error] = [];
-  }
-  localCategorizedErrors[error].push(cardName);
-};
 
 const handleRequestError = (error, cardName, localCategorizedErrors) => {
   let errorMessage = "An error occurred. Please try again.";
@@ -142,8 +132,6 @@ const handleRequestError = (error, cardName, localCategorizedErrors) => {
   if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
     errorMessage += " The DreamStudio API may be down. Check the API status here: https://dreamstudio.com/api/status/";
   }
-
-  setErrorMessage(errorMessage);
 
   if (!localCategorizedErrors[errorMessage]) {
     localCategorizedErrors[errorMessage] = [];

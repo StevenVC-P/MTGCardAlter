@@ -162,8 +162,8 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
         let width = 640;
 
         if (face.type_line.includes("Saga")) {
-          height = 576;
-          width = 1536;
+          height = 1536;
+          width = 576;
         } else if (face.type_line.includes("Battle")) {
           width = 1280;
         }
