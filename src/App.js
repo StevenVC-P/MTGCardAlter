@@ -150,12 +150,12 @@ const App = () => {
       setIsLoading(true);
 
       const accessToken = localStorage.getItem("accessToken");
-
       if (accessToken) {
         try {
           const response = await axiosInstance.post("/api/auth/validate-access-token", { accessToken });
           setIsLoggedIn(true);
           setUser(response.data.user);
+          setIsPatreonConnected(response.data.hasPatreonLinked || false);
           // Set up the interval only if the access token is valid.
           intervalId = setupRefreshTokenInterval();
         } catch (error) {
@@ -169,27 +169,6 @@ const App = () => {
         }
       } else {
         setIsLoading(false);
-      }
-
-      // Handle Patreon token validation if necessary
-      const queryParams = new URLSearchParams(location.search);
-      const patreonConnected = queryParams.get("patreonConnected");
-      const patreonToken = queryParams.get("token");
-
-      if (patreonConnected === "true" && patreonToken) {
-        try {
-          const response = await axiosInstance.post("/patreon/validate-patreon-token", { token: patreonToken });
-          if (response.data.valid) {
-            localStorage.setItem("accessToken", response.data.accessToken);
-            localStorage.setItem("refreshToken", response.data.refreshToken);
-            setIsLoggedIn(true);
-            setIsPatreonConnected(true);
-            // After validating Patreon and setting tokens, set up the token refresh interval
-            intervalId = setupRefreshTokenInterval();
-          }
-        } catch (error) {
-          console.error("Error validating Patreon token:", error.response ? error.response.data : error.message);
-        }
       }
     };
 

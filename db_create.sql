@@ -138,6 +138,7 @@ CREATE TABLE CardPrices (
 );
 
 DROP TABLE IF EXISTS token_transactions;
+DROP TABLE IF EXISTS user_patreon_link;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS patreon_accounts;
 
@@ -165,6 +166,15 @@ CREATE TABLE `users` (
   `emailVerificationToken` VARCHAR(255),
   `emailVerificationExpires` DATETIME,
   FOREIGN KEY (`patreon_account_id`) REFERENCES `patreon_accounts`(`id`)
+);
+
+CREATE TABLE user_patreon_link (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL UNIQUE,
+  patreon_account_id INT NOT NULL UNIQUE,
+  linked_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (patreon_account_id) REFERENCES patreon_accounts(id)
 );
 
 CREATE TABLE UserCards (
