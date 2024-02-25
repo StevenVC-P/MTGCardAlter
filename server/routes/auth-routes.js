@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
-const User = require('../models/User');
+const {User, UserPatreonLink}  = require('../models/index');
 const { env } = require("../../env/config");
 
 const { JWT_SECRET, REFRESH_TOKEN_SECRET, EMAIL_USER, EMAIL_PASS } = env;
@@ -207,13 +207,15 @@ router.post("/validate-access-token", (req, res) => {
   try {
     const decoded = jwt.verify(accessToken, JWT_SECRET);
 
-    User.findOne({ where: { id: decoded.id } })
-      .then((user) => {
+    User.findOne({ where: { id: decoded.id }})
+      .then(async(user) => {
         if (!user) {
           return res.status(403).json({ success: false, message: "User not found." });
         }
+        const patreonLink = await UserPatreonLink.findOne({ where: { user_id: user.id } });
+        const hasPatreonLinked = !!patreonLink;
 
-        return res.status(200).json({ success: true, user });
+        return res.status(200).json({ success: true, user, hasPatreonLinked });
       })
       .catch((err) => {
         console.error("Error finding user:", err);
@@ -292,7 +294,7 @@ router.get("/verify-email", async (req, res) => {
   }
 
   user.isEmailVerified = true;
-  user.emailVerificationToken = null; // Clear the token as it is no longer needed
+  user.emailVerificationToken = null; // Clear the token as it is nvalidate-access-tokeno longer needed
   await user.save();
 
   res.status(200).json({ success: true, message: "Email verified successfully" });
