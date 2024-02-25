@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import generateImageForCard from '../../helpers/imgGenerator';
 import axiosInstance from '../../utils/axiosConfig.js';
+import ConfirmationModal from '../Shared/ConfirmationModal.jsx';
 
 const CardInputForm = ({ cardData, setCardData, sidebarText, sidebarWeight, otherValues, engineValues, decrementCounter, counter, setErrorMessage, isLoading, setIsLoading }) => {
   const [cardNames, setCardNames] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const sanitizeInput = (input) => {
     let quantity;
@@ -24,11 +26,25 @@ const CardInputForm = ({ cardData, setCardData, sidebarText, sidebarWeight, othe
     return { quantity, sanitizedCardName };
   };
 
-  const handleClear = () => {
-    setCardNames("");
-    setCardData([]);
+  const handleClearConfirm = async() => {
+    try{
+      const accessToken = localStorage.getItem('accessToken');
+      const response = await axiosInstance.patch('/api/generated-images/soft-delete-all-cards', {}, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+        });
+      if (response.data.success) {
+  
+      setCardNames(""); 
+      setCardData([]); 
+    }
 
-    localStorage.removeItem('cardImages');
+    } catch (error) {
+      console.error(error); 
+    } finally {
+      setIsModalOpen(false)
+    }
   };
 
 const handleSubmit = async (event) => {
@@ -156,12 +172,19 @@ const updateStates = (tempCardData) => {
           <button 
             type="button"
             className="clear form-button"
-            onClick={handleClear}
+            onClick={() => setIsModalOpen(true)}
             disabled={isLoading}
+            onConfirm={handleClearConfirm}
           >
-            Clear
+            Clear All Cards
           </button>
         </div>
+        <ConfirmationModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={handleClearConfirm}
+          message="Are you sure you want to clear all your generated cards? This action cannot be undone."
+        />
         <textarea 
           onChange={handleInputChange} // Use the new handler
           value={cardNames} // Join the array into a string for the textarea

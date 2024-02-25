@@ -42,8 +42,8 @@ router.get("/user", authenticateToken, async (req, res) => {
     const userId = req.user.id; // The user ID obtained from the verified token
 
     const userCardInstances = await UserCard.findAll({
-      where: { user_id: userId },
-      attributes: ['user_card_id', 'face_type'],
+      where: { user_id: userId, rec_stat: true },
+      attributes: ["user_card_id", "face_type"],
       include: [
         {
           model: Card,
@@ -273,8 +273,6 @@ router.delete("/:userCardId", authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
     const userCardId = req.params.userCardId;
-    console.log("userId ", userId);
-    console.log("userCardId ", userCardId);
     // Find the UserCard to ensure it belongs to the user
     const userCard = await UserCard.findOne({
       where: { 
@@ -285,35 +283,11 @@ router.delete("/:userCardId", authenticateToken, async (req, res) => {
     });
 
     if (!userCard) {
-      console.log("FAILED")
       await transaction.rollback();
       return res.status(404).send("User card not found or you do not have permission to delete this card.");
     }
-    
 
-    const images = await GeneratedImage.findAll({
-      where: { user_card_id: userCard.user_card_id },
-      transaction: transaction,
-    });
-
-    const filenames = images.map((image) => {
-      const urlParts = image.image_url.split("/");
-      return urlParts[urlParts.length - 1];
-    });
-    
-    await deleteImagesFromGCS(filenames);
-
-    // Delete all associated GeneratedImages
-    await GeneratedImage.destroy({
-      where: { user_card_id: userCardId },
-      transaction: transaction
-    });
-
-    // Now, delete the UserCard
-    await UserCard.destroy({
-      where: { user_card_id: userCardId },
-      transaction: transaction
-    });
+    await userCard.update({ rec_stat: false }, { transaction: transaction });
 
     await transaction.commit();
     res.send("User card and associated images deleted successfully.");
@@ -321,6 +295,40 @@ router.delete("/:userCardId", authenticateToken, async (req, res) => {
     console.error("Error fetching generated images:", error);
     await transaction.rollback();
     res.status(500).send(error.message);
+  }
+});
+
+router.patch("/soft-delete-all-cards", authenticateToken, async (req, res) => {
+  const transaction = await sequelize.transaction();
+
+  try {
+
+    const userId = req.user.id;
+    console.log(userId);
+    // Update the rec_stat for all UserCard records to false
+    const updateResult = await UserCard.update(
+      { rec_stat: false },
+      {
+        where: {
+          user_id: userId,
+          rec_stat: true, // Only update cards that are not already soft-deleted
+        },
+        transaction: transaction,
+      }
+    );
+
+    // Check the result of the update to see if any rows were affected
+    if (updateResult[0] > 0) {
+      await transaction.commit();
+      return res.status(200).json({ success: true, message: "All cards soft deleted successfully." });
+    } else {
+      await transaction.rollback();
+      return res.status(404).json({ success: false, message: "No cards found to soft delete." });
+    }
+  } catch (error) {
+    await transaction.rollback();
+    console.error("Error soft deleting all cards:", error);
+    return res.status(500).json({ success: false, message: "Error soft deleting all cards." });
   }
 });
 
