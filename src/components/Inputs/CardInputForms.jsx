@@ -33,7 +33,6 @@ const CardInputForm = ({ cardData, setCardData, sidebarText, sidebarWeight, othe
 
 const handleSubmit = async (event) => {
   event.preventDefault();
-  const slotsRemaining = cardData.length;
   if (!isValidInput(sidebarText, sidebarWeight, otherValues)) {
     return;
   }
@@ -71,7 +70,6 @@ const getSanitizedCardNames = (cardNames) => {
 const processCardNames = async (cardNamesArr) => {
   let tempCardData = [];
   let localCategorizedErrors = {};
-  let slotsRemaining  = cardData.length;
 
   setIsLoading(true);
 
@@ -86,7 +84,6 @@ const processCardNames = async (cardNamesArr) => {
       break;
     }
     const { quantity, sanitizedCardName } = sanitizeInput(cardName);
-    const effectiveQuantity = Math.min(quantity, slotsRemaining );
 
     try {
       const response = await axiosInstance.get(`/api/cards/name/${sanitizedCardName}`);
@@ -97,17 +94,13 @@ const processCardNames = async (cardNamesArr) => {
 
         for (const cardObject of newCardObjects) {
          totalImages = totalImages + cardObject.images.length
-          for (let i = 0; i < effectiveQuantity; i++) {
-            if (slotsRemaining > 0) {
+          for (let i = 0; i < quantity; i++) {
               const cardDataPromise = {
                 card_details: response.data, 
                 images: cardObject.images, 
                 card: cardObject.card 
               };
-              slotsRemaining--;
-              tempCardData.push(cardDataPromise);
-            }
-            
+              tempCardData.push(cardDataPromise);           
           }
         }
 
