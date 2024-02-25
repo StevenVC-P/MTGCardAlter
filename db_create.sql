@@ -182,6 +182,7 @@ CREATE TABLE UserCards (
     user_id INT NOT NULL,
     card_id VARCHAR(36) NOT NULL,
     face_type ENUM('front', 'back') DEFAULT NULL,
+    rec_stat BOOLEAN DEFAULT TRUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (card_id) REFERENCES Cards(card_id)

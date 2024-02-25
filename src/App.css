@@ -683,3 +683,94 @@ button:disabled:hover {
   cursor: not-allowed;
   opacity: 0.5;
 }
+/* //////////////////////////////////////////////////////////////////////////////////////////////// */
+
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Styles for the modal box */
+.modal {
+  background: #434343;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  min-width: 300px;
+  z-index: 1001;
+  border: 1px solid Black;
+}
+
+/* Styles for the modal message */
+.modal-message {
+  color: #ffffff;
+  font-size: 16px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Styles for the action buttons */
+.modal-actions {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 10px;
+}
+
+/* Button styling */
+.modal-confirm,
+.modal-close {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.modal-confirm {
+  background-color: #4caf50;
+  color: white;
+}
+
+.modal-confirm:hover {
+  background-color: #45a049;
+}
+
+.modal-close {
+  background-color: #f44336;
+  color: white;
+}
+
+.modal-close:hover {
+  background-color: #d32f2f;
+}
+
+/* Assuming you have an image for the AI/fantasy theme as a background */
+.modal {
+  background-size: cover;
+  color: black;
+}
+
+/* Add some magical or futuristic font */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300&family=Roboto:wght@100;400&display=swap');
+
+.modal-message {
+  font-family: 'Merriweather', serif;
+}
+
+.modal-confirm,
+.modal-close {
+  font-family: 'Roboto', sans-serif;
+}

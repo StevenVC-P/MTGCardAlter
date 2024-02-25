@@ -28,7 +28,12 @@ UserCard.init(
     },
     face_type: {
       type: DataTypes.ENUM("front", "back"),
-      allowNull: true, 
+      allowNull: true,
+    },
+    rec_stat: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
     },
     created_at: {
       type: DataTypes.DATE,
