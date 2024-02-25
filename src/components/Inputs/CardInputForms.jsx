@@ -43,8 +43,7 @@ const handleSubmit = async (event) => {
   }
 
   const cardNamesArr = getSanitizedCardNames(cardNames);
-  const cardNamesToProcess = cardNamesArr.slice(0, slotsRemaining);
-  const [tempCardData, localCategorizedErrors] = await processCardNames(cardNamesToProcess);
+  const [tempCardData, localCategorizedErrors] = await processCardNames(cardNamesArr);
 
   if (Object.keys(localCategorizedErrors).length) {
     setErrorMessage(localCategorizedErrors);
