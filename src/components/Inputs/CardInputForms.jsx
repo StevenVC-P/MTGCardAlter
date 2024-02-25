@@ -33,7 +33,7 @@ const CardInputForm = ({ cardData, setCardData, sidebarText, sidebarWeight, othe
 
 const handleSubmit = async (event) => {
   event.preventDefault();
-  const slotsRemaining = 10 - cardData.length;
+  const slotsRemaining = cardData.length;
   if (!isValidInput(sidebarText, sidebarWeight, otherValues)) {
     return;
   }
@@ -71,7 +71,7 @@ const getSanitizedCardNames = (cardNames) => {
 const processCardNames = async (cardNamesArr) => {
   let tempCardData = [];
   let localCategorizedErrors = {};
-  let slotsRemaining  = 10-cardData.length;
+  let slotsRemaining  = cardData.length;
 
   setIsLoading(true);
 
