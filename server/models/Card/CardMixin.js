@@ -100,6 +100,7 @@ const cardMixin = (CardModel) => {
         card.relatedCards = uniqueRelatedCards;
         const [flavorRows] = await pool.execute(fetchFlavorQuery, [card.name]);
         if (flavorRows.length > 0) {
+            console.log("steve", flavorRows[0].flavor_text);
             card.flavor_text = flavorRows[0].flavor_text; 
         } else {
             card.flavor_text = "";
