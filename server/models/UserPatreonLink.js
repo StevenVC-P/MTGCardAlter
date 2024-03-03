@@ -37,6 +37,7 @@ UserPatreonLink.init(
     sequelize,
     modelName: "UserPatreonLink",
     tableName: "user_patreon_link",
+    timestamps: false,
   }
 );
 
