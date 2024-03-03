@@ -65,7 +65,7 @@ router.get("/user", authenticateToken, async (req, res) => {
       userCardInstances.map(async (userCard) => {
 
         const additionalCardData = await Card.getAdditionalData(userCard.card);
-
+        console.log("steve2: ", additionalCardData.dataValues.flavor_text);
         const cardDetails = {
           // Standard card properties from dataValues
           card_id: additionalCardData.dataValues.card_id,

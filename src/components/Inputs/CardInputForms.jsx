@@ -92,7 +92,7 @@ const processCardNames = async (cardNamesArr) => {
     counter -= count;
     decrementCounter(count);
   };
-
+  let totalImages = 0;
   for (const cardName of cardNamesArr) {
     if (counter === 0) {
       setErrorMessage("Counter is at 0, not making a request.");
@@ -105,10 +105,12 @@ const processCardNames = async (cardNamesArr) => {
       if (response.status === 200) {
         const newCardObjects = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, engineValues, counter);
 
-        let totalImages = 0;
+        
 
         for (const cardObject of newCardObjects) {
+          console.log("cardObject.images.length: ", cardObject.images.length)
          totalImages = totalImages + cardObject.images.length
+          console.log("totalImages: ", totalImages)
           for (let i = 0; i < quantity; i++) {
               const cardDataPromise = {
                 card_details: response.data, 
@@ -117,15 +119,17 @@ const processCardNames = async (cardNamesArr) => {
               };
               tempCardData.push(cardDataPromise);           
           }
+          
         }
 
-         decrementSlotsAndCounter(totalImages); 
+         
       }
     } catch (error) {
       console.error("Caught an error:", error);
       handleRequestError(error, cardName, localCategorizedErrors);
     }
   }
+  decrementSlotsAndCounter(totalImages); 
   setIsLoading(false);
   return [tempCardData, localCategorizedErrors];
 };
