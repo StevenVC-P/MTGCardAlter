@@ -2,7 +2,7 @@ import React from 'react';
 import { manaSymbols } from './ManaSymbols'; // adjust this path to point to your ManaSymbols.js
 import { stylingFormatter } from '../../helpers/stylingFormatter';
 
-const OracleTextCleaner = ({ text, className, type_line, layout }) => {
+const OracleTextCleaner = ({ text, className, type_line, layout, flavortext }) => {
   if (!text) return null;
 
   // Regex to match the curly braces and the content inside them
@@ -10,7 +10,7 @@ const OracleTextCleaner = ({ text, className, type_line, layout }) => {
 
   // Extract styling rules based on text content and type
   let { fontSize, textAlign, alignItems, display, justifyContent, flexDirection,
-    iconSize, width, height, marginLeft, marginTop, marginRight } = stylingFormatter(type_line, className, text, layout);
+    iconSize, width, height, marginLeft, marginTop, marginRight } = stylingFormatter(type_line, className, text, layout, flavortext);
   // Split the text into lines first
   const lines = text.split('\n');
   const finalParts = lines.map((line, lineIndex) => {

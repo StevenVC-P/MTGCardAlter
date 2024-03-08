@@ -182,6 +182,14 @@ const App = () => {
     };
   }, [location]);
 
+  if (isLoading) {
+    return (
+      <div className="loading-banner">
+        <span className="loading-banner-text">Loading...</span>
+      </div>
+    );
+  }
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <Routes>

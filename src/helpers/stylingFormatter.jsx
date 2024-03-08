@@ -1,4 +1,4 @@
-export const stylingFormatter = (type_line, className, text, layout) => {
+export const stylingFormatter = (type_line, className, text, layout, flavortext) => {
   const styles = {
     fontSize: '1em',
     textAlign: 'left',
@@ -9,6 +9,7 @@ export const stylingFormatter = (type_line, className, text, layout) => {
     justifyContent: 'space-around',
     height: '100%',
     marginLeft: '4px',
+    whiteSpace: 'normal',
   };
 
   if (type_line && (type_line.includes('Plane ') || type_line.includes('Phenomenon') )) {
@@ -88,6 +89,12 @@ export const stylingFormatter = (type_line, className, text, layout) => {
         styles.iconSize = '8px';
         styles.width = '99%';
       }
+  }
+
+  if(flavortext) {
+    styles.fontSize = '0.8em';
+    styles.textAlign = 'left';
+    styles.alignItems= 'flex-start';
   }
 
   return styles;
