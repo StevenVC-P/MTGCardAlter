@@ -190,8 +190,8 @@ const updateStates = (tempCardData) => {
           message="Are you sure you want to clear all your generated cards? This action cannot be undone."
         />
         <textarea 
-          onChange={handleInputChange} // Use the new handler
-          value={cardNames} // Join the array into a string for the textarea
+          onChange={handleInputChange}
+          value={cardNames} 
           className="input-box" 
           placeholder="Copy/Paste Magic card names and quantities" 
         />

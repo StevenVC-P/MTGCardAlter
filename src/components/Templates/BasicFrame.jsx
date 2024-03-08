@@ -202,7 +202,7 @@ const BasicFrame = React.memo((props) => {
                                         <OracleTextCleaner className="card-color-border-square" text={oracle_text} />
                                         {flavor_text && (
                                             <div className="flavor-text">
-                                                <OracleTextCleaner text={flavor_text} />
+                                                <OracleTextCleaner text={flavor_text} flavortext={true}/>
                                             </div>
                                         )}
 
