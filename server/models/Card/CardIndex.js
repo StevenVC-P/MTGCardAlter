@@ -12,6 +12,7 @@ class Card {
     const likeLowerCaseCardNameWithDelimiterStart = `%${lowerCaseCardName} //%`;
     const likeLowerCaseCardNameWithDelimiterEnd = `%// ${lowerCaseCardName}%`;
 
+
     const caseStatement = `
         CASE 
             WHEN name = ? THEN 1
@@ -22,7 +23,8 @@ class Card {
 
     const query = `
         SELECT * FROM Cards 
-        WHERE name LIKE ? OR name LIKE ? OR name LIKE ? OR name LIKE ?
+        WHERE (name LIKE ? OR name LIKE ? OR name LIKE ? OR name LIKE ?)
+        AND layout != 'art_series' 
         ORDER BY ${caseStatement}, 
         name ASC 
         LIMIT 1;
@@ -51,7 +53,7 @@ class Card {
     const fetchColorQuery = "SELECT color FROM CardColors WHERE card_id = ?";
     const fetchKeywordQuery = "SELECT keyword FROM Keywords WHERE card_id = ?";
     const fetchColorIdentityQuery = "SELECT color_identity FROM CardColorIdentities WHERE card_id = ? ORDER BY id ASC";
-    const fetchCardFacesQuery = "SELECT id, name, type_line, mana_cost, oracle_text, watermark, power, toughness, loyalty, defense FROM CardFaces WHERE card_id = ? ORDER BY id ASC";
+    const fetchCardFacesQuery = "SELECT id, name, type_line, mana_cost, oracle_text, watermark, power, toughness, loyalty, defense FROM CardFaces WHERE card_id = ?  ORDER BY id ASC";
     const fetchRelatedCardsQuery = "SELECT related_card_id, component, name FROM RelatedCards WHERE parent_card_name = ?";
     const fetchLegalitiesQuery = "SELECT format_name, legality FROM Legalities WHERE card_id = ?";
     const fetchGamesQuery = "SELECT game FROM Games WHERE card_id = ?";
@@ -67,6 +69,7 @@ class Card {
     card.color_identity = cardColorIdentities.map((row) => row.color_identity);
 
     const [cardFaces] = await pool.execute(fetchCardFacesQuery, [card.card_id]);
+
     card.card_faces = cardFaces.map((row) => ({
       id: row.id,
       name: row.name,

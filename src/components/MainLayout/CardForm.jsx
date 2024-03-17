@@ -67,6 +67,7 @@ const CardForm = ({ sidebarText, sidebarWeight, otherValues, engineValues, decre
 
   // Modify deleteCard to handle deletion from the database
 const deleteCard = async (cardId) => {
+  console.log("delete: ", cardId)
   setIsDeleting(prevState => ({ ...prevState, [cardId]: true }));
   const accessToken = localStorage.getItem('accessToken');
   if (!accessToken) {
@@ -128,7 +129,6 @@ const deleteCard = async (cardId) => {
           {!loading && !error && currentCards.map((data) => {
             // Access the image URL safely
             const imageUrls = data.images?.length > 0 ? data.images.map(img => img.image_url) : ['fallback-image-url'];
-            console.log("data: ", data)
             const CardComponent = () => {
               if (data.card_details.keywords && data.card_details.keywords.includes('Aftermath')) {
                 return <Aftermath card={data.card_details} imageData={imageUrls} />;
@@ -164,7 +164,7 @@ const deleteCard = async (cardId) => {
                   }
                 }
               };
-
+            console.log("data.card: ", data.card)
             return (
               <div className="card-box" key={data.card.user_card_id}>
                 <CardComponent />

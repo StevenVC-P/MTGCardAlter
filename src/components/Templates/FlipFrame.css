@@ -58,3 +58,23 @@
   align-self: flex-start; 
   font-size: 6px;
 }
+
+.frame-image-flip {
+    width: 91%; 
+    height: 47%; 
+    position: relative;
+    margin-left: 10px;
+    margin-right: auto;
+    box-sizing: border-box;
+    z-index: 0;
+}
+
+.frame-image-flip img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit:fill;
+    object-position: center;
+}

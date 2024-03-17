@@ -2,6 +2,7 @@ import axiosInstance from "../utils/axiosConfig.js";
 
 const replacements = {
   virtuous: "righteous",
+  revealer: "Enlightener"
   // Add more word replacements here as needed
 };
 

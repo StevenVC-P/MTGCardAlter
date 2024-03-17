@@ -73,7 +73,7 @@ const FlipFrame = React.memo((props) => {
                             <div className="flip-power-toughness">{card_faces[0].power}/{card_faces[0].toughness}</div>
                         )}
                     </div>
-                    <div className="frame-image card-color-border-square" style={getBorderStyle(colors)}>
+                    <div className="frame-image-flip card-color-border-square" style={getBorderStyle(colors)}>
                         {imageData && <img src={imageData} alt="Generated" />}
                     </div>
                     <div className="frame-type-line flip card-color-border" style={getBorderStyle(colors)}>
