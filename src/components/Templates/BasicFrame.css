@@ -91,3 +91,21 @@
   height: 100%;
   width: 100%;
 }
+
+
+.level-stats-first {
+    position: absolute;
+    top: 18px; 
+    right: 1px; 
+    width: 26px; 
+    height: 17px; 
+    background-color: #ccc; 
+    border-radius: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    border: 1px solid black;
+    font-size: clamp(0.5em, .8em, 2em);
+}
