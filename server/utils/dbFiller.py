@@ -13,6 +13,7 @@ connection = pymysql.connect(
 cursor = connection.cursor()
 
 try:
+    print("Connecting to the database.")
     # Prepare batches
     card_batch = []
     card_color_batch = []
@@ -21,11 +22,11 @@ try:
     card_face_batch = []
     card_prices_batch = []
     related_cards_batch = []
-
+    print("Opening tempBulkData.json file.")
     # Read from the JSON file
     with open('tempBulkData.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
-
+    print(f"Preparing to insert {len(card_batch)} cards.")
     for card in data:
         # Prepare the Cards batch
         card_batch.append((

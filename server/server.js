@@ -12,7 +12,7 @@ require("./utils/scryfallUpdater");
 const jwtMiddleware = require("./jwtMiddleware");
 const sharp = require("sharp");
 
-const { GeneratedImage, UserCard } = require("./models");
+const { GeneratedImage, UserCard, UserCardImages } = require("./models");
 
 // Adjusted paths
 const cardRoutes = require("./routes/cards");
@@ -78,8 +78,9 @@ app.get("/proxy-image", async (req, res) => {
 });
 
 app.post("/api/generate-image", authenticateToken, async (req, res) => {
+  
   try {
-    const { card_id, height, width, cfg_scale, clip_guidance_preset, sampler, samples, steps, stylePreset, text_prompts, facetype } = req.body;
+    const { card_id, height, width, cfg_scale, clip_guidance_preset, sampler, samples, steps, stylePreset, text_prompts, facetype, quantity } = req.body;
     const userId = req.user.id;
 
     const axiosConfig = {
@@ -121,14 +122,7 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
     // Upload the image to Google Cloud Storage and get the public URL
     const imageUrl = await uploadImageToGCS(base64ImageData, userId);
 
-    const userCard = await UserCard.create({
-      user_id: userId,
-      card_id,
-      face_type: facetype,
-    });
-
     const generatedImage = await GeneratedImage.create({
-      user_card_id: userCard.user_card_id,
       image_url: imageUrl,
       cfg_scale,
       clip_guidance_preset,
@@ -138,18 +132,37 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
       style_preset: stylePreset,
     });
 
-    const imageObject = {
-      image_id: generatedImage.user_card_id,
-      image_url: generatedImage.image_url,
-    };
+    const imageId = generatedImage.image_id;
+    const cardImagePairs = [];
+    for (let i = 0; i < quantity; i++) {
+      const userCard = await UserCard.create({
+        user_id: userId,
+        card_id,
+        face_type: facetype,
+      });
 
-    return res.json({
-      card: {
+      await UserCardImages.create({
         user_card_id: userCard.user_card_id,
-        face_type: userCard.face_type,
-      },
-      images: [imageObject],
-    });
+        image_id: imageId,
+      });
+
+      const cardImagePair = {
+        card: {
+          id: userCard.user_card_id,
+          face_type: userCard.face_type,
+        },
+        images: [
+          {
+            id: imageId,
+            image_url: generatedImage.image_url,
+          },
+        ],
+      };
+
+      cardImagePairs.push(cardImagePair); 
+    }
+
+    return res.json({cardImagePairs});
   } catch (error) {
     console.error("Error generating image:", error);
 

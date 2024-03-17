@@ -81,7 +81,7 @@ function createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarW
   return defaultPrompts;
 }
 
-async function generateImageForFace(face, colorNames, keywords, tokenPrompts, otherValues, sidebarText, sidebarWeight, engineValues, card_id, width, height, faceType) {
+async function generateImageForFace(face, colorNames, keywords, tokenPrompts, otherValues, sidebarText, sidebarWeight, engineValues, card_id, width, height, faceType, quantity) {
   const normalizedValues = {
     cardName: face.name,
     color: colorNames,
@@ -90,17 +90,17 @@ async function generateImageForFace(face, colorNames, keywords, tokenPrompts, ot
     tokens: tokenPrompts,
   };
   const prompts = createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarWeight);
-  const result = await generateImageFromPrompts(prompts, engineValues, card_id, width, height, faceType);
+  const result = await generateImageFromPrompts(prompts, engineValues, card_id, width, height, faceType, quantity);
   return result;
 }
 
-async function generateImageFromPrompts(prompts, engineValues, card_id, width, height, faceType) {
-  return await generateImage(combinePromptsByWeight(prompts), engineValues, card_id, height, width, faceType);
+async function generateImageFromPrompts(prompts, engineValues, card_id, width, height, faceType, quantity) {
+  return await generateImage(combinePromptsByWeight(prompts), engineValues, card_id, height, width, faceType, quantity);
 }
 
-export default async function generateImageForCard(cardData, sidebarText, sidebarWeight, otherValues, engineValues, counter) {
+export default async function generateImageForCard(cardData, sidebarText, sidebarWeight, otherValues, engineValues, counter, quantity) {
   const { card_id, name, color_identity, type_line, layout, card_faces, keywords, relatedCards, flavor } = cardData.data;
-  
+
   const colorNamesEach = getColorNames(color_identity);
   const tokenPrompts = getTokenPrompts(relatedCards);
 
@@ -111,7 +111,7 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
       return { error: "Counter insufficient for multi-faced cards." };
     }
     const colorNames = getColorNamesFromFaces(card_faces);
-     // Prepare data for each face
+    // Prepare data for each face
     const facesData = card_faces.map((face, index) => {
       let width, height;
 
@@ -136,21 +136,20 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
       return {
         height,
         width,
-        prompts: prompts.map(prompt => ({
+        prompts: prompts.map((prompt) => ({
           text: prompt.text,
           weight: prompt.weight,
         })),
       };
     });
-    
+
     try {
-      const success = await generateMultiFaceImage(facesData, engineValues, card_id);
+      const success = await generateMultiFaceImage(facesData, engineValues, card_id, quantity);
       return [success];
     } catch (error) {
-      console.error('Error generating image for multi-face card:', error.message);
+      console.error("Error generating image for multi-face card:", error.message);
       throw error;
     }
-
   } else if (dualLayouts.includes(layout) && card_faces) {
     if (counter < 2) {
       console.warn("Counter less than 2, not generating image for multiple-faced card.");
@@ -170,7 +169,7 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
 
         const faceType = index === 0 ? "front" : "back";
 
-        return generateImageForFace(face, colorNamesEach, keywords, tokenPrompts, otherValues, sidebarText, sidebarWeight, engineValues, card_id, width, height, faceType);
+        return generateImageForFace(face, colorNamesEach, keywords, tokenPrompts, otherValues, sidebarText, sidebarWeight, engineValues, card_id, width, height, faceType, quantity);
       })
     );
 
@@ -202,7 +201,7 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
         keywords: keywords,
         tokens: tokenPrompts,
       };
-    const imageResult = await generateImageFromPrompts(createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarWeight), engineValues, card_id, width, height, null);
+    const imageResult = await generateImageFromPrompts(createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarWeight), engineValues, card_id, width, height, null, quantity);
     return [imageResult];
   }
 }

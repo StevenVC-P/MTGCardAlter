@@ -126,9 +126,9 @@ const deleteCard = async (cardId) => {
           {error && <div>Error loading cards: {error.message}</div>}
 
           {!loading && !error && currentCards.map((data) => {
-          
             // Access the image URL safely
             const imageUrls = data.images?.length > 0 ? data.images.map(img => img.image_url) : ['fallback-image-url'];
+            console.log("data: ", data)
             const CardComponent = () => {
               if (data.card_details.keywords && data.card_details.keywords.includes('Aftermath')) {
                 return <Aftermath card={data.card_details} imageData={imageUrls} />;

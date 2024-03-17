@@ -11,20 +11,6 @@ GeneratedImage.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    image_id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    user_card_id: {
-      // New field to reference UserCards
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "UserCards", // This should match the table name of UserCards
-        key: "user_card_id",
-      },
-    },
     image_url: {
       type: DataTypes.STRING,
       allowNull: false,
