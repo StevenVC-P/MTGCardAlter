@@ -7,7 +7,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 const sequelize = require("../config/database");
 const authenticateToken = require("../utils/authenticateToken");
-const { Card, GeneratedImage, UserCard } = require("../models/index");
+const { Card, GeneratedImage, UserCard, UserCardImages } = require("../models/index");
 const { uploadImageToGCS, deleteImagesFromGCS } = require("./googleRoutes");
 
 const engineId = "stable-diffusion-v1-6";
@@ -42,17 +42,19 @@ router.get("/user", authenticateToken, async (req, res) => {
     const userId = req.user.id; // The user ID obtained from the verified token
 
     const userCardInstances = await UserCard.findAll({
+      logging: console.log,
       where: { user_id: userId, rec_stat: true },
       attributes: ["user_card_id", "face_type"],
       include: [
         {
           model: Card,
-          as: "card",
+          as: "card", // Ensure this matches the alias in your association definition
           required: true,
         },
         {
           model: GeneratedImage,
-          as: "generatedImages", // Use the same alias as in your association
+          as: "galleryImages", // This alias should match the one used in the through association
+          through: { attributes: [] }, // Exclude join table attributes
           required: false,
           attributes: ["image_id", "image_url", "cfg_scale", "clip_guidance_preset", "sampler", "steps", "style_preset"],
         },
@@ -65,7 +67,6 @@ router.get("/user", authenticateToken, async (req, res) => {
       userCardInstances.map(async (userCard) => {
 
         const additionalCardData = await Card.getAdditionalData(userCard.card);
-        console.log("steve2: ", additionalCardData.dataValues.flavor_text);
         const cardDetails = {
           // Standard card properties from dataValues
           card_id: additionalCardData.dataValues.card_id,
@@ -105,7 +106,6 @@ router.get("/user", authenticateToken, async (req, res) => {
           edhrec_rank: additionalCardData.dataValues.edhrec_rank,
           penny_rank: additionalCardData.dataValues.penny_rank,
 
-          // Additional properties from getAdditionalData
           colors: additionalCardData.colors,
           keywords: additionalCardData.keywords,
           color_identity: additionalCardData.color_identity,
@@ -121,13 +121,14 @@ router.get("/user", authenticateToken, async (req, res) => {
             user_card_id: userCard.user_card_id,
             face_type: userCard.face_type,
           },
-          card_details: cardDetails,
-          images: Array.isArray(userCard.generatedImages)
-            ? userCard.generatedImages.map((image) => ({
-                image_id: image.image_id,
-                image_url: `${BASE_URL}/proxy-image?url=${encodeURIComponent(image.image_url)}`,
-              }))
-            : [],
+          card_details: cardDetails, // Make sure cardDetails contains the data you need
+          images: userCard.galleryImages.map((image) => {
+            // Use the alias defined in your associations
+            return {
+              image_id: image.image_id,
+              image_url: `${BASE_URL}/proxy-image?url=${encodeURIComponent(image.image_url)}`,
+            };
+          }),
         };
       })
     );
@@ -141,14 +142,8 @@ router.get("/user", authenticateToken, async (req, res) => {
 
 router.post("/generate-multi-face-image", authenticateToken, async (req, res) => {
   try {
-    const { card_id, faces } = req.body;
+    const { card_id, faces, quantity } = req.body;
     const userId = req.user.id;
-
-    // Find or create a UserCard instance
-    const userCard = await UserCard.create({
-      user_id: userId,
-      card_id: card_id,
-    });
 
     const axiosConfig = {
       headers: {
@@ -159,8 +154,8 @@ router.post("/generate-multi-face-image", authenticateToken, async (req, res) =>
       timeout: 300000, // Timeout after 300 seconds (5 minutes)
     };
 
-    const imageObjects = []; 
-    // Process each face and generate images
+    let imageUrlsArray = [];
+
     for (const face of faces) {
       // External API call to generate image (replace with your actual API call logic)
       const imageResponse = await axios.post(
@@ -187,40 +182,60 @@ router.post("/generate-multi-face-image", authenticateToken, async (req, res) =>
       }
 
       const base64ImageData = data.artifacts[0].base64;
-
-      // Upload the image to Google Cloud Storage and get the public URL
       const imageUrl = await uploadImageToGCS(base64ImageData, userId);
-
-      // Handle the response and save the generated image
-      if (imageResponse.status === 200 && imageResponse.data.artifacts) {
-        const generatedImage = await GeneratedImage.create({
-          user_card_id: userCard.user_card_id,
-          image_url: imageUrl,
-          cfg_scale: face.cfg_scale,
-          clip_guidance_preset: face.clip_guidance_preset,
-          sampler: face.sampler,
-          samples: face.samples,
-          steps: face.steps,
-          style_preset: face.stylePreset,
-        });
-
-        imageObjects.push({
-          image_id: generatedImage.image_id, // Sequelize returns the auto-incremented ID
-          image_url: generatedImage.image_url,
-        });
-
-      } else {
-        throw new Error("Failed to generate image");
-      }
+      imageUrlsArray.push({
+        imageUrl: imageUrl,
+        faceData: face,
+      });
     }
 
-    res.json({
-      card: {
-        user_card_id: userCard.user_card_id,
-        face_type: userCard.face_type,
-      },
-      images: imageObjects,
-    });
+    // 3. Create UserCard Copies
+    let userCards = [];
+
+    let cardImagePairs = [];
+
+    for (let i = 0; i < quantity; i++) {
+      const newUserCard = await UserCard.create({
+        user_id: userId,
+        card_id: card_id,
+      });
+      userCards.push(newUserCard);
+
+      let images = [];
+
+      for (const imageObject  of imageUrlsArray.flat()) {
+        const generatedImage = await GeneratedImage.create({
+          image_url: imageObject.imageUrl,
+          cfg_scale: imageObject.faceData.cfg_scale,
+          clip_guidance_preset: imageObject.faceData.clip_guidance_preset,
+          sampler: imageObject.faceData.sampler,
+          samples: imageObject.faceData.samples,
+          steps: imageObject.faceData.steps,
+          style_preset: imageObject.faceData.stylePreset,
+        });
+
+        await UserCardImages.create({
+          user_card_id: newUserCard.user_card_id,
+          image_id: generatedImage.image_id,
+        });
+
+        images.push({
+          image_id: generatedImage.image_id,
+          image_url: generatedImage.image_url,
+        });
+      }
+
+        cardImagePairs.push({
+          card: {
+            user_card_id: newUserCard.user_card_id,
+            face_type: null,
+          },
+          images: images,
+        });
+      }
+      console.log("cardImagePairs: ", cardImagePairs);
+      return res.json(cardImagePairs);
+
   } catch (error) {
     console.error("Error generating images for multi-face card:", error);
 

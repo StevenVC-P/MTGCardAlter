@@ -47,114 +47,118 @@ const CardInputForm = ({ cardData, setCardData, sidebarText, sidebarWeight, othe
     }
   };
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  if (!isValidInput(sidebarText, sidebarWeight, otherValues)) {
-    return;
-  }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!isValidInput(sidebarText, sidebarWeight, otherValues)) {
+      return;
+    }
 
-  if (counter === 0) {
-    setErrorMessage("Counter is at 0, not making a request.");
-    return;
-  }
-
-  const cardNamesArr = getSanitizedCardNames(cardNames);
-  const [tempCardData, localCategorizedErrors] = await processCardNames(cardNamesArr);
-
-  if (Object.keys(localCategorizedErrors).length) {
-    setErrorMessage(localCategorizedErrors);
-  } else {
-    setErrorMessage("");
-  }
-
-  updateStates(tempCardData);
-};
-
-const isValidInput = (sidebarText, sidebarWeight, otherValues) => {
-  if ((sidebarText.trim() === '' || sidebarWeight === 0) && otherValues.cardName === 0) {
-    setErrorMessage("'Prompt' or 'Card Name' must have a value and weight.");
-    return false;
-  }
-  return true;
-};
-
-const getSanitizedCardNames = (cardNames) => {
-  return cardNames.split('\n').filter(name => name.trim() !== '');
-};
-
-const processCardNames = async (cardNamesArr) => {
-  let tempCardData = [];
-  let localCategorizedErrors = {};
-
-  setIsLoading(true);
-
-  const decrementSlotsAndCounter = (count) => {
-    counter -= count;
-    decrementCounter(count);
-  };
-  let totalImages = 0;
-  for (const cardName of cardNamesArr) {
     if (counter === 0) {
       setErrorMessage("Counter is at 0, not making a request.");
-      break;
+      return;
     }
-    const { quantity, sanitizedCardName } = sanitizeInput(cardName);
 
-    try {
-      const response = await axiosInstance.get(`/api/cards/name/${sanitizedCardName}`);
-      if (response.status === 200) {
-        const newCardObjects = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, engineValues, counter);
+    const cardNamesArr = getSanitizedCardNames(cardNames);
+    const [tempCardData, localCategorizedErrors] = await processCardNames(cardNamesArr);
 
-        
+    if (Object.keys(localCategorizedErrors).length) {
+      setErrorMessage(localCategorizedErrors);
+    } else {
+      setErrorMessage("");
+    }
 
-        for (const cardObject of newCardObjects) {
-          console.log("cardObject.images.length: ", cardObject.images.length)
-         totalImages = totalImages + cardObject.images.length
-          console.log("totalImages: ", totalImages)
-          for (let i = 0; i < quantity; i++) {
-              const cardDataPromise = {
-                card_details: response.data, 
-                images: cardObject.images, 
-                card: cardObject.card 
-              };
-              tempCardData.push(cardDataPromise);           
-          }
-          
-        }
+    updateStates(tempCardData);
+  };
 
-         
+  const isValidInput = (sidebarText, sidebarWeight, otherValues) => {
+    if ((sidebarText.trim() === '' || sidebarWeight === 0) && otherValues.cardName === 0) {
+      setErrorMessage("'Prompt' or 'Card Name' must have a value and weight.");
+      return false;
+    }
+    return true;
+  };
+
+  const getSanitizedCardNames = (cardNames) => {
+    return cardNames.split('\n').filter(name => name.trim() !== '');
+  };
+
+  function addCardData(cardObject, responseData, tempCardData) {
+    tempCardData.push({
+      card_details: responseData,
+      images: cardObject.images,
+      card: cardObject.card
+    });
+  }
+
+  const processCardNames = async (cardNamesArr) => {
+    let tempCardData = [];
+    let localCategorizedErrors = {};
+
+    setIsLoading(true);
+
+    const decrementSlotsAndCounter = (count) => {
+      counter -= count;
+      decrementCounter(count);
+    };
+
+    for (const cardName of cardNamesArr) {
+      if (counter === 0) {
+        setErrorMessage("Counter is at 0, not making a request.");
+        break;
       }
-    } catch (error) {
-      console.error("Caught an error:", error);
-      handleRequestError(error, cardName, localCategorizedErrors);
+      const { quantity, sanitizedCardName } = sanitizeInput(cardName);
+
+      try {
+        let totalImages = 0;
+        const response = await axiosInstance.get(`/api/cards/name/${sanitizedCardName}`);
+        if (response.status === 200) {
+          const newCardObjects = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, engineValues, counter, quantity);
+
+            newCardObjects.forEach(cardAndImageArray => {
+              cardAndImageArray.forEach(cardObject => {
+                addCardData(cardObject, response.data, tempCardData);
+              }); 
+            })
+            if (newCardObjects.length > 0 && newCardObjects[0].length > 0 && newCardObjects[0][0].images) {
+              totalImages += newCardObjects[0][0].images.length;
+            }
+        }
+        decrementSlotsAndCounter(totalImages); 
+      } catch (error) {
+        console.error("Caught an error:", error);
+        handleRequestError(error, cardName, localCategorizedErrors);
+      }
     }
-  }
-  decrementSlotsAndCounter(totalImages); 
-  setIsLoading(false);
-  return [tempCardData, localCategorizedErrors];
-};
+    console.log(tempCardData)
+
+    setIsLoading(false);
+    return [tempCardData, localCategorizedErrors];
+  };
 
 
-const handleRequestError = (error, cardName, localCategorizedErrors) => {
-  let errorMessage = "An error occurred. Please try again.";
-  if (error.response && error.response.data && error.response.data.message) {
-    errorMessage = error.response.data.message;
-  }
+  const handleRequestError = (error, cardName, localCategorizedErrors) => {
+    let errorMessage = "An error occurred. Please try again.";
+    if (error.response && error.response.data && error.response.data.message) {
+      errorMessage = error.response.data.message;
+    }
 
-  if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
-    errorMessage += " The DreamStudio API may be down. Check the API status here: https://dreamstudio.com/api/status/";
-  }
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      errorMessage += " The DreamStudio API may be down. Check the API status here: https://dreamstudio.com/api/status/";
+    }
 
-  if (!localCategorizedErrors[errorMessage]) {
-    localCategorizedErrors[errorMessage] = [];
-  }
-  localCategorizedErrors[errorMessage].push(cardName);
-};
+    if (!localCategorizedErrors[errorMessage]) {
+      localCategorizedErrors[errorMessage] = [];
+    }
+    localCategorizedErrors[errorMessage].push(cardName);
+  };
 
-const updateStates = (tempCardData) => {
-  setCardData(prevCardData => [...tempCardData, ...prevCardData]);
-  setCardNames("");
-};
+  const updateStates = (tempCardData) => {
+    console.log("tempCardData: ", tempCardData)
+    console.log("cardData1: ", cardData)
+    setCardData(prevCardData => [...tempCardData, ...prevCardData]);
+    console.log("cardData2: ", cardData)
+    setCardNames("");
+  };
 
   const handleInputChange = (e) => {
     setCardNames(e.target.value);

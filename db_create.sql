@@ -1,213 +1,437 @@
-USE arcane_proxies;
+-- MySQL Workbench Forward Engineering
 
--- Drop tables in the correct order to avoid foreign key constraints issues
-DROP TABLE IF EXISTS CardPrices;
-DROP TABLE IF EXISTS Legalities;
-DROP TABLE IF EXISTS Games;
-DROP TABLE IF EXISTS RelatedCards;
-DROP TABLE IF EXISTS CardFaces;
-DROP TABLE IF EXISTS Keywords;
-DROP TABLE IF EXISTS CardColorIdentities;
-DROP TABLE IF EXISTS CardColors;
-DROP TABLE IF EXISTS GeneratedImages;
-DROP TABLE IF EXISTS UserCards;
-DROP TABLE IF EXISTS Cards;
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
--- Create the Cards table
-CREATE TABLE Cards (
-    card_id VARCHAR(36) PRIMARY KEY,
-    oracle_id VARCHAR(36) NULL,
-    mtgo_id INT NULL,
-    tcgplayer_id INT NULL,
-    cardmarket_id INT NULL,
-    name TEXT NULL,
-    mana_cost TEXT NULL,
-    type_line TEXT NULL,
-    oracle_text TEXT NULL,
-    flavor_text TEXT NULL,
-    power VARCHAR(10) NULL,
-    toughness VARCHAR(10) NULL,
-    watermark VARCHAR(50) NULL,
-    artist TEXT NULL,
-    lang VARCHAR(10) NULL,
-	loyalty VARCHAR(10) NULL,
-    released_at DATE NULL,
-    uri TEXT NULL,
-    scryfall_uri TEXT NULL,
-    layout TEXT,
-    cmc FLOAT NULL,
-    rarity TEXT,
-    border_color TEXT NULL,
-    set_id VARCHAR(36) NULL,
-    set_code TEXT NULL,
-    set_name TEXT NULL,
-    set_type TEXT NULL,
-    oversized BOOLEAN NULL,
-    promo BOOLEAN NULL,
-    reprint BOOLEAN NULL,
-    variation BOOLEAN NULL,
-    digital BOOLEAN NULL,
-    booster BOOLEAN NULL,
-    story_spotlight BOOLEAN NULL,
-    edhrec_rank INT NULL,
-    penny_rank INT NULL
-);
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema arcane_proxies
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `arcane_proxies` ;
 
--- Create the CardColors table
-CREATE TABLE CardColors (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    card_id VARCHAR(36),
-    color CHAR(1) NULL,
-    FOREIGN KEY (card_id) REFERENCES Cards(card_id)
-);
+-- -----------------------------------------------------
+-- Schema arcane_proxies
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `arcane_proxies` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `arcane_proxies` ;
 
--- Create the CardColorIdentities table
-CREATE TABLE CardColorIdentities (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    card_id VARCHAR(36),
-    color_identity CHAR(1) NULL,
-    FOREIGN KEY (card_id) REFERENCES Cards(card_id)
-);
+-- -----------------------------------------------------
+-- Table `cards`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `cards` ;
 
--- Create the Keywords table
-CREATE TABLE Keywords (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    card_id VARCHAR(36),
-    keyword TEXT NULL,
-    FOREIGN KEY (card_id) REFERENCES Cards(card_id)
-);
+CREATE TABLE IF NOT EXISTS `cards` (
+  `card_id` VARCHAR(36) NOT NULL,
+  `oracle_id` VARCHAR(36) NULL DEFAULT NULL,
+  `mtgo_id` INT NULL DEFAULT NULL,
+  `tcgplayer_id` INT NULL DEFAULT NULL,
+  `cardmarket_id` INT NULL DEFAULT NULL,
+  `name` TEXT NULL DEFAULT NULL,
+  `mana_cost` TEXT NULL DEFAULT NULL,
+  `type_line` TEXT NULL DEFAULT NULL,
+  `oracle_text` TEXT NULL DEFAULT NULL,
+  `flavor_text` TEXT NULL DEFAULT NULL,
+  `power` VARCHAR(10) NULL DEFAULT NULL,
+  `toughness` VARCHAR(10) NULL DEFAULT NULL,
+  `watermark` VARCHAR(50) NULL DEFAULT NULL,
+  `artist` TEXT NULL DEFAULT NULL,
+  `lang` VARCHAR(10) NULL DEFAULT NULL,
+  `loyalty` VARCHAR(10) NULL DEFAULT NULL,
+  `released_at` DATE NULL DEFAULT NULL,
+  `uri` TEXT NULL DEFAULT NULL,
+  `scryfall_uri` TEXT NULL DEFAULT NULL,
+  `layout` TEXT NULL DEFAULT NULL,
+  `cmc` FLOAT NULL DEFAULT NULL,
+  `rarity` TEXT NULL DEFAULT NULL,
+  `border_color` TEXT NULL DEFAULT NULL,
+  `set_id` VARCHAR(36) NULL DEFAULT NULL,
+  `set_code` TEXT NULL DEFAULT NULL,
+  `set_name` TEXT NULL DEFAULT NULL,
+  `set_type` TEXT NULL DEFAULT NULL,
+  `oversized` TINYINT(1) NULL DEFAULT NULL,
+  `promo` TINYINT(1) NULL DEFAULT NULL,
+  `reprint` TINYINT(1) NULL DEFAULT NULL,
+  `variation` TINYINT(1) NULL DEFAULT NULL,
+  `digital` TINYINT(1) NULL DEFAULT NULL,
+  `booster` TINYINT(1) NULL DEFAULT NULL,
+  `story_spotlight` TINYINT(1) NULL DEFAULT NULL,
+  `edhrec_rank` INT NULL DEFAULT NULL,
+  `penny_rank` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`card_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
--- Create the CardFaces table
-CREATE TABLE CardFaces (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    card_id VARCHAR(36),
-    name TEXT NULL,
-    mana_cost TEXT NULL,
-    type_line TEXT NULL,
-    oracle_text TEXT NULL,
-	power VARCHAR(10) NULL,
-    toughness VARCHAR(10) NULL,
-	loyalty VARCHAR(10) NULL,
-    defense VARCHAR(10) NULL,
-    watermark VARCHAR(50) NULL,
-    artist TEXT NULL,
-    artist_id VARCHAR(36) NULL,
-    FOREIGN KEY (card_id) REFERENCES Cards(card_id)
-);
 
--- Create the RelatedCards table
-CREATE TABLE RelatedCards (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    card_id VARCHAR(36) NOT NULL,
-    parent_card_name TEXT NULL,  -- New column
-    related_card_id VARCHAR(36) NULL,
-    component TEXT NULL,
-    name TEXT NULL,  -- This now refers to the related card
-    type_line TEXT NULL,
-    FOREIGN KEY (card_id) REFERENCES Cards(card_id),
-    UNIQUE (parent_card_name(255), related_card_id)
-);
+-- -----------------------------------------------------
+-- Table `cardcoloridentities`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `cardcoloridentities` ;
 
--- Create the Legalities table
-CREATE TABLE Legalities (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    card_id VARCHAR(36),
-    format_name TEXT,
-    legality TEXT,
-    FOREIGN KEY (card_id) REFERENCES Cards(card_id)
-);
+CREATE TABLE IF NOT EXISTS `cardcoloridentities` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `card_id` VARCHAR(36) NULL DEFAULT NULL,
+  `color_identity` CHAR(1) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `cardcoloridentities_ibfk_1`
+    FOREIGN KEY (`card_id`)
+    REFERENCES `cards` (`card_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 485609
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
--- Create the Games table
-CREATE TABLE Games (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    card_id VARCHAR(36),
-    game TEXT,
-    FOREIGN KEY (card_id) REFERENCES Cards(card_id)
-);
+CREATE INDEX `card_id` ON `cardcoloridentities` (`card_id` ASC) VISIBLE;
 
-CREATE TABLE CardPrices (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    card_id VARCHAR(36),
-    usd FLOAT NULL,
-    usd_foil FLOAT NULL,
-    usd_etched FLOAT NULL,
-    eur FLOAT NULL,
-    eur_foil FLOAT NULL,
-    tix FLOAT NULL,
-    FOREIGN KEY (card_id) REFERENCES Cards(card_id)
-);
 
-DROP TABLE IF EXISTS token_transactions;
-DROP TABLE IF EXISTS user_patreon_link;
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS patreon_accounts;
+-- -----------------------------------------------------
+-- Table `cardcolors`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `cardcolors` ;
 
--- Create the Patreon table
-CREATE TABLE patreon_accounts (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    patreon_id VARCHAR(50) NOT NULL UNIQUE,
-    total_pledged INT DEFAULT 0
-);
+CREATE TABLE IF NOT EXISTS `cardcolors` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `card_id` VARCHAR(36) NULL DEFAULT NULL,
+  `color` CHAR(1) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `cardcolors_ibfk_1`
+    FOREIGN KEY (`card_id`)
+    REFERENCES `cards` (`card_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 412033
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
--- Create the User table
-CREATE TABLE `users` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `username` VARCHAR(50) UNIQUE NOT NULL,
-  `email` VARCHAR(50) UNIQUE NOT NULL,
+CREATE INDEX `card_id` ON `cardcolors` (`card_id` ASC) VISIBLE;
+
+
+-- -----------------------------------------------------
+-- Table `cardfaces`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `cardfaces` ;
+
+CREATE TABLE IF NOT EXISTS `cardfaces` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `card_id` VARCHAR(36) NULL DEFAULT NULL,
+  `name` TEXT NULL DEFAULT NULL,
+  `mana_cost` TEXT NULL DEFAULT NULL,
+  `type_line` TEXT NULL DEFAULT NULL,
+  `oracle_text` TEXT NULL DEFAULT NULL,
+  `power` VARCHAR(10) NULL DEFAULT NULL,
+  `toughness` VARCHAR(10) NULL DEFAULT NULL,
+  `loyalty` VARCHAR(10) NULL DEFAULT NULL,
+  `defense` VARCHAR(10) NULL DEFAULT NULL,
+  `watermark` VARCHAR(50) NULL DEFAULT NULL,
+  `artist` TEXT NULL DEFAULT NULL,
+  `artist_id` VARCHAR(36) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `cardfaces_ibfk_1`
+    FOREIGN KEY (`card_id`)
+    REFERENCES `cards` (`card_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 13349
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+CREATE INDEX `card_id` ON `cardfaces` (`card_id` ASC) VISIBLE;
+
+
+-- -----------------------------------------------------
+-- Table `cardprices`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `cardprices` ;
+
+CREATE TABLE IF NOT EXISTS `cardprices` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `card_id` VARCHAR(36) NULL DEFAULT NULL,
+  `usd` FLOAT NULL DEFAULT NULL,
+  `usd_foil` FLOAT NULL DEFAULT NULL,
+  `usd_etched` FLOAT NULL DEFAULT NULL,
+  `eur` FLOAT NULL DEFAULT NULL,
+  `eur_foil` FLOAT NULL DEFAULT NULL,
+  `tix` FLOAT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `cardprices_ibfk_1`
+    FOREIGN KEY (`card_id`)
+    REFERENCES `cards` (`card_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 444519
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+CREATE INDEX `card_id` ON `cardprices` (`card_id` ASC) VISIBLE;
+
+
+-- -----------------------------------------------------
+-- Table `games`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `games` ;
+
+CREATE TABLE IF NOT EXISTS `games` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `card_id` VARCHAR(36) NULL DEFAULT NULL,
+  `game` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `games_ibfk_1`
+    FOREIGN KEY (`card_id`)
+    REFERENCES `cards` (`card_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+CREATE INDEX `card_id` ON `games` (`card_id` ASC) VISIBLE;
+
+
+-- -----------------------------------------------------
+-- Table `generatedimages`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `generatedimages` ;
+
+CREATE TABLE IF NOT EXISTS `generatedimages` (
+  `image_id` INT NOT NULL AUTO_INCREMENT,
+  `image_url` MEDIUMTEXT NOT NULL,
+  `cfg_scale` FLOAT NOT NULL,
+  `clip_guidance_preset` VARCHAR(50) NOT NULL,
+  `sampler` VARCHAR(50) NOT NULL,
+  `steps` INT NOT NULL,
+  `style_preset` VARCHAR(50) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`image_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 11
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `keywords`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `keywords` ;
+
+CREATE TABLE IF NOT EXISTS `keywords` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `card_id` VARCHAR(36) NULL DEFAULT NULL,
+  `keyword` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `keywords_ibfk_1`
+    FOREIGN KEY (`card_id`)
+    REFERENCES `cards` (`card_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 240669
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+CREATE INDEX `card_id` ON `keywords` (`card_id` ASC) VISIBLE;
+
+
+-- -----------------------------------------------------
+-- Table `legalities`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `legalities` ;
+
+CREATE TABLE IF NOT EXISTS `legalities` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `card_id` VARCHAR(36) NULL DEFAULT NULL,
+  `format_name` TEXT NULL DEFAULT NULL,
+  `legality` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `legalities_ibfk_1`
+    FOREIGN KEY (`card_id`)
+    REFERENCES `cards` (`card_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+CREATE INDEX `card_id` ON `legalities` (`card_id` ASC) VISIBLE;
+
+
+-- -----------------------------------------------------
+-- Table `patreon_accounts`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `patreon_accounts` ;
+
+CREATE TABLE IF NOT EXISTS `patreon_accounts` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `patreon_id` VARCHAR(50) NOT NULL,
+  `total_pledged` INT NULL DEFAULT '0',
+  `deferred_tokens` INT NULL DEFAULT '0',
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+CREATE UNIQUE INDEX `patreon_id` ON `patreon_accounts` (`patreon_id` ASC) VISIBLE;
+
+
+-- -----------------------------------------------------
+-- Table `relatedcards`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `relatedcards` ;
+
+CREATE TABLE IF NOT EXISTS `relatedcards` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `card_id` VARCHAR(36) NOT NULL,
+  `parent_card_name` TEXT NULL DEFAULT NULL,
+  `related_card_id` VARCHAR(36) NULL DEFAULT NULL,
+  `component` TEXT NULL DEFAULT NULL,
+  `name` TEXT NULL DEFAULT NULL,
+  `type_line` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `relatedcards_ibfk_1`
+    FOREIGN KEY (`card_id`)
+    REFERENCES `cards` (`card_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 86059
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+CREATE UNIQUE INDEX `parent_card_name` ON `relatedcards` (`parent_card_name`(255) ASC, `related_card_id` ASC) VISIBLE;
+
+CREATE INDEX `card_id` ON `relatedcards` (`card_id` ASC) VISIBLE;
+
+
+-- -----------------------------------------------------
+-- Table `users`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `users` ;
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(50) NOT NULL,
+  `email` VARCHAR(50) NOT NULL,
   `password_hash` VARCHAR(255) NOT NULL,
-  `google_id` VARCHAR(50),
-  `facebook_id` VARCHAR(50),
-  `patreon_account_id` INT,
+  `google_id` VARCHAR(50) NULL DEFAULT NULL,
+  `facebook_id` VARCHAR(50) NULL DEFAULT NULL,
+  `patreon_account_id` INT NULL DEFAULT NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `tokens` INT DEFAULT 10,
-  `refresh_token` VARCHAR(255),
-  `isEmailVerified` BOOLEAN DEFAULT FALSE,
-  `emailVerificationToken` VARCHAR(255),
-  `emailVerificationExpires` DATETIME,
-  FOREIGN KEY (`patreon_account_id`) REFERENCES `patreon_accounts`(`id`)
-);
+  `tokens` INT NULL DEFAULT '10',
+  `refresh_token` VARCHAR(255) NULL DEFAULT NULL,
+  `isEmailVerified` TINYINT(1) NULL DEFAULT '0',
+  `emailVerificationToken` VARCHAR(255) NULL DEFAULT NULL,
+  `emailVerificationExpires` DATETIME NULL DEFAULT NULL,
+  `resetPasswordToken` VARCHAR(255) NULL DEFAULT NULL,
+  `resetPasswordExpires` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `users_ibfk_1`
+    FOREIGN KEY (`patreon_account_id`)
+    REFERENCES `patreon_accounts` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
-CREATE TABLE user_patreon_link (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL UNIQUE,
-  patreon_account_id INT NOT NULL UNIQUE,
-  linked_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  FOREIGN KEY (patreon_account_id) REFERENCES patreon_accounts(id)
-);
+CREATE UNIQUE INDEX `username` ON `users` (`username` ASC) VISIBLE;
 
-CREATE TABLE UserCards (
-    user_card_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    card_id VARCHAR(36) NOT NULL,
-    face_type ENUM('front', 'back') DEFAULT NULL,
-    rec_stat BOOLEAN DEFAULT TRUE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (card_id) REFERENCES Cards(card_id)
-);
+CREATE UNIQUE INDEX `email` ON `users` (`email` ASC) VISIBLE;
 
--- Create the GeneratedImages table
-CREATE TABLE GeneratedImages (
-    image_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_card_id INT NOT NULL, -- This replaces the user_id and card_id
-    image_url MEDIUMTEXT NOT NULL,
-    cfg_scale FLOAT NOT NULL,
-    clip_guidance_preset VARCHAR(50) NOT NULL,
-    sampler VARCHAR(50) NOT NULL,
-    steps INT NOT NULL,
-    style_preset VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (user_card_id) REFERENCES UserCards(user_card_id)
-);
+CREATE INDEX `patreon_account_id` ON `users` (`patreon_account_id` ASC) VISIBLE;
 
--- Create the TokenTransaction table
-CREATE TABLE token_transactions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    amount INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    source VARCHAR(50) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
+
+-- -----------------------------------------------------
+-- Table `token_transactions`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `token_transactions` ;
+
+CREATE TABLE IF NOT EXISTS `token_transactions` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `amount` INT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `source` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `token_transactions_ibfk_1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `users` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+CREATE INDEX `user_id` ON `token_transactions` (`user_id` ASC) VISIBLE;
+
+
+-- -----------------------------------------------------
+-- Table `user_patreon_link`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `user_patreon_link` ;
+
+CREATE TABLE IF NOT EXISTS `user_patreon_link` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `patreon_account_id` INT NOT NULL,
+  `linked_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `user_patreon_link_ibfk_1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `users` (`id`),
+  CONSTRAINT `user_patreon_link_ibfk_2`
+    FOREIGN KEY (`patreon_account_id`)
+    REFERENCES `patreon_accounts` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+CREATE UNIQUE INDEX `user_id` ON `user_patreon_link` (`user_id` ASC) VISIBLE;
+
+CREATE UNIQUE INDEX `patreon_account_id` ON `user_patreon_link` (`patreon_account_id` ASC) VISIBLE;
+
+
+-- -----------------------------------------------------
+-- Table `usercards`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `usercards` ;
+
+CREATE TABLE IF NOT EXISTS `usercards` (
+  `user_card_id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `card_id` VARCHAR(36) NOT NULL,
+  `face_type` ENUM('front', 'back') NULL DEFAULT NULL,
+  `rec_stat` TINYINT(1) NOT NULL DEFAULT '1',
+  `full_frame` TINYINT(1) NOT NULL DEFAULT '0',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_card_id`),
+  CONSTRAINT `usercards_ibfk_1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `users` (`id`),
+  CONSTRAINT `usercards_ibfk_2`
+    FOREIGN KEY (`card_id`)
+    REFERENCES `cards` (`card_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 11
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+CREATE INDEX `user_id` ON `usercards` (`user_id` ASC) VISIBLE;
+
+CREATE INDEX `card_id` ON `usercards` (`card_id` ASC) VISIBLE;
+
+
+-- -----------------------------------------------------
+-- Table `usercardimages`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `usercardimages` ;
+
+CREATE TABLE IF NOT EXISTS `usercardimages` (
+  `user_card_id` INT NOT NULL,
+  `image_id` INT NOT NULL,
+  PRIMARY KEY (`user_card_id`, `image_id`),
+  CONSTRAINT `usercardimages_ibfk_1`
+    FOREIGN KEY (`user_card_id`)
+    REFERENCES `usercards` (`user_card_id`),
+  CONSTRAINT `usercardimages_ibfk_2`
+    FOREIGN KEY (`image_id`)
+    REFERENCES `generatedimages` (`image_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+CREATE INDEX `image_id` ON `usercardimages` (`image_id` ASC) VISIBLE;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+-

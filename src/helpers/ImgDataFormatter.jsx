@@ -14,7 +14,7 @@ function replaceWords(text, replacements) {
   return modifiedText;
 }
 
-const generateImage = async (textPromptsWithWeights, engineValues, card_id, height, width, facetype) => {
+const generateImage = async (textPromptsWithWeights, engineValues, card_id, height, width, facetype, quantity) => {
   try {
     const accessToken  = localStorage.getItem('accessToken');
     const url = '/api/generate-image';
@@ -40,12 +40,13 @@ const generateImage = async (textPromptsWithWeights, engineValues, card_id, heig
         weight: prompt.weight,
       })),
       facetype,
+      quantity
     };
 
     const response = await axiosInstance.post(url, data, config);
-
+    console.log("response: ", response)
     if (response.status === 200) {
-      return response.data; // Return the response data to be used by the calling function
+      return response.data.cardImagePairs; // Return the response data to be used by the calling function
     } else {
       throw new Error(`Non-200 response: ${response.statusText}`);
     }
@@ -55,7 +56,7 @@ const generateImage = async (textPromptsWithWeights, engineValues, card_id, heig
   }
 };
 
-const generateMultiFaceImage = async (facesData, engineValues, card_id) => {
+const generateMultiFaceImage = async (facesData, engineValues, card_id, quantity) => {
   try {
     const accessToken = localStorage.getItem('accessToken');
     const url = '/api/generated-images/generate-multi-face-image'; 
@@ -85,6 +86,7 @@ const generateMultiFaceImage = async (facesData, engineValues, card_id) => {
     const data = {
       card_id,
       faces,
+      quantity
     };
 
     const response = await axiosInstance.post(url, data, config);

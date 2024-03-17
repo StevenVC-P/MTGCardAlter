@@ -6,6 +6,7 @@ const cardMixin = require("./Card/cardMixin");
 const GeneratedImage = require("./GeneratedImages");
 const UserCard = require("./UserCard");
 const UserPatreonLink = require("./UserPatreonLink");
+const UserCardImages = require("./UserCardImages");
 
 // Apply the mixin to add custom methods to CardModel
 const Card = cardMixin(CardModel);
@@ -22,6 +23,20 @@ UserCard.belongsTo(Card, { foreignKey: "card_id", targetKey: "card_id", as: "car
 UserCard.hasMany(GeneratedImage, { foreignKey: "user_card_id", as: "generatedImages" });
 GeneratedImage.belongsTo(UserCard, { foreignKey: "user_card_id", as: "userCard" });
 
+UserCard.belongsToMany(GeneratedImage, {
+  through: UserCardImages,
+  foreignKey: "user_card_id",
+  otherKey: "image_id",
+  as: "galleryImages",
+});
+
+GeneratedImage.belongsToMany(UserCard, {
+  through: UserCardImages,
+  foreignKey: "image_id",
+  otherKey: "user_card_id",
+  as: "imageOwners",
+});
+
 module.exports = {
   User,
   Patreon,
@@ -30,4 +45,5 @@ module.exports = {
   GeneratedImage,
   UserCard,
   UserPatreonLink,
+  UserCardImages,
 };
