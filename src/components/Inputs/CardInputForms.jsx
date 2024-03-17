@@ -178,7 +178,6 @@ const CardInputForm = ({ cardData, setCardData, sidebarText, sidebarWeight, othe
             className="clear form-button"
             onClick={() => setIsModalOpen(true)}
             disabled={isLoading}
-            onConfirm={handleClearConfirm}
           >
             Clear All Cards
           </button>
