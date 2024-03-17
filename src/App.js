@@ -65,20 +65,31 @@ const MainPage = ({ isPatreonConnected }) => {
   const handleClearError = () => {
     setErrorMessage("");
   };
+  
   const decrementCounter = (decrementAmount = 1) => {
-    const newCounterValue = Math.max(0, counter - decrementAmount);
-    if (newCounterValue !== counter) {
-      updateCounterInBackend(user.id, newCounterValue)
-        .then((success) => {
-          if (success) {
-            setCounter(newCounterValue);
-          }
-        })
-        .catch((error) => {
-          console.error("Error updating counter in backend:", error);
-          setErrorMessage("Failed to update counter in the backend.");
-        });
-    }
+    setCounter((prevCounter) => {
+      const newCounterValue = Math.max(0, prevCounter - decrementAmount);
+
+      // Only proceed with backend update if the counter actually changes
+      if (newCounterValue !== prevCounter) {
+        updateCounterInBackend(user.id, newCounterValue)
+          .then((success) => {
+            if (!success) {
+              // If the backend update fails, we don't need to do anything here
+              // because we haven't changed the state yet.
+              console.error("Backend update failed");
+            }
+          })
+          .catch((error) => {
+            console.error("Error updating counter in backend:", error);
+            setErrorMessage("Failed to update counter in the backend.");
+            // No need to revert state here because it was never updated
+          });
+      }
+
+      // Return newCounterValue to update the state
+      return newCounterValue;
+    });
   };
 
   const updateCounterInBackend = async (userId, newCounterValue) => {

@@ -164,7 +164,7 @@ const deleteCard = async (cardId) => {
                   }
                 }
               };
-            console.log("data.card: ", data.card)
+              
             return (
               <div className="card-box" key={data.card.user_card_id}>
                 <CardComponent />

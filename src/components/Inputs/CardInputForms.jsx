@@ -112,7 +112,6 @@ const CardInputForm = ({ cardData, setCardData, sidebarText, sidebarWeight, othe
         let totalImages = 0;
         const response = await axiosInstance.get(`/api/cards/name/${sanitizedCardName}`);
         if (response.status === 200) {
-          console.log("response: ", response)
           const newCardObjects = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, engineValues, counter, quantity);
 
             newCardObjects.forEach(cardAndImageArray => {
@@ -130,7 +129,6 @@ const CardInputForm = ({ cardData, setCardData, sidebarText, sidebarWeight, othe
         handleRequestError(error, cardName, localCategorizedErrors);
       }
     }
-    console.log(tempCardData)
 
     setIsLoading(false);
     return [tempCardData, localCategorizedErrors];
@@ -154,10 +152,7 @@ const CardInputForm = ({ cardData, setCardData, sidebarText, sidebarWeight, othe
   };
 
   const updateStates = (tempCardData) => {
-    console.log("tempCardData: ", tempCardData)
-    console.log("cardData1: ", cardData)
     setCardData(prevCardData => [...tempCardData, ...prevCardData]);
-    console.log("cardData2: ", cardData)
     setCardNames("");
   };
 
