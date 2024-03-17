@@ -148,7 +148,7 @@ app.post("/api/generate-image", authenticateToken, async (req, res) => {
 
       const cardImagePair = {
         card: {
-          id: userCard.user_card_id,
+          user_card_id: userCard.user_card_id,
           face_type: userCard.face_type,
         },
         images: [

@@ -112,6 +112,7 @@ const CardInputForm = ({ cardData, setCardData, sidebarText, sidebarWeight, othe
         let totalImages = 0;
         const response = await axiosInstance.get(`/api/cards/name/${sanitizedCardName}`);
         if (response.status === 200) {
+          console.log("response: ", response)
           const newCardObjects = await generateImageForCard(response, sidebarText, sidebarWeight, otherValues, engineValues, counter, quantity);
 
             newCardObjects.forEach(cardAndImageArray => {

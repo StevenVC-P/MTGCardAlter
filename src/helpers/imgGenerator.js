@@ -89,6 +89,7 @@ async function generateImageForFace(face, colorNames, keywords, tokenPrompts, ot
     keywords: keywords,
     tokens: tokenPrompts,
   };
+  console.log("normalizedValues: ", normalizedValues);
   const prompts = createImagePrompts(normalizedValues, otherValues, sidebarText, sidebarWeight);
   const result = await generateImageFromPrompts(prompts, engineValues, card_id, width, height, faceType, quantity);
   return result;
@@ -155,6 +156,7 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
       console.warn("Counter less than 2, not generating image for multiple-faced card.");
       return { error: "Counter insufficient for multi-faced cards." };
     }
+    
     const cardResults = await Promise.all(
       card_faces.map((face, index) => {
         let height = 512;
@@ -168,7 +170,7 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
         }
 
         const faceType = index === 0 ? "front" : "back";
-
+        console.log("inside face: ", face);
         return generateImageForFace(face, colorNamesEach, keywords, tokenPrompts, otherValues, sidebarText, sidebarWeight, engineValues, card_id, width, height, faceType, quantity);
       })
     );
@@ -180,10 +182,10 @@ export default async function generateImageForCard(cardData, sidebarText, sideba
       height = 448;
       width = 1408;
     } else {
-      width = layout === "saga" ? 576 : 512;
-      height = layout === "saga" ? 1536 : 640;
+      width = layout === "saga" ? 576 : 704;
+      height = layout === "saga" ? 1536 : 512;
     }
-
+    console.log("layout: ", layout, " width: ", width, " height: ", height);
     let normalizedValues = {};
     if (layout === "adventure" && card_faces) {
       normalizedValues = {
