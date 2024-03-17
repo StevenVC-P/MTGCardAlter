@@ -85,6 +85,7 @@ const BasicFrame = React.memo((props) => {
             levels.push(
             <div className="level-up-description" key="level-up">
                 <OracleTextCleaner text={level_up_description} className={""}/>
+                <div className="level-stats-first">{power}/{toughness}</div>
             </div>
         );
 

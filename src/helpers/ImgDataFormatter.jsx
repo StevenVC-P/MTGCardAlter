@@ -45,7 +45,6 @@ const generateImage = async (textPromptsWithWeights, engineValues, card_id, heig
     };
 
     const response = await axiosInstance.post(url, data, config);
-    console.log("response: ", response)
     if (response.status === 200) {
       return response.data.cardImagePairs; // Return the response data to be used by the calling function
     } else {
