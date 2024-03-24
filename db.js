@@ -2,14 +2,14 @@
 const mysql = require("mysql2/promise");
 const { env } = require("./env/config");
 
-const { USER, HOST, DATABASE, PASSWORD, PORT} = env;
+const { USER, HOST, DATABASE, PASSWORD, DB_PORT } = env;
 
 const pool = mysql.createPool({
   user: USER,
   host: HOST,
   database: DATABASE,
   password: PASSWORD,
-  port: PORT,
+  port: DB_PORT,
 });
 
 async function getUserById(id, provider = null) {
