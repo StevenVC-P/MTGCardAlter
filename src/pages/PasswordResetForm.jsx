@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axiosInstance from '../utils/axiosConfig.js';
 
 const PasswordResetForm = () => {
   const [token] = useState(new URLSearchParams(window.location.search).get('token'));
@@ -15,19 +16,13 @@ const PasswordResetForm = () => {
       return;
     }
 
-    // Add more password validations as required
-
     try {
-      // Replace with your actual API endpoint
-      const response = await fetch('http://localhost:5000/api/auth/reset-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token, newPassword }),
+      const response = await axiosInstance.post('/api/auth/reset-password', {
+        token, 
+        newPassword
       });
 
-      const data = await response.json();
+      const data = response.data;
       if (data.success) {
         setIsResetSuccessful(true);
         setMessage("Your password has been successfully reset. You can now log in with your new password.");

@@ -1,12 +1,12 @@
-import axios from "../axiosSetup";
+import axiosInstance from "../axiosConfig";
 
 export const tryLocalTokenValidation = () => {
   const accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
 
   if (accessToken && refreshToken) {
-    return axios
-      .post("http://localhost:5000/api/auth/validate-access-token", { accessToken, refreshToken })
+    return axiosInstance
+      .post("/api/auth/validate-access-token", { accessToken, refreshToken })
       .then((response) => {
         if (response.data.success) {
           return { success: true, user: response.data.user };
@@ -28,8 +28,8 @@ export const tryPatreonTokenValidation = (location) => {
   const patreonToken = queryParams.get("token");
 
   if (patreonConnected === "true" && patreonToken) {
-    return axios
-      .post("http://localhost:5000/patreon/validate-patreon-token", { token: patreonToken })
+    return axiosInstance
+      .post("/patreon/validate-patreon-token", { token: patreonToken })
       .then((response) => {
         if (response.data.valid) {
           localStorage.setItem("accessToken", response.data.accessToken);

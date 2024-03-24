@@ -12,7 +12,7 @@ const EmailVerificationConfirm  = () => {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const response = await axiosInstance.post('http://localhost:5000/api/auth/verify-email', { token });
+        const response = await axiosInstance.post('/api/auth/verify-email', { token });
         setVerificationSuccessful(true);
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
