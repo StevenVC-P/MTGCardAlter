@@ -3,13 +3,11 @@ const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fet
 require("dotenv").config({ path: "./env/.env" });
 const http = require("http");
 const axios = require("axios");
-const jwt = require("jsonwebtoken");
 const express = require("express");
 const authenticateToken = require("./utils/authenticateToken");
 const setupMiddleware = require("./middleware");
 const { credentials } = require("./config/setup");
 require("./utils/scryfallUpdater");
-const jwtMiddleware = require("./jwtMiddleware");
 const sharp = require("sharp");
 
 const { GeneratedImage, UserCard, UserCardImages } = require("./models");
@@ -23,6 +21,16 @@ const generatedImagesRouter = require("./routes/generatedImages");
 const { uploadImageToGCS } = require("./routes/googleRoutes");
 
 const app = express();
+
+app.enable("trust proxy");
+
+// Enforce HTTPS middleware (only in production)
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'production' && req.headers['x-forwarded-proto'] !== 'https') {
+    return res.redirect('https://' + req.headers.host + req.url);
+  }
+  next();
+});
 
 setupMiddleware(app);
 app.use("/api/auth", authRoutes);
