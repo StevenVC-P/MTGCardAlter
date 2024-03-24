@@ -10,8 +10,6 @@ import AppWrapper from "./AppWrapper";
 // document.head.appendChild(link);
 
 ReactDOM.render(
-  <React.StrictMode>
-    <AppWrapper />
-  </React.StrictMode>,
+    <AppWrapper />,
   document.getElementById("root")
 );

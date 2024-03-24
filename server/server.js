@@ -44,7 +44,7 @@ app.use("/api/generated-images", generatedImagesRouter);
 const engineId = "stable-diffusion-v1-6";
 const apiHost = process.env.API_HOST;
 const apiKey = process.env.STABILITY_API_KEY;
-const PORT = process.env.SERVERPORT || 5000;
+const PORT = process.env.PORT || 5000;
 const origin = process.env.FRONTEND_ORIGIN || "http://localhost:3000";
 
 app.get("/proxy-image", async (req, res) => {
