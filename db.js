@@ -2,11 +2,11 @@
 const mysql = require("mysql2/promise");
 const { env } = require("./env/config");
 
-const { USER, HOST, DATABASE, PASSWORD, DB_PORT } = env;
+const { USER, DB_HOST, DATABASE, PASSWORD, DB_PORT } = env;
 
 const pool = mysql.createPool({
   user: USER,
-  host: HOST,
+  host: DB_HOST,
   database: DATABASE,
   password: PASSWORD,
   port: DB_PORT,
