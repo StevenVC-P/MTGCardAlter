@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import UserContext from '../contexts/UserContext';
+import axiosInstance from '../utils/axiosConfig.js';
 import ValidatedInput from '../components/Inputs/ValidatedInput';
 
 const RegisterPage = ({setIsLoggedIn}) => {
@@ -62,15 +63,13 @@ const RegisterPage = ({setIsLoggedIn}) => {
       setMessages([]); 
       
       try {
-        const response = await fetch('http://localhost:5000/api/auth/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, username, password }),
+        const response = await axiosInstance.post('/api/auth/register', {
+          email, 
+          username, 
+          password
         });
 
-        const data = await response.json();
+        const data = response.data; 
         if (data.success) {
           // Navigate to the next step or display success message
           navigate('/verify-email-notice', { state: { email } });

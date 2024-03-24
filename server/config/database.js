@@ -2,10 +2,10 @@ const { Sequelize } = require("sequelize");
 
 const { env } = require("../../env/config");
 
-const { USER, HOST, DATABASE, PASSWORD, } = env;
+const { USER, DB_HOST, DATABASE, PASSWORD, } = env;
 
 const sequelize = new Sequelize(DATABASE, USER, PASSWORD, {
-  host: HOST,
+  host: DB_HOST,
   dialect: "mysql",
 });
 

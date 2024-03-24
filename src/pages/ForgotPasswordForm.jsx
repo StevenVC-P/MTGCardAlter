@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axiosInstance from '../utils/axiosConfig.js';
 import ValidatedInput from '../components/Inputs/ValidatedInput'; 
 
 const ForgotPasswordForm = () => {
@@ -11,16 +12,11 @@ const ForgotPasswordForm = () => {
     e.preventDefault();
     if (identifierRegex.test(identifier)) {
       try {
-        // Replace with your actual API endpoint
-        const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ identifier }),
-        });
+      const response = await axiosInstance.post('/api/auth/forgot-password', {
+        identifier
+      });
 
-        const data = await response.json();
+      const data = response.data; 
         if (data.success) {
           setMessage("If your email is in our database, you will receive a password reset link shortly.");
         } else {

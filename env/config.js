@@ -14,10 +14,10 @@ module.exports = {
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASS: process.env.EMAIL_PASS,
     USER: process.env.USER,
-    HOST: process.env.HOST,
+    DB_HOST: process.env.DB_HOST,
     DATABASE: process.env.DATABASE,
     PASSWORD: process.env.PASSWORD,
-    PORT: process.env.PORT,
+    DB_PORT: process.env.DB_PORT,
     STORAGE_BUCKET: process.env.GOOGLE_CLOUD_STORAGE_BUCKET,
   },
 };

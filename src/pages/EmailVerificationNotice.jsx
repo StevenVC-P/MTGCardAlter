@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axiosInstance from '../utils/axiosConfig.js';
 import { useLocation } from 'react-router-dom';
 
 const EmailVerificationNotice = () => {
@@ -8,15 +9,11 @@ const EmailVerificationNotice = () => {
 
   const resendVerificationEmail = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/resend', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
+      const response = await axiosInstance.post('/api/auth/resend', {
+        email
       });
 
-      const data = await response.json();
+      const data = response.data; // With axios, you get the JSON data directly from the response object
       if (data.success) {
         setMessage('Verification email resent. Please check your inbox.');
       } else {
