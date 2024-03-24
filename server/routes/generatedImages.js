@@ -13,7 +13,7 @@ const { uploadImageToGCS, deleteImagesFromGCS } = require("./googleRoutes");
 const engineId = "stable-diffusion-v1-6";
 const apiHost = process.env.API_HOST;
 const apiKey = process.env.STABILITY_API_KEY;
-const PORT = process.env.SERVERPORT || 5000;
+const PORT = process.env.PORT || 5000;
 const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 // Route to get a list of generated images by a user
 router.get("/", authenticateToken, async (req, res) => {
